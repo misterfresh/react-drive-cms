@@ -6,5 +6,18 @@ http://misterfresh.github.io/react-drive-cms/
 
 How to use:
 
-In your Google Drive, create folders and files following the structure used here : 
+1) In your Google Drive, create folders and files following the names and structure used here : 
 https://docs.google.com/folderview?id=0B0A_zASTMp9WU0NMYW9wXzVQWjg&usp=drivesdk
+
+2) Add to the Dashboard sheet the following bound script:
+https://gist.github.com/misterfresh/e1c9cf0bb4c777221f84
+This will create a new "Update" button with which you can automatically update the Dashboard file. 
+
+3) In order for the contact form to work, publish the following script as a Google Web App:
+https://gist.github.com/misterfresh/b69d29a97cf415980be2
+
+4) Fill in the correct values in assets/js/config.js
+
+5) Put the contents of the assets folder on GitHub Pages
+
+That's it!
