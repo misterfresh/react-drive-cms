@@ -1,0 +1,33 @@
+{
+  "name": "react_drive_cms",
+  "version": "0.0.1",
+  "description": "React Drive CMS : Publish articles directly from Google Drive to your blog with React JS",
+  "dependencies": {
+    "body-parser": "^1.12.4",
+    "bootstrap-sass": "^3.3.4",
+    "browser-request": "^0.3.3",
+    "express": "^4.10.2",
+    "lodash": "^3.9.2",
+    "react": "^0.13.3",
+    "react-bootstrap": "^0.24.4",
+    "react-router": "^0.13.2",
+    "react-router-bootstrap": "^0.13.0",
+    "socket.io": "^1.3.5"
+  },
+  "devDependencies": {
+    "browser-sync": "^2.2.1",
+    "browserify": "^9.0.3",
+    "envify": "^3.4.0",
+    "gulp": "^3.9.0",
+    "gulp-minify-css": "^1.2.0",
+    "gulp-nodemon": "^1.0.5",
+    "gulp-rename": "^1.2.0",
+    "gulp-sass": "^1.3.3",
+    "gulp-uglify": "^1.1.0",
+    "gulp-util": "^3.0.4",
+    "nodemon": "^1.3.7",
+    "reactify": "^1.1.0",
+    "vinyl-source-stream": "^1.0.0",
+    "watchify": "^2.4.0"
+  }
+}
