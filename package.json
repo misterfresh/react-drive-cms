@@ -29,5 +29,15 @@
     "reactify": "^1.1.0",
     "vinyl-source-stream": "^1.0.0",
     "watchify": "^2.4.0"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/misterfresh/react-drive-cms"
+  },
+  "keywords": [
+    "react",
+    "google-drive",
+    "cms"
+  ],
+  "license": "MIT"
 }
