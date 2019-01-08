@@ -24,7 +24,7 @@ This will create a new "Update" button with which you can automatically update t
 3) In order for the contact form to work, publish the following script as a Google Web App:
 https://gist.github.com/misterfresh/b69d29a97cf415980be2  . In your "Visitors" Google spreadsheet, go to Tools>Script Editor. You can create a free SendGrid account and paste your SendGrid API key in the script. Save the script and click on Publish>Deploy as Web App. .
 
-4) Fill in the correct values in /conf.js
+4) Fill in the correct values in /conf.json .
 
 5) Push to a "gh-pages" branch on GitHub to publish on GitHub Pages
 

@@ -10,7 +10,8 @@ import Root from 'main/containers/root'
 import configureStore from 'main/store/configureStore'
 
 let initialState = {}
-let history = createBrowserHistory()
+import conf from 'conf'
+let history = createBrowserHistory(conf.root ? {basename: conf.root} : {})
 
 const store = configureStore(initialState, routerMiddleware(history))
 

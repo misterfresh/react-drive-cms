@@ -6,16 +6,17 @@ let fs = require('fs')
 let path = require('path')
 let Terser = require('terser')
 let hasha = require('hasha')
+let projectConf = require('./../../conf')
+let projectRoot = projectConf.root ? `/${projectConf.root}/` : false
+fs.writeFileSync(
+    path.join(process.cwd(), 'assets/build/conf.js'),
+    'export default ' + JSON.stringify(projectConf)
+)
 
 let dependencies = {}
 fs.readdirSync(path.join(process.cwd(), 'assets/js/vendors')).forEach(file => {
     dependencies[file.slice(0, -3)] = `./assets/js/vendors/${file}`
 })
-let index_prod = fs.readFileSync(
-    path.join(process.cwd(), 'assets/html/index_prod.html'),
-    'utf-8'
-)
-
 let conf = JSON.parse(
     fs.readFileSync(path.join(process.cwd(), '.babelrc'), 'utf-8')
 )
@@ -27,8 +28,28 @@ conf.babelrc = false
 conf.exclude = 'node_modules/**'
 conf.plugins[moduleResolverIndex][1]['alias'] = {
     ...conf.plugins[moduleResolverIndex][1]['alias'],
-    ...dependencies
+    ...dependencies,
+    'conf': './assets/build/conf.js'
 }
+
+let index_prod = fs.readFileSync(
+    path.join(process.cwd(), 'assets/html/index_prod.html'),
+    'utf-8'
+)
+if(projectRoot){
+    index_prod = index_prod.replace(/\/assets\//g, `${projectRoot}assets/`).replace('/src/', `${projectRoot}src/`)
+}
+fs.copyFileSync(
+    path.join(
+        process.cwd(),
+        `assets/html/404_${
+            projectRoot
+                ? 'with_root'
+                : 'no_root'
+            }.html`
+    ),
+    path.join(process.cwd(), '404.html')
+)
 
 rollup
     .rollup({
@@ -56,7 +77,7 @@ rollup
                 let { code } = result.output[0]
                 let hash = hasha(code, { algorithm: 'sha1' }).slice(0, 16)
                 fs.writeFile(
-                    path.join(process.cwd(), 'assets/build/index_build.html'),
+                    path.join(process.cwd(), 'assets/build/index_prod.html'),
                     index_prod.replace('<VERSION_HASH>', hash),
                     (err, res) => {
                         if(err){
