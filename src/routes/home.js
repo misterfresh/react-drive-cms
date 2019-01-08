@@ -11,6 +11,7 @@ import DisqusCount from 'components/disqus/disqusCount'
 import Article from 'components/blocks/article'
 import Category from 'components/blocks/category'
 import blocks from 'styles/blocks'
+import conf from 'conf'
 
 class Home extends Component {
     constructor() {
@@ -38,7 +39,7 @@ class Home extends Component {
                 description="Publish articles directly from Google Drive to your website."
                 sidebarImage={`${window.location.protocol}//${
                     window.location.hostname
-                    }:${window.location.port}/assets/images/default-sidebar.jpg`}
+                    }:${window.location.port}${conf.root ? ('/' + conf.root) : ''}/assets/images/default-sidebar.jpg`}
                 showLinks={true}
             >
                 <div className={css(styles.subNav)}>

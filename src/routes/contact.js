@@ -10,6 +10,7 @@ import Page from 'components/layout/page'
 import input from 'styles/input'
 import buttons from 'styles/buttons'
 import Mail from 'lib/mail'
+import conf from 'conf'
 
 class Contact extends Component {
     constructor(props) {
@@ -108,7 +109,7 @@ class Contact extends Component {
                 description=""
                 sidebarImage={`${window.location.protocol}//${
                     window.location.hostname
-                    }:${window.location.port}/assets/images/default-contact.jpg`}
+                    }:${window.location.port}${conf.root ? ('/' + conf.root) : ''}/assets/images/default-contact.jpg`}
             >
                 <h3 className={css(styles.title)}>Send me an email</h3>
                 <form className={css(styles.form)}>
