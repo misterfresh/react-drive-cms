@@ -11,7 +11,7 @@ import configureStore from 'main/store/configureStore'
 
 let initialState = {}
 import conf from 'conf'
-let history = createBrowserHistory(conf.root ? {basename: conf.root} : {})
+let history = createBrowserHistory(conf.root ? { basename: conf.root } : {})
 
 const store = configureStore(initialState, routerMiddleware(history))
 

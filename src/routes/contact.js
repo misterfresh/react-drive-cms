@@ -109,7 +109,9 @@ class Contact extends Component {
                 description=""
                 sidebarImage={`${window.location.protocol}//${
                     window.location.hostname
-                    }:${window.location.port}${conf.root ? ('/' + conf.root) : ''}/assets/images/default-contact.jpg`}
+                }:${window.location.port}${
+                    conf.root ? '/' + conf.root : ''
+                }/assets/images/default-contact.jpg`}
             >
                 <h3 className={css(styles.title)}>Send me an email</h3>
                 <form className={css(styles.form)}>

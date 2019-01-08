@@ -101,8 +101,8 @@ class Menu extends Component {
                                             className={css(
                                                 styles.subItem,
                                                 category.id ===
-                                                activeCategory &&
-                                                styles.subItemExpanded
+                                                    activeCategory &&
+                                                    styles.subItemExpanded
                                             )}
                                         >
                                             <Link

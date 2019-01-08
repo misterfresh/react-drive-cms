@@ -44,11 +44,11 @@ class CategoryPage extends Component {
         let activeCategory = categories[activeCategoryId]
             ? categories[activeCategoryId]
             : {
-                title: '',
-                image: `${window.location.protocol}//${
-                    window.location.hostname
-                    }:${window.location.port}/assets/images/default-sidebar.jpg`
-            }
+                  title: '',
+                  image: `${window.location.protocol}//${
+                      window.location.hostname
+                  }:${window.location.port}/assets/images/default-sidebar.jpg`
+              }
 
         let { activePanel } = this.state
         return (
@@ -82,22 +82,22 @@ class CategoryPage extends Component {
                 </div>
                 <div className={css(styles.list)}>
                     {activePanel === 'posts' &&
-                    Object.values(articles)
-                        .filter(
-                            article =>
-                                article.categoryId === activeCategoryId
-                        )
-                        .map(article => (
-                            <Article
-                                key={article.id}
-                                article={article}
-                                category={categories[article.categoryId]}
-                            />
-                        ))}
+                        Object.values(articles)
+                            .filter(
+                                article =>
+                                    article.categoryId === activeCategoryId
+                            )
+                            .map(article => (
+                                <Article
+                                    key={article.id}
+                                    article={article}
+                                    category={categories[article.categoryId]}
+                                />
+                            ))}
                     {activePanel === 'categories' &&
-                    Object.values(categories).map(category => (
-                        <Category key={category.id} category={category} />
-                    ))}
+                        Object.values(categories).map(category => (
+                            <Category key={category.id} category={category} />
+                        ))}
                 </div>
                 <DisqusCount />
             </Page>
@@ -167,4 +167,3 @@ let styles = StyleSheet.create({
         justifyContent: 'space-between'
     }
 })
-

@@ -4,13 +4,13 @@ import { StyleSheet, css } from 'aphrodite'
 import { Link } from 'react-router-dom'
 
 let Sidebar = ({
-                   title,
-                   subtitle,
-                   description,
-                   sidebarImage,
-                   menuVisible,
-                   showLinks
-               }) => (
+    title,
+    subtitle,
+    description,
+    sidebarImage,
+    menuVisible,
+    showLinks
+}) => (
     <aside
         className={css(styles.sidebar, menuVisible && styles.sidebarNarrow)}
         style={{ backgroundImage: `url(${sidebarImage})` }}

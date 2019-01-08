@@ -11,7 +11,7 @@ let Footer = ({ article, category, articles, menuVisible }) => (
                 <img
                     src={`${window.location.protocol}//${
                         window.location.hostname
-                        }:${window.location.port}/assets/images/profile-1.jpg`}
+                    }:${window.location.port}/assets/images/profile-1.jpg`}
                     className={css(styles.profile)}
                     alt="user-image"
                 />

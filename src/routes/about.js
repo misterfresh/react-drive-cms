@@ -11,14 +11,18 @@ let About = () => (
         description="An easy way to publish articles directly from Google Drive"
         sidebarImage={`${window.location.protocol}//${
             window.location.hostname
-            }:${window.location.port}${conf.root ? ('/' + conf.root) : ''}/assets/images/default-about.jpg`}
+        }:${window.location.port}${
+            conf.root ? '/' + conf.root : ''
+        }/assets/images/default-about.jpg`}
         showLinks={true}
     >
         <div className={css(styles.content)}>
             <img
                 src={`${window.location.protocol}//${
                     window.location.hostname
-                    }:${window.location.port}${conf.root ? ('/' + conf.root) : ''}/assets/images/react_logo.png`}
+                }:${window.location.port}${
+                    conf.root ? '/' + conf.root : ''
+                }/assets/images/react_logo.png`}
                 className={css(styles.image)}
             />
             <div className={css(styles.info)}>

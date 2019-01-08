@@ -39,7 +39,9 @@ class Home extends Component {
                 description="Publish articles directly from Google Drive to your website."
                 sidebarImage={`${window.location.protocol}//${
                     window.location.hostname
-                    }:${window.location.port}${conf.root ? ('/' + conf.root) : ''}/assets/images/default-sidebar.jpg`}
+                }:${window.location.port}${
+                    conf.root ? '/' + conf.root : ''
+                }/assets/images/default-sidebar.jpg`}
                 showLinks={true}
             >
                 <div className={css(styles.subNav)}>

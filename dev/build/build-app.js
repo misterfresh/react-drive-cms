@@ -29,24 +29,22 @@ conf.exclude = 'node_modules/**'
 conf.plugins[moduleResolverIndex][1]['alias'] = {
     ...conf.plugins[moduleResolverIndex][1]['alias'],
     ...dependencies,
-    'conf': './assets/build/conf.js'
+    conf: './assets/build/conf.js'
 }
 
 let index_prod = fs.readFileSync(
     path.join(process.cwd(), 'assets/html/index_prod.html'),
     'utf-8'
 )
-if(projectRoot){
-    index_prod = index_prod.replace(/\/assets\//g, `${projectRoot}assets/`).replace('/src/', `${projectRoot}src/`)
+if (projectRoot) {
+    index_prod = index_prod
+        .replace(/\/assets\//g, `${projectRoot}assets/`)
+        .replace('/src/', `${projectRoot}src/`)
 }
 fs.copyFileSync(
     path.join(
         process.cwd(),
-        `assets/html/404_${
-            projectRoot
-                ? 'with_root'
-                : 'no_root'
-            }.html`
+        `assets/html/404_${projectRoot ? 'with_root' : 'no_root'}.html`
     ),
     path.join(process.cwd(), '404.html')
 )
@@ -80,17 +78,31 @@ rollup
                     path.join(process.cwd(), 'assets/build/index_prod.html'),
                     index_prod.replace('<VERSION_HASH>', hash),
                     (err, res) => {
-                        if(err){
+                        if (err) {
                             console.log(err)
+                        } else {
+                            fs.copyFile(
+                                path.join(
+                                    process.cwd(),
+                                    'assets/build/index_prod.html'
+                                ),
+                                path.join(process.cwd(), 'index.html'),
+                                (err, res) => {
+                                    if (err) {
+                                        console.log(err)
+                                    }
+                                }
+                            )
                         }
                     }
                 )
+
                 code = Terser.minify(code).code
                 return fs.writeFile(
                     path.join(process.cwd(), `assets/build/app.min.${hash}.js`),
                     code,
                     (err, res) => {
-                        if(err){
+                        if (err) {
                             console.log(err)
                         } else {
                             console.log('Build complete.')

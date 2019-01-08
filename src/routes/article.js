@@ -71,7 +71,7 @@ class Article extends Component {
             typeof articles[activeArticleId] !== 'undefined' &&
             typeof texts[activeArticleId] !== 'undefined' &&
             typeof categories[articles[activeArticleId].categoryId] !==
-            'undefined'
+                'undefined'
         ) {
             activeArticle = articles[activeArticleId]
             activeText = texts[activeArticleId]
@@ -329,4 +329,3 @@ let styles = StyleSheet.create({
         borderRadius: '0.3rem'
     }
 })
-

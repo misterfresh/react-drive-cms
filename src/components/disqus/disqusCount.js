@@ -44,4 +44,3 @@ export default class DisqusCount extends Component {
         return <span id="disqus-comments-count" />
     }
 }
-;
