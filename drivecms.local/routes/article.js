@@ -9,9 +9,9 @@ import { getLocation } from '../modules/route/selectors.js'
 import * as categoryActions from '../modules/category/actionCreators.js'
 import * as articleActions from '../modules/article/actionCreators.js'
 
-import Menu from '/components/layout/menu.js'
-import blocks from '/styles/blocks.js'
-import Footer from '/components/layout/footer.js'
+import Menu from '../components/layout/menu.js'
+import blocks from '../styles/blocks.js'
+import Footer from '../components/layout/footer.js'
 
 class Article extends Component {
     static readyOnActions(dispatch, activeArticleId) {
