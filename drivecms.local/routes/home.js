@@ -35,7 +35,7 @@ class Home extends PureComponent {
                 title="Cats"
                 subtitle="React Drive CMS Demo"
                 description="Publish articles directly from Google Drive to your website."
-                sidebarImage='../assets/images/default-sidebar.jpg'
+                sidebarImage='./../assets/images/default-sidebar.jpg'
                 showLinks=${true}
             >
                 <div className=${css(styles.subNav)}>

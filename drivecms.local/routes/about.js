@@ -8,7 +8,7 @@ let About = () => html`
         title="About"
         subtitle="React Drive CMS Demo"
         description="An easy way to publish articles directly from Google Drive"
-        sidebarImage="../assets/images/default-about.jpg"
+        sidebarImage="./../assets/images/default-about.jpg"
         showLinks=${true}
     >
         <div className=${css(styles.content)}>
