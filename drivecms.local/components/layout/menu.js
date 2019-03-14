@@ -41,7 +41,7 @@ class Menu extends Component {
             >
                 <ul className=${css(styles.list)}>
                     <li className=${css(styles.item)}>
-                        <i className=${'icon-home ' + css(styles.icon)} />
+                        <i className=${'fas fa-home ' + css(styles.icon)} />
                         <${Link}
                             to="/"
                             title="Home"
@@ -51,7 +51,7 @@ class Menu extends Component {
                         <//>
                     </li>
                     <li className=${css(styles.item)}>
-                        <i className=${'icon-user ' + css(styles.icon)} />
+                        <i className=${'fas fa-user ' + css(styles.icon)} />
                         <${Link}
                             to="/about"
                             title="About"
@@ -61,7 +61,7 @@ class Menu extends Component {
                         <//>
                     </li>
                     <li className=${css(styles.item)}>
-                        <i className=${'icon-paper-plane ' + css(styles.icon)} />
+                        <i className=${'fas fa-paper-plane ' + css(styles.icon)} />
                         <${Link}
                             to="/contact"
                             title="Contact"
@@ -77,7 +77,7 @@ class Menu extends Component {
                         <li key=${category.id}>
                             <i
                                 className=${
-                                    'icon-right-open ' + css(styles.icon)
+                                    'fas fa-right-open ' + css(styles.icon)
                                 }
                             />
                             <button
