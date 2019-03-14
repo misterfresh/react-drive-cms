@@ -10,8 +10,7 @@ import Page from '../components/layout/page.js'
 import input from '../styles/input.js'
 import buttons from '../styles/buttons.js'
 import Mail from '../lib/mail.js'
-import conf from '../conf.js'
-import resolveAsset from '../utils/resolveAsset'
+import resolveAsset from '../utils/resolveAsset.js'
 
 class Contact extends Component {
     constructor(props) {
