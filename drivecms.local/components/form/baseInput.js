@@ -1,7 +1,7 @@
-import { html, Component } from '/react.js'
-import debounce from '/lodash.debounce.js'
-import uuid from '/utils/uuid.js'
-import capitalize from '/utils/capitalize.js'
+import { html, Component } from '../../react.js'
+import debounce from '../../lodash.debounce.js'
+import uuid from '../../utils/uuid.js'
+import capitalize from '../../utils/capitalize.js'
 
 class BaseInput extends Component {
     constructor(props) {

@@ -1,6 +1,6 @@
 import { REQUEST_CATEGORIES, RECEIVE_CATEGORIES } from './actionTypes.js'
 import { shouldFetchCategories } from './selectors.js'
-import Drive from '/lib/drive.js'
+import Drive from '../../lib/drive.js'
 
 export function fetchCategoriesIfNeeded() {
     return (dispatch, getState) => {

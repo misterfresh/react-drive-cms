@@ -1,16 +1,16 @@
-import {html, PureComponent} from '/react.js'
-import { StyleSheet, css } from '/aphrodite.js'
-import { connect } from '/react-redux.js'
-import { bindActionCreators } from '/redux.js'
+import {html, PureComponent} from '../react.js'
+import { StyleSheet, css } from '../aphrodite.js'
+import { connect } from '../react-redux.js'
+import { bindActionCreators } from '../redux.js'
 
-import { getLocation } from '/modules/route/selectors.js'
+import { getLocation } from '../modules/route/selectors.js'
 
-import Page from '/components/layout/page.js'
-import DisqusCount from '/components/disqus/disqusCount.js'
-import Article from '/components/blocks/article.js'
-import Category from '/components/blocks/category.js'
-import blocks from '/styles/blocks.js'
-import conf from '/conf.js'
+import Page from '../components/layout/page.js'
+import DisqusCount from '../components/disqus/disqusCount.js'
+import Article from '../components/blocks/article.js'
+import Category from '../components/blocks/category.js'
+import blocks from '../styles/blocks.js'
+import conf from '../conf.js'
 
 class Home extends PureComponent {
     constructor() {

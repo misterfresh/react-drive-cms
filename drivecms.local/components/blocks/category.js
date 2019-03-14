@@ -1,6 +1,6 @@
-import {html} from '/react.js'
-import { StyleSheet, css } from '/aphrodite.js'
-import { Link } from '/react-router-dom.js'
+import {html} from '../../react.js'
+import { StyleSheet, css } from '../../aphrodite.js'
+import { Link } from '../../react-router-dom.js'
 
 let Category = ({ category }) => html`
     <div

@@ -1,5 +1,5 @@
-import {html, Component} from '/react.js'
-import { Helmet } from '/react-helmet.js'
+import {html, Component} from '../../../react.js'
+import { Helmet } from '../../../react-helmet.js'
 
 const NoMatch = () => html`
     <div>

@@ -1,5 +1,5 @@
-import { html, Component } from '/react.js'
-import conf from '/conf.js'
+import { html, Component } from '../../react.js'
+import conf from '../../conf.js'
 
 export default class DisqusCount extends Component {
     constructor(props) {

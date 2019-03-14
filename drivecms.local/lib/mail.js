@@ -1,6 +1,6 @@
 import Api from './api.js'
-import conf from '/conf.js'
-import jsonpCall from '/utils/jsonpCall.js'
+import conf from '../conf.js'
+import jsonpCall from '../utils/jsonpCall.js'
 
 class Mail extends Api {
     constructor() {

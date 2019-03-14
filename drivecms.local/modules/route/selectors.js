@@ -1,4 +1,4 @@
-import { matchPath } from '/react-router-dom.js'
+import { matchPath } from '../../react-router-dom.js'
 
 export const getLocation = state => state.route.location
 

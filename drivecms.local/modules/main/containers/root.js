@@ -1,11 +1,11 @@
-import {html, PureComponent} from '/react.js'
-import { Provider } from '/react-redux.js'
-import ConnectedRouter from '/modules/route/ConnectedRouter.js'
-import { renderRoutes } from '/react-router-dom.js'
-import { css } from '/aphrodite.js'
-import routes from '/routes/routes.js'
+import {html, PureComponent} from '../../../react.js'
+import { Provider } from '../../../react-redux.js'
+import ConnectedRouter from '../../../modules/route/ConnectedRouter.js'
+import { renderRoutes } from '../../../react-router-dom.js'
+import { css } from '../../../aphrodite.js'
+import routes from '../../../routes/routes.js'
 
-import blocks from '/styles/blocks.js'
+import blocks from '../../../styles/blocks.js'
 
 class Root extends PureComponent {
     render({ store, history }){

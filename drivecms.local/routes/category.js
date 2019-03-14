@@ -1,16 +1,15 @@
-import {html, Component} from '/react.js'
-import { StyleSheet, css } from '/aphrodite.js'
-import { Link } from '/react-router-dom.js'
+import {html, Component} from '../react.js'
+import { StyleSheet, css } from '../aphrodite.js'
 
-import { connect } from '/react-redux.js'
-import { bindActionCreators } from '/redux.js'
+import { connect } from '../react-redux.js'
+import { bindActionCreators } from '../redux.js'
 
-import { getLocation } from '/modules/route/selectors.js'
+import { getLocation } from '../modules/route/selectors.js'
 
-import Page from '/components/layout/page.js'
-import DisqusCount from '/components/disqus/disqusCount.js'
-import Article from '/components/blocks/article.js'
-import Category from '/components/blocks/category.js'
+import Page from '../components/layout/page.js'
+import DisqusCount from '../components/disqus/disqusCount.js'
+import Article from '../components/blocks/article.js'
+import Category from '../components/blocks/category.js'
 
 class CategoryPage extends Component {
     constructor() {

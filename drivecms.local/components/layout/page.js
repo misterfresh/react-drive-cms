@@ -1,14 +1,14 @@
-import {html, PureComponent} from '/react.js'
-import { StyleSheet, css } from '/aphrodite.js'
-import { connect } from '/react-redux.js'
-import { bindActionCreators } from '/redux.js'
-import { Helmet } from '/react-helmet.js'
-import { getLocation } from '/modules/route/selectors.js'
-import * as categoryActions from '/modules/category/actionCreators.js'
+import {html, PureComponent} from '../../react.js'
+import { StyleSheet, css } from '../../aphrodite.js'
+import { connect } from '../../react-redux.js'
+import { bindActionCreators } from '../../redux.js'
+import { Helmet } from '../../react-helmet.js'
+import { getLocation } from '../../modules/route/selectors.js'
+import * as categoryActions from '../../modules/category/actionCreators.js'
 
-import Menu from '/components/layout/menu.js'
-import Sidebar from '/components/layout/sidebar.js'
-import blocks from '/styles/blocks.js'
+import Menu from '../../components/layout/menu.js'
+import Sidebar from '../../components/layout/sidebar.js'
+import blocks from '../../styles/blocks.js'
 
 class Page extends PureComponent {
     static readyOnActions(dispatch) {

@@ -1,6 +1,5 @@
-import {html, PureComponent} from '/react.js'
-import { StyleSheet, css } from '/aphrodite.js'
-import { Link } from '/react-router-dom.js'
+import {html, PureComponent} from '../../react.js'
+import { StyleSheet, css } from '../../aphrodite.js'
 
 class Sidebar extends PureComponent {
     render({

@@ -1,16 +1,13 @@
-import {html, Component} from '/react.js'
-import { StyleSheet, css } from '/aphrodite.js'
-import { Link } from '/react-router-dom.js'
+import {html, Component} from '../react.js'
+import { StyleSheet, css } from '../aphrodite.js'
+import { Helmet } from '../react-helmet.js'
 
-import { Helmet } from '/react-helmet.js'
+import { bindActionCreators } from '../redux.js'
+import { connect } from '../react-redux.js'
 
-import { bindActionCreators } from '/redux.js'
-import { connect } from '/react-redux.js'
-
-import { getLocation } from '/modules/route/selectors.js'
-import * as categoryActions from '/modules/category/actionCreators.js'
-import * as articleActions from '/modules/article/actionCreators.js'
-import DisqusThread from '/components/disqus/disqusThread.js'
+import { getLocation } from '../modules/route/selectors.js'
+import * as categoryActions from '../modules/category/actionCreators.js'
+import * as articleActions from '../modules/article/actionCreators.js'
 
 import Menu from '/components/layout/menu.js'
 import blocks from '/styles/blocks.js'

@@ -1,4 +1,4 @@
-import { StyleSheet } from '/aphrodite.js'
+import { StyleSheet } from '../aphrodite.js'
 
 let buttons = StyleSheet.create({
     base: {

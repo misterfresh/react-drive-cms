@@ -1,8 +1,8 @@
-import {html, Component} from '/react.js'
-import { StyleSheet, css } from '/aphrodite.js'
-import { Link } from '/react-router-dom.js'
-import Page from '/components/layout/page.js'
-import conf from '/conf.js'
+import {html, Component} from '../react.js'
+import { StyleSheet, css } from '../aphrodite.js'
+import { Link } from '../react-router-dom.js'
+import Page from '../components/layout/page.js'
+import conf from '../conf.js'
 
 let About = () => html`
     <${Page}

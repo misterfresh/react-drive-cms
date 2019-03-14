@@ -1,5 +1,5 @@
 import { REQUEST_ARTICLE, RECEIVE_ARTICLE } from './actionTypes.js'
-import { RECEIVE_CATEGORIES } from '/modules/category/actionTypes.js'
+import { RECEIVE_CATEGORIES } from '../../modules/category/actionTypes.js'
 
 export default function article(state = initialState, action) {
     switch (action.type) {

@@ -1,6 +1,6 @@
-import {html, Component} from '/react.js'
-import PropTypes from '/prop-types.js'
-import { Router } from '/react-router-dom.js'
+import {html, Component} from '../../react.js'
+import PropTypes from '../../prop-types.js'
+import { Router } from '../../react-router-dom.js'
 import { LOCATION_CHANGE } from './actionTypes.js'
 
 class ConnectedRouter extends Component {

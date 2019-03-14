@@ -1,7 +1,7 @@
-import {html, PureComponent} from '/react.js'
-import { StyleSheet, css } from '/aphrodite.js'
-import { Link } from '/react-router-dom.js'
-import conf from '/conf.js'
+import {html, PureComponent} from '../../react.js'
+import { StyleSheet, css } from '../../aphrodite.js'
+import { Link } from '../../react-router-dom.js'
+import conf from '../../conf.js'
 
 class Footer extends PureComponent {
     render({ article, category, articles, menuVisible }){

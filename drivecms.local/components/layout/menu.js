@@ -1,8 +1,8 @@
-import {html, Component} from '/react.js'
-import { StyleSheet, css } from '/aphrodite.js'
-import { Link } from '/react-router-dom.js'
-import { connect } from '/react-redux.js'
-import { bindActionCreators } from '/redux.js'
+import {html, Component} from '../../react.js'
+import { StyleSheet, css } from '../../aphrodite.js'
+import { Link } from '../../react-router-dom.js'
+import { connect } from '../../react-redux.js'
+import { bindActionCreators } from '../../redux.js'
 
 class Menu extends Component {
     constructor() {
