@@ -2,27 +2,19 @@ import {html, Component} from '../react.js'
 import { StyleSheet, css } from '../aphrodite.js'
 import { Link } from '../react-router-dom.js'
 import Page from '../components/layout/page.js'
-import conf from '../conf.js'
+import resolveAsset from '../utils/resolveAsset'
 
 let About = () => html`
     <${Page}
         title="About"
         subtitle="React Drive CMS Demo"
         description="An easy way to publish articles directly from Google Drive"
-        sidebarImage=${`${window.location.protocol}//${
-            window.location.hostname
-        }:${window.location.port}${
-            conf.root ? ('/' + conf.root) : ''
-        }/assets/images/default-about.jpg`}
+        sidebarImage=${resolveAsset('/assets/images/default-about.jpg')}
         showLinks=${true}
     >
         <div className=${css(styles.content)}>
             <img
-                src=${`${window.location.protocol}//${
-                    window.location.hostname
-                }:${window.location.port}${
-                    conf.root ? ('/' + conf.root) : ''
-                }/assets/images/react_logo.png`}
+                src=${resolveAsset('/assets/react_logo.png')}
                 className=${css(styles.image)}
             />
             <div className=${css(styles.info)}>

@@ -1,7 +1,7 @@
 import {html, PureComponent} from '../../react.js'
 import { StyleSheet, css } from '../../aphrodite.js'
 import { Link } from '../../react-router-dom.js'
-import conf from '../../conf.js'
+import resolveAsset from '../../utils/resolveAsset'
 
 class Footer extends PureComponent {
     render({ article, category, articles, menuVisible }){
@@ -10,11 +10,7 @@ class Footer extends PureComponent {
         <div className=${css(styles.footerTop, menuVisible && styles.topNarrow)}>
             <${Link} to="/about" title="About" className=${css(styles.profileLink)}>
                 <img
-                    src=${`${window.location.protocol}//${
-            window.location.hostname
-            }:${window.location.port}${
-            conf.root ? '/' + conf.root : ''
-            }/assets/images/profile-1.jpg`}
+                    src=${resolveAsset('/assets/images/profile-1.jpg')}
                     className=${css(styles.profile)}
                     alt="user-image"
                 />
