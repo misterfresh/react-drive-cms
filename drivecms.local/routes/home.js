@@ -10,6 +10,7 @@ import DisqusCount from '../components/disqus/disqusCount.js'
 import Article from '../components/blocks/article.js'
 import Category from '../components/blocks/category.js'
 import blocks from '../styles/blocks.js'
+import conf from '../conf.js'
 
 class Home extends PureComponent {
     constructor() {
@@ -35,7 +36,11 @@ class Home extends PureComponent {
                 title="Cats"
                 subtitle="React Drive CMS Demo"
                 description="Publish articles directly from Google Drive to your website."
-                sidebarImage='./../assets/images/default-sidebar.jpg'
+                sidebarImage=${`${window.location.protocol}//${
+                    window.location.hostname
+                }:${window.location.port}${
+                    conf.root ? ('/' + conf.root) : ''
+                }/assets/images/default-sidebar.jpg`}
                 showLinks=${true}
             >
                 <div className=${css(styles.subNav)}>
