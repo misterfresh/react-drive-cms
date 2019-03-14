@@ -1,5 +1,5 @@
 import Api from './api.js'
-import conf from '../../conf.js'
+import conf from '../conf.js'
 
 class Drive extends Api {
     constructor() {
