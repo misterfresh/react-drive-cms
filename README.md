@@ -24,7 +24,7 @@ This will create a new "Update" button with which you can automatically update t
 3) In order for the contact form to work, publish the following script as a Google Web App:
 https://gist.github.com/misterfresh/b69d29a97cf415980be2  . In your "Visitors" Google spreadsheet, go to Tools>Script Editor. You can create a free SendGrid account and paste your SendGrid API key in the script. Save the script and click on Publish>Deploy as Web App. .
 
-4) Fill in the correct values in ./conf.json :
+4) Fill in the correct values in ./conf.js :
     - "dashboardId" is the id of the "Dashboard" Google spreadsheet.
     - "sendContactMessageUrlId" is the id of the Google Web App script that does the email forwarding
     - "shortname" is the website's Disqus identifier
@@ -34,9 +34,10 @@ https://gist.github.com/misterfresh/b69d29a97cf415980be2  . In your "Visitors" G
 
 That's it!
 
-### How to customize:
-1. Install dependencies ````npm install````
-2. Start dev server ````npm run dev````
-3. Edit source code in /src folder
-4. Build the project ````npm run build````
-5. Check if the compiled project works  ````npm run local````
+### How to customize, no tools required:
+1. [Add the repo folder as Sources overrides in Chrome DevTools( how to ) ](https://medium.com/@jmatix/using-chrome-as-a-local-web-server-af04baffd581)
+2. Open page [chrome://net-internals/#hsts](chrome://net-internals/#hsts) in chrome and add "drivecms.local" as HSTS domain
+3. You should now be able to open [http://drivecms.local/](http://drivecms.local/) in Chrome
+4. Edit source code in "drivecms.local" folder
+5. No need to build or compile, just refresh the [http://drivecms.local/](http://drivecms.local/) page to view changes
+
