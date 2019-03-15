@@ -1,5 +1,5 @@
 # React Drive CMS
-Publish articles directly from Google Drive to your blog with React JS.
+Publish articles directly from Google Drive to your blog with React JS. Simple setup with no transpiling.
 
 Live demo here: 
 http://misterfresh.github.io/react-drive-cms/
@@ -36,7 +36,7 @@ That's it!
 
 ### How to customize, no tools required:
 1. [Add the repo folder as Sources overrides in Chrome DevTools( how to ) ](https://medium.com/@jmatix/using-chrome-as-a-local-web-server-af04baffd581)
-2. Open page [chrome://net-internals/#hsts](chrome://net-internals/#hsts) in chrome and add "drivecms.local" as HSTS domain
+2. Open page "[chrome://net-internals/#hsts](chrome://net-internals/#hsts)" in Chrome and add "drivecms.local" as HSTS domain
 3. You should now be able to open [http://drivecms.local/](http://drivecms.local/) in Chrome
 4. Edit source code in "drivecms.local" folder
 5. No need to build or compile, just refresh the [http://drivecms.local/](http://drivecms.local/) page to view changes
