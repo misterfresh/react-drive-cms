@@ -21,7 +21,7 @@ class Home extends PureComponent {
         }
     }
 
-    setActivePanel() {
+    setActivePanel(event) {
         let panel = event.target.dataset.panel
         this.setState({
             activePanel: panel
