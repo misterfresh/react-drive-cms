@@ -5,7 +5,7 @@ export default function resolveAsset(uri){
         window.location.hostname
         }:${window.location.port}`
 
-    const root = conf.root ? ('/' + conf.root) : ''
+    const root = (conf.root && !window.location.origin.includes(conf.local)) ? ('/' + conf.root) : ''
     const local = window.location.origin.includes(conf.local)  ? '' : ('/' + conf.local)
 
     return base + root + local + uri

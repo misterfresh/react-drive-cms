@@ -77,7 +77,7 @@ class Menu extends Component {
                         <li key=${category.id}>
                             <i
                                 className=${
-                                    'fas fa-right-open ' + css(styles.icon)
+                                    'fas fa-angle-right ' + css(styles.icon)
                                 }
                             />
                             <button
