@@ -11,7 +11,7 @@ class Footer extends PureComponent {
         <div className=${css(styles.footerTop, menuVisible && styles.topNarrow)}>
             <${Link} to="/about" title="About" className=${css(styles.profileLink)}>
                 <img
-                    src=${resolveAsset('/assets/images/profile-1.jpg')}
+                    src=${resolveAsset('/assets/profile-1.jpg')}
                     className=${css(styles.profile)}
                     alt="user-image"
                 />

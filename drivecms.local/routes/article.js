@@ -12,6 +12,7 @@ import * as articleActions from '../modules/article/actionCreators.js'
 import Menu from '../components/layout/menu.js'
 import blocks from '../styles/blocks.js'
 import Footer from '../components/layout/footer.js'
+import DisqusThread from '../components/disqus/disqusThread.js'
 
 class Article extends Component {
     static readyOnActions(dispatch, activeArticleId) {
@@ -131,7 +132,7 @@ class Article extends Component {
                             className=${css(styles.text)}
                             dangerouslySetInnerHTML=${{ __html: activeText }}
                         />
-                        <DisqusThread
+                        <${DisqusThread}
                             id=${activeArticle.id}
                             title=${activeArticle.title}
                         />
