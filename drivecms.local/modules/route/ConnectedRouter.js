@@ -4,17 +4,13 @@ import { Router } from '../../react-router-dom.js'
 import { LOCATION_CHANGE } from './actionTypes.js'
 
 class ConnectedRouter extends Component {
-    static propTypes = {
-        store: PropTypes.object,
-        history: PropTypes.object,
-        children: PropTypes.node
+
+    constructor(props){
+        super(props)
+        this.handleLocationChange = this.handleLocationChange.bind(this)
     }
 
-    static contextTypes = {
-        store: PropTypes.object
-    }
-
-    handleLocationChange = location => {
+    handleLocationChange(location) {
         this.store.dispatch({
             type: LOCATION_CHANGE,
             location
@@ -39,6 +35,16 @@ class ConnectedRouter extends Component {
     render() {
         return html`<${Router} ...${this.props} />`
     }
+}
+
+ConnectedRouter.propTypes = {
+    store: PropTypes.object,
+    history: PropTypes.object,
+    children: PropTypes.node
+}
+
+ConnectedRouter.contextTypes = {
+    store: PropTypes.object
 }
 
 export default ConnectedRouter
