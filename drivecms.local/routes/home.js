@@ -10,7 +10,7 @@ import DisqusCount from '../components/disqus/disqusCount.js'
 import Article from '../components/blocks/article.js'
 import Category from '../components/blocks/category.js'
 import blocks from '../styles/blocks.js'
-import resolveAsset from '../utils/resolveAsset'
+import resolveAsset from '../utils/resolveAsset.js'
 
 class Home extends PureComponent {
     constructor() {

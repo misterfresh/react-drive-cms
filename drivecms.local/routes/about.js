@@ -2,7 +2,7 @@ import {html, Component} from '../react.js'
 import { StyleSheet, css } from '../aphrodite.js'
 import { Link } from '../react-router-dom.js'
 import Page from '../components/layout/page.js'
-import resolveAsset from '../utils/resolveAsset'
+import resolveAsset from '../utils/resolveAsset.js'
 
 let About = () => html`
     <${Page}
