@@ -47,7 +47,7 @@ class CategoryPage extends Component {
                   title: '',
                   image: `${window.location.protocol}//${
                       window.location.hostname
-                  }:${window.location.port}/assets/images/default-sidebar.jpg`
+                  }:${window.location.port}/assets/images/sidebar.jpg`
               }
 
         let { activePanel } = this.state
