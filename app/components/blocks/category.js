@@ -28,7 +28,7 @@ let Category = ({ category }) => html`
         .category-block:hover .title { 
             text-decoration: none;
             outline: 0;
-            color: #000;
+            color: #333337;;
             transition: all .4s;
             background: rgba(250,250,250,.5);
         }
