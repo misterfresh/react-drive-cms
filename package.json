@@ -1,0 +1,19 @@
+{
+  "scripts": {
+    "start": "node ./dev/server.js",
+    "format": "./node_modules/.bin/prettier --write --no-semi --tab-width 4 --single-quote \"{,!(node_modules|deps)/**/}*.js\""
+  },
+  "name": "react-drive-cms",
+  "version": "3.0.1",
+  "main": "app/app.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {},
+  "devDependencies": {
+    "prettier": "^2.0.5"
+  }
+}
