@@ -46,7 +46,7 @@ class CategoryPage extends Component {
             ? categories[activeCategoryId]
             : {
                   title: '',
-                  image: resolveAsset('/assets/images/default-sidebar.jpg'),
+                  image: resolveAsset('/assets/default-sidebar.jpg'),
               }
 
         let { activePanel } = this.state

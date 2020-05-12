@@ -1,35 +1,98 @@
 import { html } from '../../../deps/react.js'
-import { StyleSheet, css } from '../../../deps/aphrodite.js'
 import { Link } from '../../../deps/react-router-dom.js'
 
 let Article = ({ article, category }) => html`
-    <article className=${css(styles.article)}>
+    <style>
+        article {
+            padding: 30px 0;
+            display: block;
+            border-bottom: solid 1px #f5f5f5;
+        }
+        article .title {
+            text-decoration: none;
+            color: #333337;
+            font-size: 2.4rem;
+            margin-top: 0;
+            font-family: "Source Sans Pro",Helvetica,Arial,sans-serif;
+            font-weight: 700;
+            margin-bottom: 10px;
+            line-height: 1.1;
+            cursor: pointer;
+            background-color: transparent;
+            border: none;
+        }
+        article .title:hover {
+            color: #b6b6b6;
+        }
+        article p {
+            margin: 0 0 10px;
+            font-family: "Droid Serif",serif;
+            font-size: 1.6rem;
+        }
+        article p.description {
+             margin-bottom: 30px;
+        }
+        article p.meta {
+             color: #b6b6b6;
+        }
+        article p.meta .disqus-comment-count {
+            margin-right: 0.5rem;
+        }
+        article .category {
+            text-decoration: none;
+            cursor: pointer;
+            background-color: transparent;
+            outline: 0;
+            transition: all .4s;
+            color: #b6b6b6;
+            border-bottom: 1px solid #b6b6b6;
+        }
+        article .category:hover {
+            text-decoration: none;
+            cursor: pointer;
+            background-color: transparent;
+            color: #333337;
+            outline: 0;
+            transition: all .4s;
+            border-bottom: 1px solid #b6b6b6;
+        }
+        @media (min-width: 992px) {
+            article .title { 
+                font-size: 3.2rem;
+            }
+            article p { 
+                font-size: 1.8rem,
+            }
+        }
+    </style>
+    
+    <article>
         <h2>
             <${Link}
                 to=${article.uri}
                 title=${article.title}
-                className=${css(styles.title)}
+                class="title"
             >
                 ${article.title}
             <//>
         </h2>
-        <p className=${css(styles.p, styles.description)}>
+        <p class="description">
             ${article.subtitle}
         </p>
-        <p className=${css(styles.p, styles.meta)}>
+        <p class="meta">
             <span
                 title=${'Comments for ' + article.title}
                 data-disqus-url=${window.location.protocol +
                 window.location.hostname +
                 article.uri}
                 data-disqus-identifier=${article.id}
-                className=${'disqus-comment-count ' + css(styles.comments)}
+                class="disqus-comment-count"
             />
-            - Published in :
+             - Published in :
             <${Link}
                 title=${category.title}
                 to=${category.uri}
-                className=${css(styles.category)}
+                class="category"
             >
                 ${category.title}
             <//>
@@ -39,58 +102,3 @@ let Article = ({ article, category }) => html`
 
 export default Article
 
-let styles = StyleSheet.create({
-    article: {
-        padding: '30px 0',
-        display: 'block',
-        borderBottom: 'solid 1px #f5f5f5',
-    },
-    title: {
-        textDecoration: 'none',
-        color: '#333337',
-        fontSize: '2.4rem',
-        marginTop: 0,
-        fontFamily: '"Source Sans Pro",Helvetica,Arial,sans-serif',
-        fontWeight: 700,
-        marginBottom: '10px',
-        lineHeight: '1.1',
-        cursor: 'pointer',
-        backgroundColor: 'transparent',
-        border: 'none',
-        '@media (min-width: 992px)': { fontSize: '3.2rem' },
-        ':hover': { color: '#b6b6b6' },
-    },
-    p: {
-        margin: '0 0 10px',
-        fontFamily: '"Droid Serif",serif',
-        fontSize: '1.6rem',
-        '@media (min-width: 992px)': {
-            fontSize: '1.8rem',
-        },
-    },
-    description: {
-        marginBottom: '30px',
-    },
-    meta: {
-        color: '#b6b6b6',
-    },
-    comments: {},
-    category: {
-        textDecoration: 'none',
-        cursor: 'pointer',
-        backgroundColor: 'transparent',
-        outline: 0,
-        transition: 'all .4s',
-        color: '#b6b6b6',
-        borderBottom: '1px solid #b6b6b6',
-        ':hover': {
-            textDecoration: 'none',
-            cursor: 'pointer',
-            backgroundColor: 'transparent',
-            color: '#333337',
-            outline: 0,
-            transition: 'all .4s',
-            borderBottom: '1px solid #b6b6b6',
-        },
-    },
-})
