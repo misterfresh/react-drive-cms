@@ -14,23 +14,18 @@ http://misterfresh.github.io/react-drive-cms/
 
 ### How to use:
 
-1) In your Google Drive, create folders and files following the names and structure used here : 
-https://docs.google.com/folderview?id=0B0A_zASTMp9WU0NMYW9wXzVQWjg&usp=drivesdk
+1) Connecting your React App to your Google Drive : follow this detailed step-by-step guide: https://github.com/misterfresh/react-drive-cms/blob/master/GUIDE.md
 
-2) Add to the "Dashboard" sheet the following bound script:
-https://gist.github.com/misterfresh/e1c9cf0bb4c777221f84   . 
-This will create a new "Update" button with which you can automatically update the Dashboard file. Change the projectFolderName on line 9 in the Dashboard Script to the name of your drive folder if necessary. Publish the Dashboard sheet to the web via File>Publish to the Web.
+2) In order for the contact form to work, publish the following script as a Google Web App:
+https://gist.github.com/misterfresh/b69d29a97cf415980be2  . In your "Visitors" Google spreadsheet, go to Tools>Script Editor. You can create a free SendGrid account and paste your SendGrid API key in the script. Save the script and click on Publish>Deploy as Web App.
 
-3) In order for the contact form to work, publish the following script as a Google Web App:
-https://gist.github.com/misterfresh/b69d29a97cf415980be2  . In your "Visitors" Google spreadsheet, go to Tools>Script Editor. You can create a free SendGrid account and paste your SendGrid API key in the script. Save the script and click on Publish>Deploy as Web App. .
-
-4) Fill in the correct values in ./conf.js :
+3) Fill in the correct values in ./conf.js :
     - "dashboardId" is the id of the "Dashboard" Google spreadsheet.
     - "sendContactMessageUrlId" is the id of the Google Web App script that does the email forwarding
     - "shortname" is the website's Disqus identifier
     - "root" is an optional url parameter, that would be the name of the project on GitHub pages.
 
-5) Push to a "gh-pages" branch on GitHub to publish on GitHub Pages
+4) Push these changes to your forked repository on GitHub, go to your repo's Settings tab to publish it.
 
 That's it!
 
