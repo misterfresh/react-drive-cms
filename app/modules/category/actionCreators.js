@@ -1,8 +1,8 @@
 import { REQUEST_CATEGORIES, RECEIVE_CATEGORIES } from './actionTypes.js'
 import { shouldFetchCategories } from './selectors.js'
-import Drive from '../../lib/drive.js'
+import { Drive } from '../../lib/drive.js'
 
-export function fetchCategoriesIfNeeded() {
+export async function fetchCategoriesIfNeeded() {
     return (dispatch, getState) => {
         let state = getState()
 
@@ -12,15 +12,19 @@ export function fetchCategoriesIfNeeded() {
     }
 }
 
-export function fetchCategories(dispatch) {
+export async function fetchCategories(dispatch) {
     dispatch(requestCategories())
-    return Drive.getCategories()
-        .then((categories) => {
-            return dispatch(receiveCategories(categories))
-        })
-        .catch(function (error) {
-            console.log('code:', error.code, ' message:', error.message)
-        })
+    const [fetchCategoriesError, categories] = await Drive.getCategories()
+    if (fetchCategoriesError) {
+        console.log(
+            'code:',
+            fetchCategoriesError.code,
+            ' message:',
+            fetchCategoriesError.message
+        )
+        return
+    }
+    dispatch(receiveCategories(categories))
 }
 
 export function requestCategories() {

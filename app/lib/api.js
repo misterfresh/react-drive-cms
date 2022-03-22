@@ -1,11 +1,7 @@
-export default class Api {
-    constructor() {
-        this.call = this.call.bind(this)
-        this.get = this.get.bind(this)
-        this.post = this.post.bind(this)
-    }
+import { to } from '../utils/to.js'
 
-    call(
+export const Api = {
+    async call(
         url,
         options = {
             method: 'GET',
@@ -13,7 +9,7 @@ export default class Api {
             headers: {},
         }
     ) {
-        let { method, credentials, headers } = options
+        const { method, credentials, headers } = options
 
         if (!credentials) {
             options = { ...options, credentials: 'include' }
@@ -23,10 +19,10 @@ export default class Api {
             headers,
         })
 
-        return fetch(url, options)
-    }
+        return await to(fetch(url, options))
+    },
 
-    get(
+    async get(
         url,
         options = {
             method: 'GET',
@@ -34,9 +30,9 @@ export default class Api {
         }
     ) {
         return this.call(url, { ...options, method: 'GET' })
-    }
+    },
 
-    post(
+    async post(
         url,
         options = {
             method: 'POST',
@@ -44,5 +40,5 @@ export default class Api {
         }
     ) {
         return this.call(url, { ...options, method: 'POST' })
-    }
+    },
 }

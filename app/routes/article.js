@@ -1,329 +1,253 @@
-import { html, Component } from '../../deps/react.js'
+import { html, useState, useEffect } from '../../deps/react.js'
 import { StyleSheet, css } from '../../deps/aphrodite.js'
 import { Helmet } from '../../deps/react-helmet.js'
 
-import { bindActionCreators } from '../../deps/redux.js'
-import { connect } from '../../deps/react-redux.js'
-
-import { getLocation } from '../modules/route/selectors.js'
-import * as categoryActions from '../modules/category/actionCreators.js'
-import * as articleActions from '../modules/article/actionCreators.js'
-
-import Menu from '../components/layout/menu.js'
+import { Menu } from '../components/layout/menu.js'
 import blocks from '../styles/blocks.js'
-import Footer from '../components/layout/footer.js'
+import { Footer } from '../components/layout/footer.js'
 import DisqusThread from '../components/disqus/disqusThread.js'
+import { getPathParts } from '../utils/path.js'
 
-class Article extends Component {
-    static readyOnActions(dispatch, activeArticleId) {
-        return Promise.all([
-            dispatch(categoryActions.fetchCategoriesIfNeeded()),
-            dispatch(articleActions.fetchArticleIfNeeded(activeArticleId)),
-        ])
-    }
-
-    constructor() {
-        super()
-        this.toggleMenu = this.toggleMenu.bind(this)
-        this.state = {
-            menuVisible: !(
-                typeof window !== 'undefined' && window.innerWidth < 769
-            ),
-        }
-    }
-
-    componentDidMount() {
-        let { match } = this.props
-        let activeArticleId = match.params.articleId
-        Article.readyOnActions(this.props.dispatch, activeArticleId)
-    }
-
-    componentWillReceiveProps(nextProps) {
-        let { match } = this.props
-        let activeArticleId = match.params.articleId
-        if (nextProps.match.params.articleId !== activeArticleId) {
-            Article.readyOnActions(
-                this.props.dispatch,
-                nextProps.match.params.articleId
-            ).then((loaded) => {
-                let element = document.getElementById('article-header')
-                element.scrollIntoView()
-            })
-        }
-    }
-
-    toggleMenu() {
-        let { menuVisible } = this.state
-        this.setState(
-            {
-                menuVisible: !menuVisible,
-            },
-            (param) => param
-        )
-    }
-
-    render() {
-        let { texts, articles, categories, match } = this.props
-        let activeArticleId = match.params.articleId
-        let activeArticle = { title: '', id: activeArticleId },
-            activeText,
-            category = { title: '', uri: '/' }
-        if (
-            typeof articles[activeArticleId] !== 'undefined' &&
-            typeof texts[activeArticleId] !== 'undefined' &&
-            typeof categories[articles[activeArticleId].categoryId] !==
-                'undefined'
-        ) {
-            activeArticle = articles[activeArticleId]
-            activeText = texts[activeArticleId]
-            category = categories[activeArticle.categoryId]
-        }
-
-        let { menuVisible } = this.state
-
-        return html`
-            <div className=${css(blocks.wrapper, styles.page)}>
-                <${Helmet}
-                    title=${activeArticle.title}
-                    titleTemplate=${'%s - React Drive CMS'}
-                    meta=${[
-                        { 'char-set': 'utf-8' },
-                        { name: 'description', content: activeArticle.title },
-                    ]}
-                />
-                <button
-                    className=${css(styles.menuBurger)}
-                    onClick=${this.toggleMenu}
-                    id="menu-burger"
-                >
-                    <div className=${css(styles.bar)} />
-                    <div className=${css(styles.bar)} />
-                    <div className=${css(styles.bar)} />
-                </button>
-                <${Menu} menuVisible=${menuVisible} />
-                <main
-                    className=${css(
-                        blocks.wrapper,
-                        styles.main,
-                        menuVisible && styles.mainNarrow
-                    )}
-                >
-                    <header
-                        className=${css(styles.hero)}
-                        role="banner"
-                        style=${{
-                            backgroundImage: `url(${activeArticle.image})`,
-                        }}
-                        id="article-header"
-                    />
-                    <section
-                        className=${css(
-                            styles.content,
-                            menuVisible && styles.contentNarrow
-                        )}
-                    >
-                        <h1 id="article-title" className=${css(styles.title)}>
-                            ${activeArticle.title}
-                        </h1>
-                        <p className="{css(styles.p)}">
-                            ${activeArticle.subtitle}
-                        </p>
-                        <div
-                            className=${css(styles.text)}
-                            dangerouslySetInnerHTML=${{ __html: activeText }}
-                        />
-                        <${DisqusThread}
-                            id=${activeArticle.id}
-                            title=${activeArticle.title}
-                        />
-                    </section>
-                    <${Footer}
-                        article=${activeArticle}
-                        articles=${articles}
-                        category=${category}
-                        menuVisible=${menuVisible}
-                    />
-                </main>
-            </div>
-        `
-    }
-}
-
-function mapStateToProps(state) {
-    return {
-        location: getLocation(state),
-        articles: state.article.articles,
-        categories: state.category.categories,
-        texts: state.article.texts,
-    }
-}
-
-function mapDispatchToProps(dispatch) {
-    return Object.assign(
-        bindActionCreators(
-            {
-                ...categoryActions,
-            },
-            dispatch
-        ),
-        { dispatch }
+export const Article = ({ state, dispatch }) => {
+    const articles = state.articles
+    const categories = state.categories
+    const texts = state.texts
+    const activeArticleId = getPathParts()?.[1]
+    const activeArticle = articles?.[activeArticleId]
+    const activeText = texts?.[activeArticleId]
+    const category = categories?.[activeArticle?.categoryId]
+    const [menuVisible, setMenuVisible] = useState(
+        !(typeof window !== 'undefined' && window.innerWidth < 769)
     )
+    const toggleMenu = () => setMenuVisible(!menuVisible)
+
+    useEffect(async () => {
+        await fetchArticleIfNeeded(activeArticleId)
+        document.getElementById('article-header').scrollIntoView()
+    }, [activeArticleId])
+    useEffect(async () => {
+        await fetchCategoriesIfNeeded()
+    }, [categories])
+    return html` <style>
+            @keyframes fadein {
+                from {
+                    opacity: 0;
+                }
+                to {
+                    opacity: 1;
+                }
+            }
+
+            .hero {
+                position: relative;
+                display: block;
+                height: 15rem;
+                width: 100%;
+                background-position: center;
+                background-repeat: no-repeat;
+                background-size: cover;
+                overflow-x: hidden;
+                max-width: 100%;
+            }
+
+            .title {
+                padding-top: 20pt;
+                color: #000000;
+                font-size: 20pt;
+                padding-bottom: 6pt;
+                font-family: Arial;
+                line-height: 1.15;
+                page-break-after: avoid;
+                orphans: 2;
+                widows: 2;
+                text-align: left;
+                letter-spacing: -1pt;
+                font-weight: 700;
+                margin: 0.67em 0 10px;
+            }
+
+            p {
+                margin: 0;
+                padding-top: 0;
+                color: #666666;
+                font-size: 15pt;
+                padding-bottom: 16pt;
+                font-family: Arial;
+                line-height: 1.15;
+                page-break-after: avoid;
+                orphans: 2;
+                widows: 2;
+                text-align: left;
+            }
+
+            .page {
+                display: flex;
+                width: 100%;
+                justify-content: flex-end;
+                overflow-x: hidden;
+                max-width: 100%;
+            }
+
+            main {
+                opacity: 1;
+                width: 100%;
+                overflow-x: hidden;
+                display: block;
+                transition: width linear 750ms;
+                margin: 0;
+                padding: 0;
+                animation-name: fadein;
+                animation-duration: 1s, 1s;
+                animation-iteration-count: 1;
+                max-width: 100%;
+            }
+
+            .content: {
+                display: block;
+                width: 100%;
+                padding: 3rem 8%;
+                overflow-x: hidden;
+                max-width: 100%;
+            }
+
+            .content-narrow: {
+                display: block;
+                width: 100%;
+                padding: 3rem 8%;
+            }
+
+            @media (min-width: 768px) : {
+                .hero {
+                    height: 30rem;
+                }
+
+                .main-narrow {
+                    width: 60%;
+                }
+
+                .content {
+                    padding: 3rem 16%;
+                }
+
+                .content-narrow: {
+                    padding: 3rem 8%;
+                }
+            }
+
+            @media (min-width: 992px) : {
+                .main-narrow {
+                    width: 70%;
+                }
+
+                .content {
+                    padding: 3rem 18%;
+                }
+
+                .content-narrow: {
+                    padding: 3rem 12%;
+                }
+            }
+
+            @media (min-width: 1200px) : {
+                .main-narrow {
+                    width: 75%;
+                }
+
+                .content {
+                    padding: 3rem 24%;
+                }
+
+                .content-narrow: {
+                    padding: 3rem 20%;
+                }
+            }
+
+            .menu-burger {
+                position: fixed;
+                top: 1.5rem;
+                left: 1.5rem;
+                z-index: 15;
+                border-radius: 5px;
+                height: 4rem;
+                width: 4rem;
+                background: #333;
+                padding-top: 8px;
+                cursor: pointer;
+                border-bottom: 0 transparent;
+                box-shadow: #948b8b 2px 2px 10px;
+                color: #fff;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                outline: 0;
+                border: 0;
+            }
+
+            .menu-burger:hover {
+                color: #fff;
+                outline: 0;
+                background: #999;
+            }
+
+            .menu-burger:focus {
+                outline: 0;
+            }
+
+            .bar {
+                height: 0.5rem;
+                width: 2.8rem;
+                display: block;
+                margin: 0 6px 5px;
+                background: #fff;
+                border-radius: 0.3rem;
+            }
+        </style>
+        <div class="blocks-wrapper page">
+            <${Helmet}
+                title=${activeArticle.title}
+                titleTemplate=${'%s - React Drive CMS'}
+                meta=${[
+                    { 'char-set': 'utf-8' },
+                    { name: 'description', content: activeArticle.title },
+                ]}
+            />
+            <button class="menu-burger" onClick=${toggleMenu} id="menu-burger">
+                <div class="bar" />
+                <div class="bar" />
+                <div class="bar" />
+            </button>
+            <${Menu} menuVisible=${menuVisible} />
+            <main
+                class="blocks-wrapper main ${menuVisible ? 'main-narrow' : ''}"
+            >
+                <header
+                    class="hero"
+                    role="banner"
+                    style=${{
+                        backgroundImage: `url(${activeArticle.image})`,
+                    }}
+                    id="article-header"
+                />
+                <section class="content ${menuVisible ? 'content-narrow' : ''}">
+                    <h1 id="article-title" class="title">
+                        ${activeArticle.title}
+                    </h1>
+                    <p>${activeArticle.subtitle}</p>
+                    <div
+                        class="text"
+                        dangerouslySetInnerHTML=${{ __html: activeText }}
+                    />
+                    <${DisqusThread}
+                        id=${activeArticle.id}
+                        title=${activeArticle.title}
+                    />
+                </section>
+                <${Footer}
+                    article=${activeArticle}
+                    articles=${articles}
+                    category=${category}
+                    menuVisible=${menuVisible}
+                />
+            </main>
+        </div>`
 }
-
-export default connect(mapStateToProps, mapDispatchToProps)(Article)
-
-const opacityKeyframes = {
-    from: {
-        opacity: 0,
-    },
-
-    to: {
-        opacity: 1,
-    },
-}
-
-let styles = StyleSheet.create({
-    hero: {
-        position: 'relative',
-        display: 'block',
-        height: '15rem',
-        width: '100%',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat',
-        backgroundSize: 'cover',
-        '@media (min-width: 768px)': {
-            height: '30rem',
-        },
-        overflowX: 'hidden',
-        maxWidth: '100%',
-    },
-    title: {
-        paddingTop: '20pt',
-        color: '#000000',
-        fontSize: '20pt',
-        paddingBottom: '6pt',
-        fontFamily: '"Arial"',
-        lineHeight: '1.15',
-        pageBreakAfter: 'avoid',
-        orphans: 2,
-        widows: 2,
-        textAlign: 'left',
-        letterSpacing: '-1pt',
-        marginTop: '20px',
-        margin: '.67em 0',
-        fontWeight: 700,
-        marginBottom: '10px',
-    },
-    p: {
-        margin: 0,
-        paddingTop: '0pt',
-        color: '#666666',
-        fontSize: '15pt',
-        paddingBottom: '16pt',
-        fontFamily: '"Arial"',
-        lineHeight: '1.15',
-        pageBreakAfter: 'avoid',
-        orphans: 2,
-        widows: 2,
-        textAlign: 'left',
-    },
-    text: {},
-    page: {
-        display: 'flex',
-        width: '100%',
-        justifyContent: 'flex-end',
-        overflowX: 'hidden',
-        maxWidth: '100%',
-    },
-    main: {
-        opacity: 1,
-        width: '100%',
-        overflowX: 'hidden',
-        display: 'block',
-        transition: 'width linear 750ms',
-        margin: 0,
-        padding: 0,
-        animationName: [opacityKeyframes],
-        animationDuration: '1s, 1s',
-        animationIterationCount: 1,
-        maxWidth: '100%',
-    },
-    mainNarrow: {
-        '@media (min-width: 768px)': {
-            width: '60%',
-        },
-        '@media (min-width: 992px)': {
-            width: '70%',
-        },
-        '@media (min-width: 1200px)': {
-            width: '75%',
-        },
-    },
-    content: {
-        display: 'block',
-        width: '100%',
-        padding: '3rem 8%',
-        '@media (min-width: 768px)': {
-            padding: '3rem 16%',
-        },
-        '@media (min-width: 992px)': {
-            padding: '3rem 18%',
-        },
-        '@media (min-width: 1200px)': {
-            padding: '3rem 24%',
-        },
-        overflowX: 'hidden',
-        maxWidth: '100%',
-    },
-    contentNarrow: {
-        display: 'block',
-        width: '100%',
-        padding: '3rem 8%',
-        '@media (min-width: 768px)': {
-            padding: '3rem 8%',
-        },
-        '@media (min-width: 992px)': {
-            padding: '3rem 12%',
-        },
-        '@media (min-width: 1200px)': {
-            padding: '3rem 20%',
-        },
-    },
-
-    menuBurger: {
-        position: 'fixed',
-        top: '1.5rem',
-        left: '1.5rem',
-        zIndex: '15',
-        borderRadius: 5,
-        height: '4rem',
-        width: '4rem',
-        background: '#333',
-        paddingTop: 8,
-        cursor: 'pointer',
-        borderBottom: '0 transparent',
-        boxShadow: '#948b8b 2px 2px 10px',
-        color: '#fff',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        outline: 0,
-        border: 0,
-        ':hover': {
-            color: '#fff',
-            outline: 0,
-            background: '#999',
-        },
-        ':focus': {
-            outline: 0,
-        },
-    },
-    bar: {
-        height: '0.5rem',
-        width: '2.8rem',
-        display: 'block',
-        margin: '0 6px 5px',
-        background: '#fff',
-        borderRadius: '0.3rem',
-    },
-})

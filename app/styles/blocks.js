@@ -1,5 +1,3 @@
-import { StyleSheet } from '../../deps/aphrodite.js'
-
 const opacityKeyframes = {
     from: {
         opacity: 0,

@@ -1,22 +1,33 @@
-import { html, render } from './../deps/react.js'
-import { createBrowserHistory } from './../deps/history.js'
-import routerMiddleware from './modules/route/middleware.js'
-import Root from './modules/main/containers/root.js'
-import configureStore from './modules/main/store/configureStore.js'
+import { html, render, useReducer, useMemo } from '../deps/react.js'
+import { reducer, initialState } from './state.js'
 
-let initialState = {}
-const conf = window.appConf
+import { Article } from './routes/article.js'
+import { Category } from './routes/category.js'
 
-let history = createBrowserHistory(
-    conf.root
-        ? { basename: conf.root }
-        : {}
-)
+import { About } from './routes/about.js'
+import { Contact } from './routes/contact.js'
+import { Home } from './routes/home.js'
+import { getPathParts } from './utils/path.js'
 
-const store = configureStore(initialState, routerMiddleware(history))
+const App = () => {
+    const [state, dispatch] = useReducer(reducer, initialState)
 
-render(
-    html`<${Root} store=${store} history=${history} />`,
-    document.getElementById('app-mount'),
-    document.getElementById('app-mount').firstElementChild
-)
+    const pathParts = getPathParts()
+    const CurrentPage = useMemo(() => {
+        let Page = Home
+        if (pathParts[0] === 'about') {
+            Page = About
+        } else if (pathParts[0] === 'contact') {
+            Page = Contact
+        } else if (pathParts[0] === 'categories') {
+            Page = Category
+        } else if (pathParts[0] === 'articles') {
+            Page = Article
+        }
+        return Page
+    }, [pathParts])
+
+    return html`<${CurrentPage} state=${state} dispatch=${dispatch} />`
+}
+
+render(html`<${App} />`, document.getElementById('app-mount'))

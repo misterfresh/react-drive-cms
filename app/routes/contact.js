@@ -9,7 +9,7 @@ import BaseInput from '../components/form/baseInput.js'
 import Page from '../components/layout/page.js'
 import input from '../styles/input.js'
 import buttons from '../styles/buttons.js'
-import Mail from '../lib/mail.js'
+import { Mail } from '../lib/mail.js'
 import resolveAsset from '../utils/resolveAsset.js'
 
 class Contact extends Component {
@@ -46,7 +46,8 @@ class Contact extends Component {
             valid: false,
             sent: false,
         }
-        this.validateEmail = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/
+        this.validateEmail =
+            /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/
         this.updateFormProperty = this.updateFormProperty.bind(this)
         this.sendMessage = this.sendMessage.bind(this)
     }
