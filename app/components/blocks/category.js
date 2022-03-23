@@ -1,5 +1,5 @@
 import { html } from '../../../deps/react.js'
-import {avoidReload} from "../../utils/avoidReload.js";
+import { avoidReload } from '../../utils/avoidReload.js'
 
 export const Category = ({ category }) => html`
     <style>
@@ -55,4 +55,3 @@ export const Category = ({ category }) => html`
         <h2 class="title" title=${category.title}>${category.title}</h2>
     </a>
 `
-

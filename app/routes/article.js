@@ -1,10 +1,10 @@
 import { html, useState, useEffect } from '../../deps/react.js'
 import { Menu } from '../components/layout/menu.js'
-import {blocksStyles} from '../styles/blocks.js'
+import { blocksStyles } from '../styles/blocks.js'
 import { Footer } from '../components/layout/footer.js'
 import DisqusThread from '../components/disqus/disqusThread.js'
 import { getPathParts } from '../utils/path.js'
-import {MenuBurger} from "../components/layout/menuBurger.js";
+import { MenuBurger } from '../components/layout/menuBurger.js'
 
 export const Article = ({ state, dispatch }) => {
     const articles = state.articles
@@ -16,9 +16,10 @@ export const Article = ({ state, dispatch }) => {
     const category = categories?.[activeArticle?.categoryId]
 
     const menuVisible = state?.menuVisible
-    const toggleMenuVisible = () => dispatch({
-        type: 'TOGGLE_MENU_VISIBLE'
-    })
+    const toggleMenuVisible = () =>
+        dispatch({
+            type: 'TOGGLE_MENU_VISIBLE',
+        })
 
     useEffect(async () => {
         await fetchArticleIfNeeded(activeArticleId)
@@ -28,9 +29,7 @@ export const Article = ({ state, dispatch }) => {
         await fetchCategoriesIfNeeded()
     }, [categories])
     return html` <style>
-            ${blocksStyles}
-
-            .hero {
+            ${blocksStyles} .hero {
                 position: relative;
                 display: block;
                 height: 15rem;
@@ -153,7 +152,7 @@ export const Article = ({ state, dispatch }) => {
                     padding: 3rem 20%;
                 }
             }
-/*
+            /*
             .menu-burger {
                 position: fixed;
                 top: 1.5rem;

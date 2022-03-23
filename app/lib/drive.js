@@ -10,23 +10,27 @@ export const Drive = {
     isFetchingCategories: false,
 
     async getSpreadsheet(fileId) {
-        return await to(this.get(
-            `https://sheets.googleapis.com/v4/spreadsheets/${fileId}/values/Posts?alt=json&key=${GOOGLE_API_KEY}`,
-            {
-                credentials: 'omit',
-            }
-        ).then((response) => response.json()))
+        return await to(
+            this.get(
+                `https://sheets.googleapis.com/v4/spreadsheets/${fileId}/values/Posts?alt=json&key=${GOOGLE_API_KEY}`,
+                {
+                    credentials: 'omit',
+                }
+            ).then((response) => response.json())
+        )
     },
 
     async getDocument(fileId) {
-        return await to(this.get(
-            `https://docs.google.com/feeds/download/documents/export/Export?id=${fileId}&exportFormat=html`,
-            {
-                credentials: 'omit',
-            }
-        ).then((response) => {
-            return response.text()
-        }))
+        return await to(
+            this.get(
+                `https://docs.google.com/feeds/download/documents/export/Export?id=${fileId}&exportFormat=html`,
+                {
+                    credentials: 'omit',
+                }
+            ).then((response) => {
+                return response.text()
+            })
+        )
     },
 
     async getCategories(dashboardId) {
@@ -81,18 +85,20 @@ export const Drive = {
 
     async fetchCategories(dispatch) {
         const dashboardId = conf.dashboardId
-        if(this.isFetchingCategories) {
+        if (this.isFetchingCategories) {
             return ['fetching']
         }
         this.isFetchingCategories = true
         dispatch({
-            type: 'REQUEST_CATEGORIES'
+            type: 'REQUEST_CATEGORIES',
         })
-        const [getCategoriesError, response] = await this.getCategories(dashboardId)
-        if(getCategoriesError) {
+        const [getCategoriesError, response] = await this.getCategories(
+            dashboardId
+        )
+        if (getCategoriesError) {
             return [getCategoriesError]
         }
-        const {articles, categories} = response
+        const { articles, categories } = response
         dispatch({
             type: 'RECEIVE_CATEGORIES',
             articles,

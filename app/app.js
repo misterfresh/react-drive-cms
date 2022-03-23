@@ -1,4 +1,4 @@
-import { html, render, useReducer, useMemo } from '../deps/react.js'
+import { html, render, useReducer, useMemo, useEffect } from '../deps/react.js'
 import { reducer, initialState } from './state.js'
 
 import { Article } from './routes/article.js'
@@ -12,20 +12,35 @@ import { getPathParts } from './utils/path.js'
 const App = () => {
     const [state, dispatch] = useReducer(reducer, initialState)
 
-    const pathParts = getPathParts()
+    const pageName = state?.pageName
     const CurrentPage = useMemo(() => {
         let Page = Home
-        if (pathParts[0] === 'about') {
+        if (pageName === 'about') {
             Page = About
-        } else if (pathParts[0] === 'contact') {
+        } else if (pageName === 'contact') {
             Page = Contact
-        } else if (pathParts[0] === 'categories') {
+        } else if (pageName === 'categories') {
             Page = Category
-        } else if (pathParts[0] === 'articles') {
+        } else if (pageName === 'articles') {
             Page = Article
         }
         return Page
-    }, [pathParts])
+    }, [pageName])
+
+    useEffect(() => {
+        const updatePath = () => {
+            const parts = getPathParts()
+            dispatch({
+                type: 'URI_CHANGE',
+                pageName: parts[1],
+                activeItemId: parts[2],
+            })
+        }
+        window.addEventListener('popstate', updatePath)
+        return function cleanup() {
+            window.removeEventListener('popstate', updatePath)
+        }
+    }, [dispatch])
 
     return html`<${CurrentPage} state=${state} dispatch=${dispatch} />`
 }

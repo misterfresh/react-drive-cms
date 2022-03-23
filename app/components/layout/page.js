@@ -1,14 +1,15 @@
 import { html, useState, useEffect } from '../../../deps/react.js'
 import { Menu } from './menu.js'
 import { Sidebar } from './sidebar.js'
-import {buttonsStyles} from "../../styles/buttons.js";
-import {inputStyles} from "../../styles/input.js";
-import {blocksStyles} from '../../styles/blocks.js'
-import {MenuBurger} from "./menuBurger.js";
-import {Drive} from "../../lib/drive.js";
+import { buttonsStyles } from '../../styles/buttons.js'
+import { inputStyles } from '../../styles/input.js'
+import { blocksStyles } from '../../styles/blocks.js'
+import { MenuBurger } from './menuBurger.js'
+import { Drive } from '../../lib/drive.js'
 
 export const Page = ({
-    state, dispatch,
+    state,
+    dispatch,
     title,
     subtitle,
     description,
@@ -19,13 +20,14 @@ export const Page = ({
     const articles = state?.articles
     const categories = state?.categories
     const menuVisible = state?.menuVisible
-    const toggleMenuVisible = () => dispatch({
-        type: 'TOGGLE_MENU_VISIBLE'
-    })
+    const toggleMenuVisible = () =>
+        dispatch({
+            type: 'TOGGLE_MENU_VISIBLE',
+        })
 
     const isFetchingCategories = state?.isFetching?.categories
-    useEffect(async ()=> {
-        if(!isFetchingCategories && !Object.values(categories).length) {
+    useEffect(async () => {
+        if (!isFetchingCategories && !Object.values(categories).length) {
             await Drive.fetchCategories(dispatch)
         }
     }, [categories, dispatch, isFetchingCategories])
@@ -40,10 +42,7 @@ export const Page = ({
             .setAttribute('content', subtitle)
     }, [subtitle])
     return html` <style>
-            ${buttonsStyles}
-            ${inputStyles}
-            ${blocksStyles}
-            .page {
+            ${buttonsStyles} ${inputStyles} ${blocksStyles} .page {
                 display: flex;
                 width: 100%;
                 justify-content: flex-end;
@@ -122,13 +121,18 @@ export const Page = ({
                     width: 52%;
                 }
             }
-            
         </style>
         <div class="blocks-wrapper page">
             <${MenuBurger} toggleMenuVisible=${toggleMenuVisible} />
-            <${Menu} articles=${articles} categories=${categories} menuVisible=${menuVisible} />
+            <${Menu}
+                articles=${articles}
+                categories=${categories}
+                menuVisible=${menuVisible}
+            />
             <main
-                class="main ${menuVisible ? 'main-narrow' : ''} wrapper blocks-fadein"
+                class="main ${menuVisible
+                    ? 'main-narrow'
+                    : ''} wrapper blocks-fadein"
             >
                 <${Sidebar}
                     title=${title}

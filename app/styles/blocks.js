@@ -53,5 +53,6 @@ export const blocksStyles = `<style>
         animation-duration: 1s, 1s;
         animation-iteration-count: 1;
     }
-</style>`.replace('<style>', '')
+</style>`
+    .replace('<style>', '')
     .replace('</style>', '')

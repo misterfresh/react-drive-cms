@@ -43,5 +43,6 @@ export const buttonsStyles = `<style>
         border-color: #85c6f2;
         cursor: not-allowed;
     }
-</style>`.replace('<style>', '')
+</style>`
+    .replace('<style>', '')
     .replace('</style>', '')

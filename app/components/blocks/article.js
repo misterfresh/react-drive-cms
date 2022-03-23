@@ -1,5 +1,5 @@
 import { html } from '../../../deps/react.js'
-import {avoidReload} from "../../utils/avoidReload.js";
+import { avoidReload } from '../../utils/avoidReload.js'
 
 export const Article = ({ article, category }) => html`
     <style>
@@ -69,7 +69,12 @@ export const Article = ({ article, category }) => html`
 
     <article>
         <h2>
-            <a href=${article.uri} title=${article.title} class="title" onClick=${avoidReload}>
+            <a
+                href=${article.uri}
+                title=${article.title}
+                class="title"
+                onClick=${avoidReload}
+            >
                 ${article.title}
             </a>
         </h2>

@@ -1,12 +1,12 @@
 import { html, useState } from '../../deps/react.js'
-import {Page} from '../components/layout/page.js'
+import { Page } from '../components/layout/page.js'
 import DisqusCount from '../components/disqus/disqusCount.js'
-import {Article as ArticleBlock} from '../components/blocks/article.js'
-import {Category as CategoryBlock} from '../components/blocks/category.js'
+import { Article as ArticleBlock } from '../components/blocks/article.js'
+import { Category as CategoryBlock } from '../components/blocks/category.js'
 import resolveAsset from '../utils/resolveAsset.js'
-import {getPathParts} from "../utils/path.js";
+import { getPathParts } from '../utils/path.js'
 
-export const Category = ({state, dispatch}) => {
+export const Category = ({ state, dispatch }) => {
     const articles = state.articles
     const categories = state.categories
 
@@ -18,14 +18,13 @@ export const Category = ({state, dispatch}) => {
         const selectedPanel = event.target.dataset.panel
         dispatch({
             type: 'SET_ACTIVE_PANEL',
-            selectedPanel
+            selectedPanel,
         })
     }
 
     const activeCategory = categories?.[activeCategoryId]
 
-    return html`
-        <style>
+    return html` <style>
             .sub-nav {
                 border-bottom: solid 1px #f5f5f5;
                 line-height: 3rem;
@@ -36,7 +35,7 @@ export const Category = ({state, dispatch}) => {
                 font-weight: 700;
                 margin-right: 10px;
                 font-size: 1.2rem;
-                font-family: "Source Sans Pro",Helvetica,Arial,sans-serif;
+                font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif;
                 text-transform: uppercase;
                 cursor: pointer;
                 background-color: transparent;
@@ -71,52 +70,56 @@ export const Category = ({state, dispatch}) => {
             }
         </style>
         <${Page}
-                title=${activeCategory.title}
-                categories=${categories}
-                articles=${articles}
-                sidebarImage=${activeCategory.image}
-            >
-                <div class="sub-nav">
-                    <button
-                        class="button ${activePanel === 'posts' ? 'button-active' : ''}"
-                        onClick=${setActivePanel}
-                        data-panel="posts"
-                    >
-                        Posts
-                    </button>
-                    <button
-                        class="button ${activePanel === 'categories' ? 'button-active' : ''}"
-                        onClick=${setActivePanel}
-                        data-panel="categories"
-                    >
-                        Categories
-                    </button>
-                </div>
-                <div class="list">
-                    ${activePanel === 'posts' &&
-    Object.values(articles)
-        .filter(
-            (article) => article.categoryId === activeCategoryId
-        )
-        .map(
-            (article) => html`
-                                <${ArticleBlock}
-                                    key=${article.id}
-                                    article=${article}
-                                    category=${categories[article.categoryId]}
-                                />
-                            `
-        )}
-                    ${activePanel === 'categories' &&
-    Object.values(categories).map(
-        (category) => html`
-                            <${CategoryBlock}
-                                key=${category.id}
-                                category=${category}
+            title=${activeCategory.title}
+            categories=${categories}
+            articles=${articles}
+            sidebarImage=${activeCategory.image}
+        >
+            <div class="sub-nav">
+                <button
+                    class="button ${activePanel === 'posts'
+                        ? 'button-active'
+                        : ''}"
+                    onClick=${setActivePanel}
+                    data-panel="posts"
+                >
+                    Posts
+                </button>
+                <button
+                    class="button ${activePanel === 'categories'
+                        ? 'button-active'
+                        : ''}"
+                    onClick=${setActivePanel}
+                    data-panel="categories"
+                >
+                    Categories
+                </button>
+            </div>
+            <div class="list">
+                ${activePanel === 'posts' &&
+                Object.values(articles)
+                    .filter(
+                        (article) => article.categoryId === activeCategoryId
+                    )
+                    .map(
+                        (article) => html`
+                            <${ArticleBlock}
+                                key=${article.id}
+                                article=${article}
+                                category=${categories[article.categoryId]}
                             />
                         `
-    )}
-                </div>
-                <${DisqusCount} />
-            <//>`
+                    )}
+                ${activePanel === 'categories' &&
+                Object.values(categories).map(
+                    (category) => html`
+                        <${CategoryBlock}
+                            key=${category.id}
+                            category=${category}
+                        />
+                    `
+                )}
+            </div>
+            <${DisqusCount} />
+        <//>`
 }

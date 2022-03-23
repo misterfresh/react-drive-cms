@@ -17,7 +17,7 @@ export const Api = {
             headers,
         })
 
-        return (fetch(url, options))
+        return fetch(url, options)
     },
 
     async get(

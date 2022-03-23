@@ -27,22 +27,22 @@ export const Menu = ({ categories, articles, menuVisible }) => {
                 padding-right: 0;
                 position: fixed;
             }
-            .menuOpen {
+            .menu-open {
                 opacity: 1;
                 width: 100%;
             }
             @media (min-width: 768px) {
-                .menuOpen {
+                .menu-open {
                     width: 40%;
                 }
             }
             @media (min-width: 992px) {
-                .menuOpen {
+                .menu-open {
                     width: 30%;
                 }
             }
             @media (min-width: 1200px) {
-                .menuOpen {
+                .menu-open {
                     width: 25%;
                 }
             }

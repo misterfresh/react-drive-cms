@@ -28,6 +28,6 @@ export const inputStyles = `<style>
         text-overflow: ellipsis;
         color: red;
     }
-</style>`.replace('<style>', '')
+</style>`
+    .replace('<style>', '')
     .replace('</style>', '')
-
