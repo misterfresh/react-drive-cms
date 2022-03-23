@@ -1,12 +1,10 @@
 import { html, useState, useEffect } from '../../deps/react.js'
-import { StyleSheet, css } from '../../deps/aphrodite.js'
-import { Helmet } from '../../deps/react-helmet.js'
-
 import { Menu } from '../components/layout/menu.js'
-import blocks from '../styles/blocks.js'
+import {blocksStyles} from '../styles/blocks.js'
 import { Footer } from '../components/layout/footer.js'
 import DisqusThread from '../components/disqus/disqusThread.js'
 import { getPathParts } from '../utils/path.js'
+import {MenuBurger} from "../components/layout/menuBurger.js";
 
 export const Article = ({ state, dispatch }) => {
     const articles = state.articles
@@ -16,10 +14,11 @@ export const Article = ({ state, dispatch }) => {
     const activeArticle = articles?.[activeArticleId]
     const activeText = texts?.[activeArticleId]
     const category = categories?.[activeArticle?.categoryId]
-    const [menuVisible, setMenuVisible] = useState(
-        !(typeof window !== 'undefined' && window.innerWidth < 769)
-    )
-    const toggleMenu = () => setMenuVisible(!menuVisible)
+
+    const menuVisible = state?.menuVisible
+    const toggleMenuVisible = () => dispatch({
+        type: 'TOGGLE_MENU_VISIBLE'
+    })
 
     useEffect(async () => {
         await fetchArticleIfNeeded(activeArticleId)
@@ -29,14 +28,7 @@ export const Article = ({ state, dispatch }) => {
         await fetchCategoriesIfNeeded()
     }, [categories])
     return html` <style>
-            @keyframes fadein {
-                from {
-                    opacity: 0;
-                }
-                to {
-                    opacity: 1;
-                }
-            }
+            ${blocksStyles}
 
             .hero {
                 position: relative;
@@ -161,7 +153,7 @@ export const Article = ({ state, dispatch }) => {
                     padding: 3rem 20%;
                 }
             }
-
+/*
             .menu-burger {
                 position: fixed;
                 top: 1.5rem;
@@ -200,7 +192,7 @@ export const Article = ({ state, dispatch }) => {
                 margin: 0 6px 5px;
                 background: #fff;
                 border-radius: 0.3rem;
-            }
+            }*/
         </style>
         <div class="blocks-wrapper page">
             <${Helmet}
@@ -211,11 +203,7 @@ export const Article = ({ state, dispatch }) => {
                     { name: 'description', content: activeArticle.title },
                 ]}
             />
-            <button class="menu-burger" onClick=${toggleMenu} id="menu-burger">
-                <div class="bar" />
-                <div class="bar" />
-                <div class="bar" />
-            </button>
+            <${MenuBurger} toggleMenuVisible=${toggleMenuVisible} />
             <${Menu} menuVisible=${menuVisible} />
             <main
                 class="blocks-wrapper main ${menuVisible ? 'main-narrow' : ''}"

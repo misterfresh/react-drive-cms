@@ -5,6 +5,8 @@ export const initialState = {
     categories: {},
     articles: {},
     texts: {},
+    menuVisible: !(typeof window !== 'undefined' && window.innerWidth < 769),
+    activePanel: 'posts'
 }
 
 export const reducer = (state, action) => {
@@ -26,11 +28,11 @@ export const reducer = (state, action) => {
                     categories: false,
                 },
                 categories: {
-                    ...action.categories.categories,
+                    ...action.categories,
                 },
                 articles: {
                     ...state.articles,
-                    ...action.categories.articles,
+                    ...action.articles,
                 },
             }
 
@@ -48,12 +50,24 @@ export const reducer = (state, action) => {
                 ...state,
                 isFetching: {
                     ...state.isFetching,
-                    [action.articleId]: false,
+                    [action.article.id]: false,
                 },
                 texts: {
                     ...state.texts,
-                    [action.articleId]: action.article,
+                    [action.article.id]: action.article,
                 },
+            }
+
+        case 'TOGGLE_MENU_VISIBLE':
+            return {
+                ...state,
+                menuVisible: !state.menuVisible
+            }
+
+        case 'SET_ACTIVE_PANEL':
+            return {
+                ...state,
+                activePanel: action.selectedPanel
             }
 
         default:

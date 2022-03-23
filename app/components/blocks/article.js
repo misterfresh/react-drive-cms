@@ -1,7 +1,7 @@
 import { html } from '../../../deps/react.js'
-import { Link } from '../../../deps/react-router-dom.js'
+import {avoidReload} from "../../utils/avoidReload.js";
 
-let Article = ({ article, category }) => html`
+export const Article = ({ article, category }) => html`
     <style>
         article {
             padding: 30px 0;
@@ -69,9 +69,9 @@ let Article = ({ article, category }) => html`
 
     <article>
         <h2>
-            <${Link} to=${article.uri} title=${article.title} class="title">
+            <a href=${article.uri} title=${article.title} class="title" onClick=${avoidReload}>
                 ${article.title}
-            <//>
+            </a>
         </h2>
         <p class="description">${article.subtitle}</p>
         <p class="meta">
@@ -84,15 +84,14 @@ let Article = ({ article, category }) => html`
                 class="disqus-comment-count"
             />
             - Published in :
-            <${Link}
+            <a
                 title=${category.title}
-                to=${category.uri}
+                href=${category.uri}
                 class="category"
+                onClick=${avoidReload}
             >
                 ${category.title}
-            <//>
+            </a>
         </p>
     </article>
 `
-
-export default Article

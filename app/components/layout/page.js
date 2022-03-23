@@ -1,10 +1,14 @@
 import { html, useState, useEffect } from '../../../deps/react.js'
 import { Menu } from './menu.js'
 import { Sidebar } from './sidebar.js'
-import blocks from '../../styles/blocks.js'
-import { fetchCategoriesIfNeeded } from '../../modules/category/actionCreators.js'
+import {buttonsStyles} from "../../styles/buttons.js";
+import {inputStyles} from "../../styles/input.js";
+import {blocksStyles} from '../../styles/blocks.js'
+import {MenuBurger} from "./menuBurger.js";
+import {Drive} from "../../lib/drive.js";
 
 export const Page = ({
+    state, dispatch,
     title,
     subtitle,
     description,
@@ -12,17 +16,19 @@ export const Page = ({
     showLinks,
     children,
 }) => {
-    const [menuVisible, setMenuVisible] = useState(
-        !(typeof window !== 'undefined' && window.innerWidth < 769)
-    )
+    const articles = state?.articles
+    const categories = state?.categories
+    const menuVisible = state?.menuVisible
+    const toggleMenuVisible = () => dispatch({
+        type: 'TOGGLE_MENU_VISIBLE'
+    })
 
-    const toggleMenuVisible = () => {
-        setMenuVisible(!menuVisible)
-    }
-
-    useEffect(async () => {
-        await fetchCategoriesIfNeeded()
-    }, [])
+    const isFetchingCategories = state?.isFetching?.categories
+    useEffect(async ()=> {
+        if(!isFetchingCategories && !Object.values(categories).length) {
+            await Drive.fetchCategories(dispatch)
+        }
+    }, [categories, dispatch, isFetchingCategories])
     useEffect(() => {
         document.title = title
             ? `${title} - React Drive CMS`
@@ -34,6 +40,9 @@ export const Page = ({
             .setAttribute('content', subtitle)
     }, [subtitle])
     return html` <style>
+            ${buttonsStyles}
+            ${inputStyles}
+            ${blocksStyles}
             .page {
                 display: flex;
                 width: 100%;
@@ -113,56 +122,13 @@ export const Page = ({
                     width: 52%;
                 }
             }
-            .menu-burger {
-                position: fixed;
-                top: 1.5rem;
-                left: 1.5rem;
-                z-index: 15;
-                border-radius: 5;
-                height: 4rem;
-                width: 4rem;
-                background: #333;
-                padding-top: 8;
-                cursor: pointer;
-                border-bottom: 0 transparent;
-                box-shadow: #948b8b 2px 2px 10px;
-                color: #fff;
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                outline: 0;
-                border: 0;
-            }
-            .menu-burger:hover {
-                color: #fff;
-                outline: 0;
-                background: #999;
-            }
-            .menu-burger:focus {
-                outline: 0;
-            }
-            .bar {
-                height: 0.5rem;
-                width: 2.8rem;
-                display: block;
-                margin: 0 6px 5px;
-                background: #fff;
-                border-radius: 0.3rem;
-            }
+            
         </style>
         <div class="blocks-wrapper page">
-            <button class="menu-burger" onClick=${toggleMenuVisible}>
-                <div class="bar" />
-                <div class="bar" />
-                <div class="bar" />
-            </button>
-            <${Menu} menuVisible=${menuVisible} />
+            <${MenuBurger} toggleMenuVisible=${toggleMenuVisible} />
+            <${Menu} articles=${articles} categories=${categories} menuVisible=${menuVisible} />
             <main
-                class="main ${menuVisible ? 'main-narrow' : ''}"
-                style="{{"
-                ...blocks.wrapper,
-                ...blocks.fadein,
-                }}
+                class="main ${menuVisible ? 'main-narrow' : ''} wrapper blocks-fadein"
             >
                 <${Sidebar}
                     title=${title}

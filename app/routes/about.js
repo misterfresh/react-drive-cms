@@ -3,7 +3,7 @@ import { Page } from '../components/layout/page.js'
 import resolveAsset from '../utils/resolveAsset.js'
 import { avoidReload } from '../utils/avoidReload.js'
 
-export const About = () => html`
+export const About = ({state, dispatch}) => html`
     <style>
         .content {
             display: block;
@@ -64,6 +64,8 @@ export const About = () => html`
         description="An easy way to publish articles directly from Google Drive"
         sidebarImage=${resolveAsset('/assets/default-about.jpg')}
         showLinks=${true}
+        state=${state} 
+        dispatch=${dispatch}
     >
         <div class="content">
             <img src=${resolveAsset('/assets/react_logo.png')} class="image" />

@@ -1,4 +1,5 @@
 import { Api } from './api.js'
+import { to } from '../utils/to.js'
 const conf = window.appConf
 //const GOOGLE_API_KEY = 'PASTE YOUR GOOGLE API KEY HERE'
 const GOOGLE_API_KEY = 'AIzaSyBYOwC55SpcCZaG9d87UuHkxkQ8GRI_39M'
@@ -6,39 +7,41 @@ const GOOGLE_API_KEY = 'AIzaSyBYOwC55SpcCZaG9d87UuHkxkQ8GRI_39M'
 export const Drive = {
     ...Api,
     driveExportUrl: 'https://drive.google.com/uc?export=download&id=',
+    isFetchingCategories: false,
 
     async getSpreadsheet(fileId) {
-        return this.get(
+        return await to(this.get(
             `https://sheets.googleapis.com/v4/spreadsheets/${fileId}/values/Posts?alt=json&key=${GOOGLE_API_KEY}`,
             {
                 credentials: 'omit',
             }
-        ).then((response) => response.json())
+        ).then((response) => response.json()))
     },
 
     async getDocument(fileId) {
-        return this.get(
+        return await to(this.get(
             `https://docs.google.com/feeds/download/documents/export/Export?id=${fileId}&exportFormat=html`,
             {
                 credentials: 'omit',
             }
         ).then((response) => {
             return response.text()
-        })
+        }))
     },
 
-    async getCategories() {
+    async getCategories(dashboardId) {
         const [getSpreadsheetError, spreadsheet] = await this.getSpreadsheet(
-            conf.dashboardId
+            dashboardId
         )
         if (getSpreadsheetError) {
             console.log('getSpreadsheetError', getSpreadsheetError)
             return [getSpreadsheetError]
         }
         const rows = spreadsheet.values
+        console.log('rows', rows)
         rows.shift()
         const categories = {}
-        const articles = rows.values.map((row) => ({
+        const articles = rows.map((row) => ({
             id: row?.[4],
             title: row?.[0],
             subtitle: row?.[1],
@@ -74,6 +77,27 @@ export const Drive = {
                 categories,
             },
         ]
+    },
+
+    async fetchCategories(dispatch) {
+        const dashboardId = conf.dashboardId
+        if(this.isFetchingCategories) {
+            return ['fetching']
+        }
+        this.isFetchingCategories = true
+        dispatch({
+            type: 'REQUEST_CATEGORIES'
+        })
+        const [getCategoriesError, response] = await this.getCategories(dashboardId)
+        if(getCategoriesError) {
+            return [getCategoriesError]
+        }
+        const {articles, categories} = response
+        dispatch({
+            type: 'RECEIVE_CATEGORIES',
+            articles,
+            categories,
+        })
     },
 
     async getArticleHtml(articleId) {

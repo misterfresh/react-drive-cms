@@ -1,5 +1,3 @@
-import { to } from '../utils/to.js'
-
 export const Api = {
     async call(
         url,
@@ -19,7 +17,7 @@ export const Api = {
             headers,
         })
 
-        return await to(fetch(url, options))
+        return (fetch(url, options))
     },
 
     async get(

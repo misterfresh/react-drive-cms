@@ -1,7 +1,7 @@
 import { html } from '../../../deps/react.js'
-import { Link } from '../../../deps/react-router-dom.js'
+import {avoidReload} from "../../utils/avoidReload.js";
 
-let Category = ({ category }) => html`
+export const Category = ({ category }) => html`
     <style>
         .category-block {
             height: 30rem;
@@ -44,15 +44,15 @@ let Category = ({ category }) => html`
         }
     </style>
 
-    <${Link}
-        to=${category.uri}
+    <a
+        href=${category.uri}
         class="category-block"
         style=${{
             backgroundImage: `url(${category.image})`,
         }}
+        onClick=${avoidReload}
     >
         <h2 class="title" title=${category.title}>${category.title}</h2>
-    <//>
+    </a>
 `
 
-export default Category
