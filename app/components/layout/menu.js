@@ -52,11 +52,11 @@ export const Menu = ({ categories, articles, menuVisible }) => {
                 color: #dadada;
                 font-size: 1.6rem;
             }
-            .list: {
-                padding: 1rem 0;
+            ul.menu-list: {
+                padding: 10px 0;
                 font-size: 1.6rem;
-                margin-bottom: 2rem;
-                margin-top: 0;
+                margin-bottom: 20px;
+                margin-top: 0px;
             }
             .item {
                 margin: 0;
@@ -131,7 +131,7 @@ export const Menu = ({ categories, articles, menuVisible }) => {
             }
         </style>
         <nav id="menu" class="menu ${menuVisible ? 'menu-open' : ''}">
-            <ul class="list">
+            <ul class="menu-list">
                 <li class="item">
                     <i class="fas fa-home icon" />
                     <a
@@ -167,7 +167,7 @@ export const Menu = ({ categories, articles, menuVisible }) => {
                 </li>
             </ul>
             <hr class="separator" />
-            <ul class="list">
+            <ul class="menu-list">
                 ${Object.values(categories).map(
                     (category, index) => html`
                         <li key=${category.id}>

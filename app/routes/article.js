@@ -1,33 +1,45 @@
-import { html, useState, useEffect } from '../../deps/react.js'
+import { html, useEffect } from '../../deps/react.js'
 import { Menu } from '../components/layout/menu.js'
 import { blocksStyles } from '../styles/blocks.js'
 import { Footer } from '../components/layout/footer.js'
 import DisqusThread from '../components/disqus/disqusThread.js'
 import { getPathParts } from '../utils/path.js'
 import { MenuBurger } from '../components/layout/menuBurger.js'
+import {Drive} from "../lib/drive.js";
 
 export const Article = ({ state, dispatch }) => {
     const articles = state.articles
     const categories = state.categories
     const texts = state.texts
-    const activeArticleId = getPathParts()?.[1]
-    const activeArticle = articles?.[activeArticleId]
+    const activeArticleId = state?.activeItemId ?? getPathParts()[2]
+    const activeArticle = articles?.[activeArticleId] ?? {}
     const activeText = texts?.[activeArticleId]
     const category = categories?.[activeArticle?.categoryId]
+    const isFetchingArticle = state?.isFetching?.[activeArticleId]
 
+    const title = activeArticle?.title
+    const subtitle = activeArticle?.subtitle
     const menuVisible = state?.menuVisible
     const toggleMenuVisible = () =>
         dispatch({
             type: 'TOGGLE_MENU_VISIBLE',
         })
 
-    useEffect(async () => {
-        await fetchArticleIfNeeded(activeArticleId)
-        document.getElementById('article-header').scrollIntoView()
-    }, [activeArticleId])
-    useEffect(async () => {
-        await fetchCategoriesIfNeeded()
-    }, [categories])
+    useEffect(() => {
+        document.title = title
+            ? `${title} - React Drive CMS`
+            : 'React Drive CMS'
+    }, [title])
+    useEffect(() => {
+        document
+            .querySelector('meta[name="description"]')
+            .setAttribute('content', subtitle)
+    }, [subtitle])
+    useEffect(async ()=> {
+        if(!texts?.[activeArticleId] && !isFetchingArticle){
+            await Drive.fetchArticle(activeArticleId, dispatch)
+        }
+    }, [texts, activeArticleId, isFetchingArticle, dispatch])
     return html` <style>
             ${blocksStyles} .hero {
                 position: relative;
@@ -79,7 +91,7 @@ export const Article = ({ state, dispatch }) => {
                 max-width: 100%;
             }
 
-            main {
+            main.article {
                 opacity: 1;
                 width: 100%;
                 overflow-x: hidden;
@@ -93,7 +105,7 @@ export const Article = ({ state, dispatch }) => {
                 max-width: 100%;
             }
 
-            .content: {
+            section.article-content: {
                 display: block;
                 width: 100%;
                 padding: 3rem 8%;
@@ -101,7 +113,7 @@ export const Article = ({ state, dispatch }) => {
                 max-width: 100%;
             }
 
-            .content-narrow: {
+            section.article-content.content-narrow: {
                 display: block;
                 width: 100%;
                 padding: 3rem 8%;
@@ -111,115 +123,62 @@ export const Article = ({ state, dispatch }) => {
                 .hero {
                     height: 30rem;
                 }
-
-                .main-narrow {
+                main.article.main-narrow {
                     width: 60%;
                 }
-
-                .content {
+                section.article-content {
                     padding: 3rem 16%;
                 }
-
-                .content-narrow: {
+                section.article-content.content-narrow: {
                     padding: 3rem 8%;
                 }
             }
 
             @media (min-width: 992px) : {
-                .main-narrow {
+                main.article.main-narrow {
                     width: 70%;
                 }
-
-                .content {
+                section.article-content {
                     padding: 3rem 18%;
                 }
-
-                .content-narrow: {
+                section.article-content.content-narrow: {
                     padding: 3rem 12%;
                 }
             }
 
             @media (min-width: 1200px) : {
-                .main-narrow {
+                main.article.main-narrow {
                     width: 75%;
                 }
-
-                .content {
+                section.article-content {
                     padding: 3rem 24%;
                 }
-
-                .content-narrow: {
+                section.article-content.content-narrow: {
                     padding: 3rem 20%;
                 }
             }
-            /*
-            .menu-burger {
-                position: fixed;
-                top: 1.5rem;
-                left: 1.5rem;
-                z-index: 15;
-                border-radius: 5px;
-                height: 4rem;
-                width: 4rem;
-                background: #333;
-                padding-top: 8px;
-                cursor: pointer;
-                border-bottom: 0 transparent;
-                box-shadow: #948b8b 2px 2px 10px;
-                color: #fff;
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                outline: 0;
-                border: 0;
-            }
-
-            .menu-burger:hover {
-                color: #fff;
-                outline: 0;
-                background: #999;
-            }
-
-            .menu-burger:focus {
-                outline: 0;
-            }
-
-            .bar {
-                height: 0.5rem;
-                width: 2.8rem;
-                display: block;
-                margin: 0 6px 5px;
-                background: #fff;
-                border-radius: 0.3rem;
-            }*/
+         
         </style>
-        <div class="blocks-wrapper page">
-            <${Helmet}
-                title=${activeArticle.title}
-                titleTemplate=${'%s - React Drive CMS'}
-                meta=${[
-                    { 'char-set': 'utf-8' },
-                    { name: 'description', content: activeArticle.title },
-                ]}
-            />
+        <div class="wrapper page">
             <${MenuBurger} toggleMenuVisible=${toggleMenuVisible} />
-            <${Menu} menuVisible=${menuVisible} />
+            <${Menu} menuVisible=${menuVisible} articles=${articles}
+                     categories=${categories} />
             <main
-                class="blocks-wrapper main ${menuVisible ? 'main-narrow' : ''}"
+                class="wrapper article ${menuVisible ? 'main-narrow' : ''}"
             >
                 <header
                     class="hero"
                     role="banner"
                     style=${{
-                        backgroundImage: `url(${activeArticle.image})`,
+                        backgroundImage: `url(${activeArticle?.image})`,
                     }}
                     id="article-header"
                 />
-                <section class="content ${menuVisible ? 'content-narrow' : ''}">
+                <section class="block article-content ${menuVisible ? 'content-narrow' : ''}">
                     <h1 id="article-title" class="title">
-                        ${activeArticle.title}
+                        ${activeArticle?.title}
                     </h1>
-                    <p>${activeArticle.subtitle}</p>
+                    <p>${activeArticle?.subtitle}</p>
                     <div
                         class="text"
                         dangerouslySetInnerHTML=${{ __html: activeText }}

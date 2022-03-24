@@ -59,11 +59,11 @@ export const reducer = (state, action) => {
                 ...state,
                 isFetching: {
                     ...state.isFetching,
-                    [action.article.id]: false,
+                    [action.articleId]: false,
                 },
                 texts: {
                     ...state.texts,
-                    [action.article.id]: action.article,
+                    [action.articleId]: action.articleHtml,
                 },
             }
 

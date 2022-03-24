@@ -3,7 +3,7 @@ import resolveAsset from '../../utils/resolveAsset.js'
 import { avoidReload } from '../../utils/avoidReload.js'
 const conf = window.appConf
 
-export const Footer = ({ article, category, articles, menuVisible }) => {
+export const Footer = ({ article = {}, category = {}, articles, menuVisible }) => {
     return html`
         <style>
             footer {
@@ -137,7 +137,7 @@ export const Footer = ({ article, category, articles, menuVisible }) => {
                 height: 6rem;
                 margin-bottom: 1rem;
             }
-            p {
+            .credits p {
                 padding-right: 2rem;
                 letter-spacing: 2px;
                 font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif;
@@ -289,13 +289,14 @@ export const Footer = ({ article, category, articles, menuVisible }) => {
                             }}
                         >
                             <div class="overlay" />
-                            <${Link}
-                                to=${article.uri}
+                            <a
+                                href=${article.uri}
                                 title=${article.title}
                                 class="other-article-title"
+                                onClick=${avoidReload}
                             >
                                 ${article.title}
-                            <//>
+                            </a>
                         </div>
                     `
                 )}

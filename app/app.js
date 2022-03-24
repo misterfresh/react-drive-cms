@@ -1,4 +1,5 @@
 import { html, render, useReducer, useMemo, useEffect } from '../deps/react.js'
+import debounce from '../deps/debounce.js'
 import { reducer, initialState } from './state.js'
 
 import { Article } from './routes/article.js'
@@ -28,6 +29,16 @@ const App = () => {
     }, [pageName])
 
     useEffect(() => {
+        const showState = () => {
+            debouncedConsole(state)
+        }
+        window.addEventListener('showState', showState)
+        return function cleanup() {
+            window.removeEventListener('showState', showState)
+        }
+    }, [state])
+
+    useEffect(() => {
         const updatePath = () => {
             const parts = getPathParts()
             dispatch({
@@ -46,3 +57,12 @@ const App = () => {
 }
 
 render(html`<${App} />`, document.getElementById('app-mount'))
+
+Object.defineProperty(window, 'state', {
+    async get() {
+        dispatchEvent(new CustomEvent('showState'))
+    },
+    configurable: true,
+    enumerable: true,
+})
+const debouncedConsole = debounce(console.log, 1000)

@@ -44,32 +44,35 @@ export const Drive = {
         const rows = spreadsheet.values
         console.log('rows', rows)
         rows.shift()
+
         const categories = {}
-        const articles = rows.map((row) => ({
-            id: row?.[4],
-            title: row?.[0],
-            subtitle: row?.[1],
-            imageName: row?.[3],
-            image: this.driveExportUrl + row?.[5],
-            categoryId: this.slug(row?.[2], 'category'),
-            lastUpdated: row?.[6],
-            date: this.formatDate(row?.[6]),
-            uri: `/articles/${row?.[4]}/${this.slug(row?.[0], 'article')}`,
-        }))
-        articles.forEach((article) => {
-            const categoryId = article.categoryId
+        const articles = {}
+        rows.forEach((row) => {
+            articles[row?.[4]] = {
+                id: row?.[4],
+                title: row?.[0],
+                subtitle: row?.[1],
+                imageName: row?.[3],
+                image: this.driveExportUrl + row?.[5],
+                category: row?.[2],
+                categoryId: this.slug(row?.[2], 'category'),
+                lastUpdated: row?.[6],
+                date: this.formatDate(row?.[6]),
+                uri: `/articles/${row?.[4]}/${this.slug(row?.[0], 'article')}`,
+            }
+            const categoryId = articles[row?.[4]]?.categoryId
             const isExistingCategory = Object.values(categories).some(
                 (category) => category.id === categoryId
             )
             if (isExistingCategory) {
-                categories[categoryId].articles.push(article.id)
+                categories[categoryId].articles.push(row?.[4])
             } else {
                 categories[categoryId] = {
                     id: categoryId,
-                    title: article.category,
-                    imageName: article.imageName,
-                    image: article.image,
-                    articles: [article.id],
+                    title: row?.[2],
+                    imageName: row?.[3],
+                    image: articles[row?.[4]]?.image,
+                    articles: [row?.[4]],
                     uri: `/categories/${categoryId}`,
                 }
             }
@@ -107,6 +110,7 @@ export const Drive = {
     },
 
     async getArticleHtml(articleId) {
+        console.log('get article', articleId)
         const [getDocumentError, doc] = await this.getDocument(articleId)
         if (getDocumentError) {
             console.log('getDocumentError', getDocumentError)
@@ -135,6 +139,24 @@ export const Drive = {
         <div>${splitHtmlEnd[0]}</div>
         `,
         ]
+    },
+
+    async fetchArticle(articleId, dispatch) {
+        dispatch({
+            type: 'REQUEST_ARTICLE',
+            articleId,
+        })
+        const [getArticleError, articleHtml] = await this.getArticleHtml(
+            articleId
+        )
+        if (getArticleError) {
+            return [getArticleError]
+        }
+        dispatch({
+            type: 'RECEIVE_ARTICLE',
+            articleId,
+            articleHtml,
+        })
     },
 
     slug(str, type = 'type') {

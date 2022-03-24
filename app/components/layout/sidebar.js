@@ -25,7 +25,7 @@ export const Sidebar = ({
                 max-width: 100%;
             }
 
-            .sidebarNarrow {
+            .sidebar-narrow {
                 padding: 0;
                 background-position: center;
                 background-repeat: no-repeat;
@@ -99,7 +99,7 @@ export const Sidebar = ({
                 margin-bottom: 1.6rem;
             }
 
-            h1 {
+            .primary h1 {
                 letter-spacing: 0;
                 margin-bottom: 0;
                 font-size: 3.4rem;
@@ -108,7 +108,7 @@ export const Sidebar = ({
                 font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif;
             }
 
-            p: {
+            .primary p {
                 margin-bottom: 1rem;
                 text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
                 line-height: 2.4rem;
@@ -123,7 +123,7 @@ export const Sidebar = ({
                 display: flex;
             }
 
-            .button {
+            .links a.button {
                 font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif;
                 display: inline-block;
                 color: #fff;
@@ -143,14 +143,14 @@ export const Sidebar = ({
                 user-select: none;
             }
 
-            .button:hover {
+            .links a.button:hover {
                 color: #fff;
                 background-color: #286090;
                 border-color: #204d74;
                 text-decoration: none;
             }
 
-            .button:focus {
+            .links a.button:focus {
                 color: #fff;
                 background-color: #286090;
                 border-color: #122b40;

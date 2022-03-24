@@ -42,14 +42,17 @@ export const Page = ({
             .setAttribute('content', subtitle)
     }, [subtitle])
     return html` <style>
-            ${buttonsStyles} ${inputStyles} ${blocksStyles} .page {
+            ${buttonsStyles} 
+            ${inputStyles} 
+            ${blocksStyles} 
+            .page {
                 display: flex;
                 width: 100%;
                 justify-content: flex-end;
                 overflow-x: hidden;
                 max-width: 100%;
             }
-            .main {
+            main.page-main {
                 opacity: 1;
                 width: 100%;
                 display: block;
@@ -59,11 +62,11 @@ export const Page = ({
                 overflow-x: hidden;
                 max-width: 100%;
             }
-            .main-narrow {
+            main.page-main.main-narrow {
                 margin: 0;
                 width: 100%;
             }
-            .content {
+            section.page-content {
                 padding: 5rem;
                 overflow-x: hidden;
                 max-width: 100%;
@@ -71,58 +74,58 @@ export const Page = ({
                 width: 100%;
                 margin-left: 0;
             }
-            .content-narrow {
+            section.page-content.content-narrow {
                 width: 100%;
                 margin-left: 0;
             }
             @media (min-width: 768px) : {
-                .main {
+                main.page-main {
                     display: block;
                 }
-                .main-narrow {
+                main.page-main.main-narrow {
                     width: 60%;
                     display: block;
                 }
-                .content {
+                section.page-content {
                     width: 100%;
                 }
-                .content-narrow {
+                section.page-content.content-narrow {
                     width: 100%;
                 }
             }
             @media (min-width: 992px) : {
-                .main {
+                main.page-main {
                     flex-direction: row;
                     display: flex;
                     justify-content: flex-end;
                 }
-                .main-narrow {
+                main.page-main.main-narrow {
                     width: 70%;
                     display: block;
                 }
-                .content {
+                section.page-content {
                     width: 60%;
                 }
-                .content-narrow {
+                section.page-content.content-narrow {
                     width: 100%;
                 }
             }
             @media (min-width: 1200px) : {
-                .main-narrow {
+                main.page-main.main-narrow {
                     width: 75%;
                     display: flex;
                     flex-direction: row;
                     justify-content: flex-end;
                 }
-                .content {
+                section.page-content {
                     width: 60%;
                 }
-                .content-narrow {
+                section.page-content.content-narrow {
                     width: 52%;
                 }
             }
         </style>
-        <div class="blocks-wrapper page">
+        <div class="block wrapper page">
             <${MenuBurger} toggleMenuVisible=${toggleMenuVisible} />
             <${Menu}
                 articles=${articles}
@@ -130,7 +133,7 @@ export const Page = ({
                 menuVisible=${menuVisible}
             />
             <main
-                class="main ${menuVisible
+                class="block wrapper page-main ${menuVisible
                     ? 'main-narrow'
                     : ''} wrapper blocks-fadein"
             >
@@ -142,7 +145,7 @@ export const Page = ({
                     menuVisible=${menuVisible}
                     showLinks=${showLinks}
                 />
-                <section class="content ${menuVisible ? 'content-narrow' : ''}">
+                <section class="page-content ${menuVisible ? 'content-narrow' : ''}">
                     ${children}
                 </section>
             </main>
