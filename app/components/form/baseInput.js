@@ -12,11 +12,12 @@ export const BaseInput = ({
     min = 0,
     step = 1,
     value,
-    handleChange,
+    required = false,
+    onInput,
 }) => {
     return html`<${Input}
         value=${value}
-        onInput=${handleChange}
+        onInput=${onInput}
         style=${style}
         class=${className}
         name=${name}
@@ -25,5 +26,6 @@ export const BaseInput = ({
         data-property=${property ? property : name}
         min=${min}
         step=${step}
+        required=${Boolean(required)}
     />`
 }

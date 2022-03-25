@@ -52,7 +52,7 @@ export const Menu = ({ categories, articles, menuVisible }) => {
                 color: #dadada;
                 font-size: 1.6rem;
             }
-            .menu ul.menu-list: {
+            .menu ul.menu-list {
                 padding: 10px 0;
                 font-size: 1.6rem;
                 margin-bottom: 20px;

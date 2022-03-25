@@ -1,7 +1,6 @@
 import { Api } from './api.js'
 import { to } from '../utils/to.js'
 const conf = window.appConf
-//const GOOGLE_API_KEY = 'PASTE YOUR GOOGLE API KEY HERE'
 const GOOGLE_API_KEY = 'AIzaSyBYOwC55SpcCZaG9d87UuHkxkQ8GRI_39M'
 
 export const Drive = {

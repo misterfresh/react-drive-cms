@@ -13,7 +13,6 @@ export const PostsAndCategories = ({ state, dispatch }) => {
     const activePanel = state.activePanel
     const isFetchingCategories = state?.isFetching?.categories
 
-
     const setActivePanel = (panel) => {
         dispatch({
             type: 'SET_ACTIVE_PANEL',
@@ -24,8 +23,6 @@ export const PostsAndCategories = ({ state, dispatch }) => {
         const selectedPanel = event.target.dataset.panel
         setActivePanel(selectedPanel)
     }
-
-
 
     useEffect(async () => {
         if (!isFetchingCategories && !Object.values(categories).length) {
@@ -89,7 +86,7 @@ export const PostsAndCategories = ({ state, dispatch }) => {
                 class="toggle-panel ${activePanel === 'posts'
                     ? 'button-active'
                     : ''}"
-                onClick=${handleSelectPanel }
+                onClick=${handleSelectPanel}
                 data-panel="posts"
             >
                 Posts

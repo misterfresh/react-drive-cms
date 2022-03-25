@@ -2,7 +2,6 @@ import { html, useState, useEffect } from '../../../deps/react.js'
 import { Menu } from './menu.js'
 import { Sidebar } from './sidebar.js'
 import { buttonsStyles } from '../../styles/buttons.js'
-import { inputStyles } from '../../styles/input.js'
 import { blocksStyles } from '../../styles/blocks.js'
 import { MenuBurger } from './menuBurger.js'
 import { Drive } from '../../lib/drive.js'
@@ -42,7 +41,7 @@ export const Page = ({
             .setAttribute('content', subtitle)
     }, [subtitle])
     return html` <style>
-            ${buttonsStyles} ${inputStyles} ${blocksStyles} .page {
+            ${buttonsStyles} ${blocksStyles} .page {
                 display: flex;
                 width: 100%;
                 justify-content: flex-end;

@@ -1,14 +1,13 @@
-import {html, useEffect, useState} from '../../../deps/react.js'
-import {to} from "../../utils/to.js";
+import { html, useEffect, useState } from '../../../deps/react.js'
+import { to } from '../../utils/to.js'
 
 const conf = window.appConf
 const DISQUS_THREAD_URL = `//${conf.shortname}.disqus.com/embed.js`
 
-export const DisqusThread = ({articleId, articleTitle}) => {
-
+export const DisqusThread = ({ articleId, articleTitle }) => {
     const [disqusThreadScript, setDisqusThreadScript] = useState(null)
 
-    const loadDisqusThreadScript = async() => {
+    const loadDisqusThreadScript = async () => {
         const [loadError, loadedScript] = await to(
             new Promise(function (resolve, reject) {
                 const head = document.getElementsByTagName('head')[0]
@@ -39,7 +38,7 @@ export const DisqusThread = ({articleId, articleTitle}) => {
         }
     }
 
-    useEffect(async ()=> {
+    useEffect(async () => {
         window.disqus_shortname = conf.shortname
         window.disqus_identifier = articleId
         window.disqus_title = articleTitle
