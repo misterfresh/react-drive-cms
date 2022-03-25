@@ -1,325 +1,336 @@
-import { html, Component } from '../../deps/react.js'
-import { StyleSheet, css } from '../../deps/aphrodite.js'
-import { Link } from '../../deps/react-router-dom.js'
-import { connect } from '../../deps/react-redux.js'
+import { html, useState, useMemo, useCallback } from '../../deps/react.js'
 
-import { bindActionCreators } from '../../deps/redux.js'
-import { getLocation } from '../modules/route/selectors.js'
-import BaseInput from '../components/form/baseInput.js'
-import Page from '../components/layout/page.js'
-import input from '../styles/input.js'
-import buttons from '../styles/buttons.js'
-import Mail from '../lib/mail.js'
+import { BaseInput } from '../components/form/baseInput.js'
+import { Page } from '../components/layout/page.js'
+import { inputStyles } from '../styles/input.js'
+import { Mail } from '../lib/mail.js'
 import resolveAsset from '../utils/resolveAsset.js'
+import { avoidReload } from '../utils/avoidReload.js'
+import debounce from '../../deps/debounce.js'
+import {Spinner} from "../styles/Spinner.js";
 
-class Contact extends Component {
-    constructor(props) {
-        super(props)
-        this.state = {
-            values: {
-                name: {
-                    value: '',
-                    error: false,
-                    required: true,
-                },
-                email: {
-                    value: '',
-                    error: false,
-                    required: true,
-                },
-                company: {
-                    value: '',
-                    error: false,
-                    required: false,
-                },
-                phone: {
-                    value: '',
-                    error: false,
-                    required: false,
-                },
-                message: {
-                    value: '',
-                    error: false,
-                    required: true,
-                },
-            },
-            valid: false,
-            sent: false,
-        }
-        this.validateEmail = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/
-        this.updateFormProperty = this.updateFormProperty.bind(this)
-        this.sendMessage = this.sendMessage.bind(this)
+const validateEmailRegex =
+    /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/
+const requiredTexts = ['name', 'message']
+
+export const Contact = ({ state, dispatch }) => {
+    const [isSent, setIsSent] = useState(false)
+    const [isSending, setIsSending] = useState(false)
+    const [sentError, setSentError] = useState('')
+
+    const [name, setName] = useState('')
+    const [email, setEmail] = useState('')
+    const [company, setCompany] = useState('')
+    const [phone, setPhone] = useState('')
+    const [message, setMessage] = useState('')
+
+    const setText = {
+        name: setName,
+        company: setCompany,
+        phone: setPhone,
+        message: setMessage,
     }
+    const texts = { name, company, phone, message }
 
-    updateFormProperty(property, value) {
-        let { values } = this.state
-        let element = values[property]
-        let { error, required } = element
-        if (required && value.length < 4) {
-            error = '4 characters minimum.'
-        } else if (property === 'email' && !this.validateEmail.test(value)) {
-            error = 'Enter valid email.'
-        } else {
-            error = false
-        }
-        values = {
-            ...values,
-            [property]: {
-                required,
-                value,
-                error,
-            },
-        }
-        let valid = Object.values(values).every(
-            (item) => !item.error && (!item.required || item.value.length > 3)
-        )
-        this.setState({
-            values,
-            valid,
-        })
-    }
+    const [errorProperty, setErrorProperty] = useState('')
+    const [formError, setFormError] = useState('')
 
-    sendMessage(e) {
-        e.preventDefault()
-        e.stopPropagation()
-        let { values } = this.state
-        this.setState(
-            {
-                sent: true,
-            },
-            () => {
-                let formatted = {}
-                Object.keys(values).forEach((key) => {
-                    formatted[key] = values[key]['value']
-                })
-
-                Mail.send(formatted)
+    const validateText = useCallback(
+        (property, value, isRequired) => {
+            if (isRequired && value.length < 4) {
+                setFormError('4 characters minimum.')
+                setErrorProperty(property)
+                console.log('invalid', property, value, isRequired)
+                return false
+            } else if (errorProperty === property) {
+                setFormError('')
+                setErrorProperty('')
+                console.log('valid', property, value, isRequired)
             }
-        )
-    }
-
-    render() {
-        let { name, email, company, phone, message } = this.state.values
-        let { valid, sent } = this.state
-
-        return html`
-            <${Page}
-                title="Contact"
-                subtitle="Get in touch with us"
-                description=""
-                sidebarImage=${resolveAsset('/assets/default-contact.jpg')}
-            >
-                <h3 className=${css(styles.title)}>Send me an email</h3>
-                <form className=${css(styles.form)}>
-                    <div>
-                        <label
-                            for="name"
-                            className=${css(styles.label, styles.required)}
-                        >
-                            Your name
-                        </label>
-                        ${name.error &&
-                        html`
-                            <span className=${css(styles.error)}>
-                                ${name.error}
-                            </span>
-                        `}
-                        <${BaseInput}
-                            value=${name.value}
-                            name="name"
-                            placeholder="Jack Smith"
-                            onInput=${this.updateFormProperty}
-                            className=${css(
-                                input.base,
-                                name.error && input.error
-                            )}
-                        />
-                    </div>
-                    <div>
-                        <label
-                            for="email"
-                            className=${css(styles.label, styles.required)}
-                        >
-                            Your email
-                        </label>
-                        ${email.error &&
-                        html`
-                            <span className=${css(styles.error)}>
-                                ${email.error}
-                            </span>
-                        `}
-                        <${BaseInput}
-                            value=${email.value}
-                            name="email"
-                            placeholder="example@mail.com"
-                            type="email"
-                            onInput=${this.updateFormProperty}
-                            className=${css(
-                                input.base,
-                                email.error && input.error
-                            )}
-                        />
-                    </div>
-                    <div>
-                        <label for="company" className=${css(styles.label)}>
-                            Company
-                        </label>
-                        ${company.error &&
-                        html`
-                            <span className=${css(styles.error)}>
-                                ${company.error}
-                            </span>
-                        `}
-                        <${BaseInput}
-                            value=${company.value}
-                            name="company"
-                            placeholder="Example Corporation"
-                            onInput=${this.updateFormProperty}
-                            className=${css(
-                                input.base,
-                                company.error && input.error
-                            )}
-                        />
-                    </div>
-                    <div>
-                        <label for="phone" className=${css(styles.label)}>
-                            Phone number
-                        </label>
-                        ${phone.error &&
-                        html`
-                            <span className=${css(styles.error)}>
-                                ${phone.error}
-                            </span>
-                        `}
-                        <${BaseInput}
-                            value=${phone.value}
-                            name="phone"
-                            placeholder="+44778765439"
-                            onInput=${this.updateFormProperty}
-                            className=${css(
-                                input.base,
-                                phone.error && input.error
-                            )}
-                        />
-                    </div>
-                    <div>
-                        <label
-                            for="message"
-                            className=${css(styles.label, styles.required)}
-                        >
-                            Your message
-                        </label>
-                        ${message.error &&
-                        html`
-                            <span className=${css(styles.error)}>
-                                ${message.error}
-                            </span>
-                        `}
-                        <${BaseInput}
-                            value=${message.value}
-                            name="message"
-                            placeholder="Hello, let's chat!"
-                            Component="textarea"
-                            onInput=${this.updateFormProperty}
-                            className=${css(
-                                input.base,
-                                message.error && input.error
-                            )}
-                        />
-                    </div>
-
-                    ${valid && !sent
-                        ? html` <button
-                              className=${css(buttons.base, styles.button)}
-                              onClick=${this.sendMessage}
-                          >
-                              Send Message
-                          </button>`
-                        : html` <button
-                              className=${css(
-                                  buttons.base,
-                                  buttons.disabled,
-                                  styles.button
-                              )}
-                          >
-                              ${sent ? 'Message sent !' : 'Form incomplete'}
-                          </button>`}
-                </form>
-                <footer className=${css(styles.footer)}>
-                    <${Link} to="/about" className=${css(styles.contact)}>
-                        About
-                    <//>
-                </footer>
-            <//>
-        `
-    }
-}
-
-function mapStateToProps(state) {
-    return {
-        location: getLocation(state),
-    }
-}
-
-function mapDispatchToProps(dispatch) {
-    return Object.assign(bindActionCreators({}, dispatch), { dispatch })
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(Contact)
-
-let styles = StyleSheet.create({
-    title: {
-        fontSize: '2.6rem',
-        marginTop: '20px',
-        fontFamily: 'inherit',
-        fontWeight: 500,
-        lineHeight: '1.1',
-        color: 'inherit',
-        marginBottom: '10px',
-    },
-
-    label: {
-        fontSize: '2rem',
-        fontFamily: '"Source Sans Pro",Helvetica,Arial,sans-serif',
-        fontWeight: 700,
-        margin: '15px 0 0',
-    },
-    button: {
-        fontFamily: '"Source Sans Pro",Helvetica,Arial,sans-serif',
-    },
-    error: {
-        color: 'red',
-    },
-    required: {
-        ':after': {
-            color: 'red',
-            content: '" *"',
+            return true
         },
-    },
-    footer: {
-        padding: '10px 0',
-        fontSize: '1.4rem',
-        letterSpacing: '1px',
-        fontWeight: 700,
-        fontFamily: '"Source Sans Pro",Helvetica,Arial,sans-serif',
-        textTransform: 'uppercase',
-    },
-    contact: {
-        textDecoration: 'none',
-        backgroundColor: 'transparent',
-        color: '#999',
-        borderBottom: 'none',
-        fontSize: '1.4rem',
-        ':hover': {
-            textDecoration: 'none',
-            backgroundColor: 'transparent',
-            color: '#333',
-            outline: 0,
-            transition: 'all .4s',
-            borderBottom: 'none',
+        [errorProperty]
+    )
+
+    const updateText = useCallback(
+        (event) => {
+            event.preventDefault()
+            event.stopPropagation()
+            const property = event.target.dataset.property
+            const text = event.target.value
+            setText[property](text)
+            const required = Boolean(event.target.required)
+            validateText(property, text, required)
+            console.log('required', required)
         },
-    },
-    form: {
-        marginBottom: '5rem',
-    },
-})
+        [validateText]
+    )
+
+    const debouncedUpdateText = useMemo(
+        () => debounce(updateText, 500),
+        [updateText]
+    )
+
+    const validateEmail = useCallback(
+        (email) => {
+            if (email.length < 4) {
+                setFormError('4 characters minimum.')
+                setErrorProperty('email')
+                console.log('invalid', 'email', email, 'required')
+                return false
+            } else if (!validateEmailRegex.test(email)) {
+                setFormError('Enter valid email')
+                setErrorProperty('email')
+                console.log('invalid', 'email', email, 'not valid')
+                return false
+            } else if (errorProperty === 'email') {
+                setFormError('')
+                setErrorProperty('')
+                console.log('valid', 'email', email)
+            }
+            return true
+        },
+        [errorProperty]
+    )
+
+    const updateEmail = useCallback(
+        (event) => {
+            event.preventDefault()
+            event.stopPropagation()
+            const email = event.target.value
+            setEmail(email)
+            validateEmail(email)
+        },
+        [validateEmail]
+    )
+
+    const debouncedUpdateEmail = useMemo(
+        () => debounce(updateEmail, 500),
+        [updateEmail]
+    )
+
+    const sendMessage = async (event) => {
+        event.preventDefault()
+        event.stopPropagation()
+        const emailIsValid = validateEmail(email)
+        if (!emailIsValid) {
+            return
+        }
+        const textsProperties = Object.keys(texts)
+
+        for (let idx = 0; idx < textsProperties.length; idx++) {
+            const property = textsProperties[idx]
+            const isRequired = requiredTexts.includes(property)
+            const textIsValid = validateText(
+                property,
+                texts[property],
+                isRequired
+            )
+            if (!textIsValid) {
+                return
+            }
+        }
+        if(isSending) {
+            return false
+        }
+        setIsSending(true)
+        const [sendError, sent] = await Mail.send({
+            name,
+            email,
+            company,
+            phone,
+            message,
+        })
+        setIsSending(false)
+        if(sendError) {
+            setSentError(sendError)
+        } else {
+            setIsSent(true)
+        }
+    }
+
+    return html` <style>
+            ${inputStyles} .contact-title {
+                font-size: 2.6rem;
+                margin-top: 20px;
+                font-family: inherit;
+                font-weight: 500;
+                line-height: 1.1;
+                color: inherit;
+                margin-bottom: 10px;
+            }
+            form {
+                margin-bottom: 5rem;
+            }
+            form label {
+                font-size: 2rem;
+                font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif;
+                font-weight: 700;
+                margin: 15px 0 0;
+            }
+            form button {
+                font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif;
+            }
+            form button .spinner {
+                margin-right: 1rem;
+            }
+            form button.green, form button.green:disabled {
+                background-color: green;
+            }
+            form button.red, form button.red:disabled {
+                background-color: red;
+            }
+            form .error {
+                color: red;
+            }
+            form .required:after {
+                color: red;
+                content: ' *';
+            }
+            footer {
+                padding: 10px 0;
+                font-size: 1.4rem;
+                letter-spacing: 1px;
+                font-weight: 700;
+                font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif;
+                text-transform: uppercase;
+            }
+            footer a.contact {
+                text-decoration: none;
+                background-color: transparent;
+                color: #999;
+                border-bottom: none;
+                font-size: 1.4rem;
+            }
+            footer a.contact:hover {
+                text-decoration: none;
+                background-color: transparent;
+                color: #333;
+                outline: 0;
+                transition: all 0.4s;
+                border-bottom: none;
+            }
+        </style>
+        <${Page}
+            title="Contact"
+            subtitle="Get in touch with us"
+            description=""
+            sidebarImage=${resolveAsset('/assets/default-contact.jpg')}
+            state=${state}
+            dispatch=${dispatch}
+        >
+            <h3 class="contact-title">Send me an email</h3>
+            <form>
+                <div>
+                    <label for="name" class="required"> Your name </label>
+                    ${errorProperty === 'name' &&
+                    html` <span class="error"> ${formError} </span> `}
+                    <${BaseInput}
+                        value=${name.value}
+                        name="name"
+                        placeholder="Jack Smith"
+                        onInput=${debouncedUpdateText}
+                        className="input-base ${errorProperty === 'name'
+                            ? 'input-error'
+                            : ''}"
+                        required
+                    />
+                </div>
+                <div>
+                    <label for="email" class="required"> Your email </label>
+                    ${errorProperty === 'email' &&
+                    html` <span class="error"> ${formError} </span> `}
+                    <${BaseInput}
+                        value=${email.value}
+                        name="email"
+                        placeholder="example@mail.com"
+                        type="email"
+                        onInput=${debouncedUpdateEmail}
+                        className="input-base ${errorProperty === 'email'
+                            ? 'input-error'
+                            : ''}"
+                        required
+                    />
+                </div>
+                <div>
+                    <label for="company"> Company </label>
+                    ${errorProperty === 'company' &&
+                    html` <span class="error"> ${formError} </span> `}
+                    <${BaseInput}
+                        value=${company.value}
+                        name="company"
+                        placeholder="Example Corporation"
+                        onInput=${debouncedUpdateText}
+                        className="input-base ${errorProperty === 'company'
+                            ? 'input-error'
+                            : ''}"
+                    />
+                </div>
+                <div>
+                    <label for="phone"> Phone number </label>
+                    ${errorProperty === 'phone' &&
+                    html` <span class="error"> ${formError} </span> `}
+                    <${BaseInput}
+                        value=${phone.value}
+                        name="phone"
+                        placeholder="+44778765439"
+                        onInput=${debouncedUpdateText}
+                        className="input-base ${errorProperty === 'phone'
+                            ? 'input-error'
+                            : ''}"
+                    />
+                </div>
+                <div>
+                    <label for="message" class="required"> Your message </label>
+                    ${errorProperty === 'message' &&
+                    html` <span class="error"> ${formError} </span> `}
+                    <${BaseInput}
+                        value=${message.value}
+                        name="message"
+                        placeholder="Hello, let's chat!"
+                        Component="textarea"
+                        onInput=${debouncedUpdateText}
+                        className="input-base ${errorProperty === 'message'
+                            ? 'input-error'
+                            : ''}"
+                        required
+                    />
+                </div>
+                <br/>
+                <${SubmitButton} isSending=${isSending} isSent=${isSent} formError=${formError} sentError=${sentError} sendMessage=${sendMessage} />
+            </form>
+            <footer>
+                <a href="/about" class="contact" onClick=${avoidReload}>
+                    About
+                </a>
+            </footer>
+        <//>`
+}
+
+const SubmitButton = ({ isSending, isSent, formError, sentError, sendMessage}) => {
+    const isDisabled = isSending || isSent || formError || sentError
+    let message = "  Send message"
+    let colorClass = ''
+    if(formError) {
+        message = "Invalid form"
+    } else if(isSending) {
+        message = "Sending..."
+    } else if (sentError) {
+        message = "Failed to send message"
+        colorClass = "red"
+    } else if (isSent) {
+        message = "Message sent!"
+        colorClass = "green"
+    }
+    return html`<button
+            class="base button ${colorClass}"
+            type="submit"
+            onClick=${sendMessage}
+            disabled=${isDisabled}
+    >${isSending && html`<${Spinner}
+                    stroke="#eee"
+                    height=${18}
+                    width=${18}
+                />`}${message}</button>${sentError &&
+    html` <span class="error"> ${sentError} </span> `}`
+}

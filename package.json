@@ -4,7 +4,7 @@
     "format": "./node_modules/.bin/prettier --write --no-semi --tab-width 4 --single-quote \"{,!(node_modules|deps)/**/}*.js\""
   },
   "name": "react-drive-cms",
-  "version": "3.0.1",
+  "version": "4.2.7",
   "main": "app/app.js",
   "directories": {
     "doc": "docs"
@@ -14,6 +14,6 @@
   "description": "",
   "dependencies": {},
   "devDependencies": {
-    "prettier": "^2.0.5"
+    "prettier": "^2.5.1"
   }
 }

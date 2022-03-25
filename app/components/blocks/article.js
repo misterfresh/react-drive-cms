@@ -1,7 +1,7 @@
 import { html } from '../../../deps/react.js'
-import { Link } from '../../../deps/react-router-dom.js'
+import { avoidReload } from '../../utils/avoidReload.js'
 
-let Article = ({ article, category }) => html`
+export const Article = ({ article, category }) => html`
     <style>
         article {
             padding: 30px 0;
@@ -14,7 +14,7 @@ let Article = ({ article, category }) => html`
             color: #333337;
             font-size: 2.4rem;
             margin-top: 0;
-            font-family: "Source Sans Pro",Helvetica,Arial,sans-serif;
+            font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif;
             font-weight: 700;
             margin-bottom: 10px;
             line-height: 1.1;
@@ -27,14 +27,14 @@ let Article = ({ article, category }) => html`
         }
         article p {
             margin: 0 0 10px;
-            font-family: "Droid Serif",serif;
+            font-family: 'Droid Serif', serif;
             font-size: 1.6rem;
         }
         article p.description {
-             margin-bottom: 30px;
+            margin-bottom: 30px;
         }
         article p.meta {
-             color: #b6b6b6;
+            color: #b6b6b6;
         }
         article p.meta .disqus-comment-count {
             margin-right: 0.5rem;
@@ -44,7 +44,7 @@ let Article = ({ article, category }) => html`
             cursor: pointer;
             background-color: transparent;
             outline: 0;
-            transition: all .4s;
+            transition: all 0.4s;
             color: #b6b6b6;
             border-bottom: 1px solid #b6b6b6;
         }
@@ -54,32 +54,34 @@ let Article = ({ article, category }) => html`
             background-color: transparent;
             color: #333337;
             outline: 0;
-            transition: all .4s;
+            transition: all 0.4s;
             border-bottom: 1px solid #b6b6b6;
         }
+        article .meta a {
+            margin-left: 0.5rem;
+        }
         @media (min-width: 992px) {
-            article .title { 
+            article .title {
                 font-size: 3.2rem;
             }
-            article p { 
-                font-size: 1.8rem,
+            article p {
+                font-size: 1.8rem;
             }
         }
     </style>
-    
+
     <article>
         <h2>
-            <${Link}
-                to=${article.uri}
+            <a
+                href=${article.uri}
                 title=${article.title}
                 class="title"
+                onClick=${avoidReload}
             >
                 ${article.title}
-            <//>
+            </a>
         </h2>
-        <p class="description">
-            ${article.subtitle}
-        </p>
+        <p class="description">${article.subtitle}</p>
         <p class="meta">
             <span
                 title=${'Comments for ' + article.title}
@@ -89,17 +91,15 @@ let Article = ({ article, category }) => html`
                 data-disqus-identifier=${article.id}
                 class="disqus-comment-count"
             />
-             - Published in :
-            <${Link}
+            - Published in :
+            <a
                 title=${category.title}
-                to=${category.uri}
+                href=${category.uri}
                 class="category"
+                onClick=${avoidReload}
             >
                 ${category.title}
-            <//>
+            </a>
         </p>
     </article>
 `
-
-export default Article
-

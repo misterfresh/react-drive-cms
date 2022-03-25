@@ -1,5 +1,8 @@
-# React Drive CMS
-Publish articles directly from Google Drive to your blog with React JS. Simple setup with no transpiling.
+# React Drive CMS v4.2.7, updated for 2022
+Publish articles directly from Google Drive to your blog with React JS. Serverless setup with no transpiling.
+In 2022, the setup has a couple extra steps, mostly because of changes with the third party services:
+- Google Spreadsheets API v3 has been discontinued and the update to the v4 requires the use of an API key that you need to configure in the Google Cloud Console
+- Sendgrid requires to create a verified sender account
 
 Live demo here: 
 http://misterfresh.github.io/react-drive-cms/

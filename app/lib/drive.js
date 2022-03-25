@@ -1,129 +1,162 @@
-import Api from './api.js'
+import { Api } from './api.js'
+import { to } from '../utils/to.js'
 const conf = window.appConf
+const GOOGLE_API_KEY = 'AIzaSyBYOwC55SpcCZaG9d87UuHkxkQ8GRI_39M'
 
-class Drive extends Api {
-    constructor() {
-        super()
-        this.getSpreadsheet = this.getSpreadsheet.bind(this)
-        this.getDocument = this.getDocument.bind(this)
-        this.getCategories = this.getCategories.bind(this)
-        this.getArticleHtml = this.getArticleHtml.bind(this)
-        this.driveExportUrl = 'https://drive.google.com/uc?export=download&id='
-        this.slug = this.slug.bind(this)
-        this.formatDate = this.formatDate.bind(this)
-    }
+export const Drive = {
+    ...Api,
+    driveExportUrl: 'https://drive.google.com/uc?export=download&id=',
+    isFetchingCategories: false,
 
-    getSpreadsheet(fileId) {
-        return this.get(
-            `https://spreadsheets.google.com/feeds/list/${fileId}/od6/public/values?alt=json`,
-            {
-                credentials: 'omit',
-            }
+    async getSpreadsheet(fileId) {
+        return await to(
+            this.get(
+                `https://sheets.googleapis.com/v4/spreadsheets/${fileId}/values/Posts?alt=json&key=${GOOGLE_API_KEY}`,
+                {
+                    credentials: 'omit',
+                }
+            ).then((response) => response.json())
         )
-            .then((response) => response.json())
-            .catch((error) => console.log('error', error))
-    }
+    },
 
-    getDocument(fileId) {
-        return this.get(
-            `https://docs.google.com/feeds/download/documents/export/Export?id=${fileId}&exportFormat=html`,
-            {
-                credentials: 'omit',
-            }
-        )
-            .then((response) => {
+    async getDocument(fileId) {
+        return await to(
+            this.get(
+                `https://docs.google.com/feeds/download/documents/export/Export?id=${fileId}&exportFormat=html`,
+                {
+                    credentials: 'omit',
+                }
+            ).then((response) => {
                 return response.text()
             })
-            .catch((error) => console.log('error', error))
-    }
+        )
+    },
 
-    getCategories() {
-        return this.getSpreadsheet(conf.dashboardId).then((sheetData) => {
-            let articles = {}
-            let categories = {}
+    async getCategories(dashboardId) {
+        const [getSpreadsheetError, spreadsheet] = await this.getSpreadsheet(
+            dashboardId
+        )
+        if (getSpreadsheetError) {
+            console.log('getSpreadsheetError', getSpreadsheetError)
+            return [getSpreadsheetError]
+        }
+        const rows = spreadsheet.values
+        console.log('rows', rows)
+        rows.shift()
 
-            sheetData.feed.entry
-                .map((row) => ({
-                    title: row.gsx$title.$t,
-                    subtitle: row.gsx$subtitle.$t,
-                    image: row.gsx$image.$t,
-                    category: row.gsx$category.$t,
-                    postId: row.gsx$postid.$t,
-                    imageId: row.gsx$imageid.$t,
-                    lastUpdated: row.gsx$lastupdated.$t,
-                }))
-                .forEach((row) => {
-                    let category = {}
-
-                    let categoryId = this.slug(row.category, 'category')
-
-                    let existingCategory = Object.values(categories).find(
-                        (category) => category.id === categoryId
-                    )
-
-                    let article = {
-                        id: row.postId,
-                        title: row.title,
-                        subtitle: row.subtitle,
-                        imageName: row.image,
-                        image: this.driveExportUrl + row.imageId,
-                        categoryId,
-                        lastUpdated: row.lastUpdated,
-                        date: this.formatDate(row.lastUpdated),
-                        uri: `/articles/${row.postId}/${this.slug(
-                            row.title,
-                            'article'
-                        )}`,
-                    }
-
-                    if (existingCategory) {
-                        categories[categoryId].articles.push(row.postId)
-                    } else {
-                        category = {
-                            id: categoryId,
-                            title: row.category,
-                            imageName: row.image,
-                            image: this.driveExportUrl + row.imageId,
-                            articles: [row.postId],
-                            uri: `/categories/${categoryId}`,
-                        }
-                        categories[categoryId] = category
-                    }
-                    articles[row.postId] = article
-                })
-            return {
-                articles,
-                categories,
+        const categories = {}
+        const articles = {}
+        rows.forEach((row) => {
+            articles[row?.[4]] = {
+                id: row?.[4],
+                title: row?.[0],
+                subtitle: row?.[1],
+                imageName: row?.[3],
+                image: this.driveExportUrl + row?.[5],
+                category: row?.[2],
+                categoryId: this.slug(row?.[2], 'category'),
+                lastUpdated: row?.[6],
+                date: this.formatDate(row?.[6]),
+                uri: `/articles/${row?.[4]}/${this.slug(row?.[0], 'article')}`,
+            }
+            const categoryId = articles[row?.[4]]?.categoryId
+            const isExistingCategory = Object.values(categories).some(
+                (category) => category.id === categoryId
+            )
+            if (isExistingCategory) {
+                categories[categoryId].articles.push(row?.[4])
+            } else {
+                categories[categoryId] = {
+                    id: categoryId,
+                    title: row?.[2],
+                    imageName: row?.[3],
+                    image: articles[row?.[4]]?.image,
+                    articles: [row?.[4]],
+                    uri: `/categories/${categoryId}`,
+                }
             }
         })
-    }
+        return [
+            null,
+            {
+                articles,
+                categories,
+            },
+        ]
+    },
 
-    getArticleHtml(articleId) {
-        return this.getDocument(articleId).then((doc) => {
-            let styleStart = '<style type="text/css">'
-            let styleEnd = '</style>'
-            let splitStyleStart = doc.split(styleStart)
-            let splitStyleEnd = splitStyleStart[1].split(styleEnd)
-
-            let htmlStart = '<body '
-            let htmlStart2 = '>'
-            let htmlEnd = '</body>'
-            let splitHtmlStart = splitStyleEnd[1].split(htmlStart)
-            let splitHtmlStart2 = splitHtmlStart[1].split(htmlStart2)
-            let htmlClass = splitHtmlStart2[0]
-            let htmlStartFull = htmlStart + htmlClass + htmlStart2
-            splitHtmlStart = splitStyleEnd[1].split(htmlStartFull)
-            let splitHtmlEnd = splitHtmlStart[1].split(htmlEnd)
-            return (
-                styleStart +
-                splitStyleEnd[0] +
-                styleEnd +
-                '<div>' +
-                splitHtmlEnd[0] +
-                '</div>'
-            )
+    async fetchCategories(dispatch) {
+        const dashboardId = conf.dashboardId
+        if (this.isFetchingCategories) {
+            return ['fetching']
+        }
+        this.isFetchingCategories = true
+        dispatch({
+            type: 'REQUEST_CATEGORIES',
         })
-    }
+        const [getCategoriesError, response] = await this.getCategories(
+            dashboardId
+        )
+        if (getCategoriesError) {
+            return [getCategoriesError]
+        }
+        const { articles, categories } = response
+        dispatch({
+            type: 'RECEIVE_CATEGORIES',
+            articles,
+            categories,
+        })
+    },
+
+    async getArticleHtml(articleId) {
+        console.log('get article', articleId)
+        const [getDocumentError, doc] = await this.getDocument(articleId)
+        if (getDocumentError) {
+            console.log('getDocumentError', getDocumentError)
+            return [getDocumentError]
+        }
+        let styleStart = '<style type="text/css">'
+        let styleEnd = '</style>'
+        let splitStyleStart = doc.split(styleStart)
+        let splitStyleEnd = splitStyleStart[1].split(styleEnd)
+
+        let htmlStart = '<body '
+        let htmlStart2 = '>'
+        let htmlEnd = '</body>'
+        let splitHtmlStart = splitStyleEnd[1].split(htmlStart)
+        let splitHtmlStart2 = splitHtmlStart[1].split(htmlStart2)
+        let htmlClass = splitHtmlStart2[0]
+        let htmlStartFull = htmlStart + htmlClass + htmlStart2
+        splitHtmlStart = splitStyleEnd[1].split(htmlStartFull)
+        let splitHtmlEnd = splitHtmlStart[1].split(htmlEnd)
+
+        return [
+            null,
+            `${styleStart}
+        ${splitStyleEnd[0]}
+        ${styleEnd}
+        <div>${splitHtmlEnd[0]}</div>
+        `,
+        ]
+    },
+
+    async fetchArticle(articleId, dispatch) {
+        dispatch({
+            type: 'REQUEST_ARTICLE',
+            articleId,
+        })
+        const [getArticleError, articleHtml] = await this.getArticleHtml(
+            articleId
+        )
+        if (getArticleError) {
+            return [getArticleError]
+        }
+        dispatch({
+            type: 'RECEIVE_ARTICLE',
+            articleId,
+            articleHtml,
+        })
+    },
 
     slug(str, type = 'type') {
         str = str.replace(/^\s+|\s+$/g, '')
@@ -144,15 +177,15 @@ class Drive extends Api {
             str = type + '_' + str
         }
         return str
-    }
+    },
 
     formatDate(lastUpdated) {
-        var fullDateSplit = lastUpdated.split(' ')
-        var dateSplit = fullDateSplit[0].split('/')
-        var day = parseInt(dateSplit[0])
-        var month = dateSplit[1]
-        var year = dateSplit[2]
-        var monthNames = [
+        const fullDateSplit = lastUpdated.split(' ')
+        const dateSplit = fullDateSplit[0].split('/')
+        const day = parseInt(dateSplit[0])
+        const month = dateSplit[1]
+        const year = dateSplit[2]
+        const monthNames = [
             'January',
             'February',
             'March',
@@ -166,7 +199,7 @@ class Drive extends Api {
             'November',
             'December',
         ]
-        var daySuffix = 'th'
+        let daySuffix = 'th'
         switch (day) {
             case 1:
                 daySuffix = 'st'
@@ -178,8 +211,6 @@ class Drive extends Api {
                 daySuffix = 'rd'
                 break
         }
-        return day + daySuffix + ' of ' + monthNames[month - 1] + ' ' + year
-    }
+        return `${day}${daySuffix} of ${monthNames[month - 1]}`
+    },
 }
-
-export default new Drive()

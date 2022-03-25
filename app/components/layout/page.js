@@ -1,234 +1,153 @@
-import { html, PureComponent } from '../../../deps/react.js'
-import { StyleSheet, css } from '../../../deps/aphrodite.js'
-import { connect } from '../../../deps/react-redux.js'
-import { bindActionCreators } from '../../../deps/redux.js'
-import { Helmet } from '../../../deps/react-helmet.js'
-import { getLocation } from '../../modules/route/selectors.js'
-import * as categoryActions from '../../modules/category/actionCreators.js'
+import { html, useState, useEffect } from '../../../deps/react.js'
+import { Menu } from './menu.js'
+import { Sidebar } from './sidebar.js'
+import { buttonsStyles } from '../../styles/buttons.js'
+import { blocksStyles } from '../../styles/blocks.js'
+import { MenuBurger } from './menuBurger.js'
+import { Drive } from '../../lib/drive.js'
 
-import Menu from '../../components/layout/menu.js'
-import Sidebar from '../../components/layout/sidebar.js'
-import blocks from '../../styles/blocks.js'
+export const Page = ({
+    state,
+    dispatch,
+    title,
+    subtitle,
+    description,
+    sidebarImage,
+    showLinks,
+    children,
+}) => {
+    const articles = state?.articles
+    const categories = state?.categories
+    const menuVisible = state?.menuVisible
+    const toggleMenuVisible = () =>
+        dispatch({
+            type: 'TOGGLE_MENU_VISIBLE',
+        })
 
-class Page extends PureComponent {
-    static readyOnActions(dispatch) {
-        return Promise.all([
-            dispatch(categoryActions.fetchCategoriesIfNeeded()),
-        ])
-    }
-
-    constructor() {
-        super()
-        this.toggleMenu = this.toggleMenu.bind(this)
-        this.state = {
-            menuVisible: !(
-                typeof window !== 'undefined' && window.innerWidth < 769
-            ),
+    const isFetchingCategories = state?.isFetching?.categories
+    useEffect(async () => {
+        if (!isFetchingCategories && !Object.values(categories).length) {
+            await Drive.fetchCategories(dispatch)
         }
-    }
-
-    componentDidMount() {
-        Page.readyOnActions(this.props.dispatch)
-    }
-
-    toggleMenu() {
-        let { menuVisible } = this.state
-        this.setState(
-            {
-                menuVisible: !menuVisible,
-            },
-            (param) => param
-        )
-    }
-
-    render() {
-        let {
-            title,
-            subtitle,
-            description,
-            sidebarImage,
-            showLinks,
-            children,
-        } = this.props
-        let { menuVisible } = this.state
-
-        return html`
-            <div className=${css(blocks.wrapper, styles.page)}>
-                <${Helmet}
+    }, [categories, dispatch, isFetchingCategories])
+    useEffect(() => {
+        document.title = title
+            ? `${title} - React Drive CMS`
+            : 'React Drive CMS'
+    }, [title])
+    useEffect(() => {
+        document
+            .querySelector('meta[name="description"]')
+            .setAttribute('content', subtitle)
+    }, [subtitle])
+    return html` <style>
+            ${buttonsStyles} ${blocksStyles} .page {
+                display: flex;
+                width: 100%;
+                justify-content: flex-end;
+                overflow-x: hidden;
+                max-width: 100%;
+            }
+            main.page-main {
+                opacity: 1;
+                width: 100%;
+                display: block;
+                transition: width linear 750ms;
+                margin: 0;
+                padding: 0;
+                overflow-x: hidden;
+                max-width: 100%;
+            }
+            main.page-main.main-narrow {
+                margin: 0;
+                width: 100%;
+            }
+            section.page-content {
+                padding: 5rem;
+                overflow-x: hidden;
+                max-width: 100%;
+                transition: width linear 750ms;
+                width: 100%;
+                margin-left: 0;
+            }
+            section.page-content.content-narrow {
+                width: 100%;
+                margin-left: 0;
+            }
+            @media (min-width: 768px) {
+                main.page-main {
+                    display: block;
+                }
+                main.page-main.main-narrow {
+                    width: 60%;
+                    display: block;
+                }
+                section.page-content {
+                    width: 100%;
+                }
+                section.page-content.content-narrow {
+                    width: 100%;
+                }
+            }
+            @media (min-width: 992px) {
+                main.page-main {
+                    flex-direction: row;
+                    display: flex;
+                    justify-content: flex-end;
+                }
+                main.page-main.main-narrow {
+                    width: 70%;
+                    display: block;
+                }
+                section.page-content {
+                    width: 60%;
+                }
+                section.page-content.content-narrow {
+                    width: 100%;
+                }
+            }
+            @media (min-width: 1200px) {
+                main.page-main.main-narrow {
+                    width: 75%;
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: flex-end;
+                }
+                section.page-content {
+                    width: 60%;
+                }
+                section.page-content.content-narrow {
+                    width: 52%;
+                }
+            }
+        </style>
+        <div class="wrapper page">
+            <${MenuBurger} toggleMenuVisible=${toggleMenuVisible} />
+            <${Menu}
+                articles=${articles}
+                categories=${categories}
+                menuVisible=${menuVisible}
+            />
+            <main
+                class="wrapper page-main ${menuVisible
+                    ? 'main-narrow'
+                    : ''} blocks-fadein"
+            >
+                <${Sidebar}
                     title=${title}
-                    titleTemplate=${'%s - React Drive CMS'}
-                    meta=${[
-                        { 'char-set': 'utf-8' },
-                        { name: 'description', content: title },
-                    ]}
+                    subtitle=${subtitle}
+                    description=${description}
+                    sidebarImage=${sidebarImage}
+                    menuVisible=${menuVisible}
+                    showLinks=${showLinks}
                 />
-                <button
-                    className=${css(styles.menuBurger)}
-                    onClick=${this.toggleMenu}
+                <section
+                    class="wrapper page-content ${menuVisible
+                        ? 'content-narrow'
+                        : ''}"
                 >
-                    <div className=${css(styles.bar)} />
-                    <div className=${css(styles.bar)} />
-                    <div className=${css(styles.bar)} />
-                </button>
-                <${Menu} menuVisible=${menuVisible} />
-                <main
-                    className=${css(
-                        blocks.wrapper,
-                        styles.main,
-                        blocks.fadein,
-                        menuVisible && styles.mainNarrow
-                    )}
-                >
-                    <${Sidebar}
-                        title=${title}
-                        subtitle=${subtitle}
-                        description=${description}
-                        sidebarImage=${sidebarImage}
-                        menuVisible=${menuVisible}
-                        showLinks=${showLinks}
-                    />
-                    <section
-                        className=${css(
-                            styles.content,
-                            menuVisible && styles.contentNarrow
-                        )}
-                    >
-                        ${children}
-                    </section>
-                </main>
-            </div>
-        `
-    }
+                    ${children}
+                </section>
+            </main>
+        </div>`
 }
-
-function mapStateToProps(state) {
-    return {
-        location: getLocation(state),
-    }
-}
-
-function mapDispatchToProps(dispatch) {
-    return Object.assign(
-        bindActionCreators(
-            {
-                ...categoryActions,
-            },
-            dispatch
-        ),
-        { dispatch }
-    )
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(Page)
-
-let styles = StyleSheet.create({
-    page: {
-        display: 'flex',
-        width: '100%',
-        justifyContent: 'flex-end',
-        overflowX: 'hidden',
-        maxWidth: '100%',
-    },
-    main: {
-        opacity: 1,
-        width: '100%',
-        display: 'block',
-        transition: 'width linear 750ms',
-        '@media (min-width: 768px)': {
-            display: 'block',
-        },
-        '@media (min-width: 992px)': {
-            flexDirection: 'row',
-            display: 'flex',
-            justifyContent: 'flex-end',
-        },
-        margin: 0,
-        padding: 0,
-        overflowX: 'hidden',
-        maxWidth: '100%',
-    },
-    mainNarrow: {
-        margin: 0,
-        width: '100%',
-        '@media (min-width: 768px)': {
-            width: '60%',
-            display: 'block',
-        },
-        '@media (min-width: 992px)': {
-            display: 'block',
-            width: '70%',
-        },
-        '@media (min-width: 1200px)': {
-            width: '75%',
-            flexDirection: 'row',
-            display: 'flex',
-            justifyContent: 'flex-end',
-        },
-    },
-    content: {
-        padding: '5rem',
-        overflowX: 'hidden',
-        maxWidth: '100%',
-        transition: 'width linear 750ms',
-        width: '100%',
-        marginLeft: 0,
-        '@media (min-width: 768px)': {
-            width: '100%',
-        },
-        '@media (min-width: 992px)': {
-            width: '60%',
-        },
-        '@media (min-width: 1200px)': {
-            width: '60%',
-        },
-    },
-    contentNarrow: {
-        width: '100%',
-        marginLeft: 0,
-        '@media (min-width: 768px)': {
-            width: '100%',
-        },
-        '@media (min-width: 992px)': {
-            width: '100%',
-        },
-        '@media (min-width: 1200px)': {
-            width: '52%',
-        },
-    },
-    menuBurger: {
-        position: 'fixed',
-        top: '1.5rem',
-        left: '1.5rem',
-        zIndex: '15',
-        borderRadius: 5,
-        height: '4rem',
-        width: '4rem',
-        background: '#333',
-        paddingTop: 8,
-        cursor: 'pointer',
-        borderBottom: '0 transparent',
-        boxShadow: '#948b8b 2px 2px 10px',
-        color: '#fff',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        outline: 0,
-        border: 0,
-        ':hover': {
-            color: '#fff',
-            outline: 0,
-            background: '#999',
-        },
-        ':focus': {
-            outline: 0,
-        },
-    },
-    bar: {
-        height: '0.5rem',
-        width: '2.8rem',
-        display: 'block',
-        margin: '0 6px 5px',
-        background: '#fff',
-        borderRadius: '0.3rem',
-    },
-})

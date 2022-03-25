@@ -1,7 +1,7 @@
 import { html } from '../../../deps/react.js'
-import { Link } from '../../../deps/react-router-dom.js'
+import { avoidReload } from '../../utils/avoidReload.js'
 
-let Category = ({ category }) => html`
+export const Category = ({ category, setActivePanel }) => html`
     <style>
         .category-block {
             height: 30rem;
@@ -15,27 +15,27 @@ let Category = ({ category }) => html`
             cursor: pointer;
         }
         .category-block .title {
-            background: rgba(50,50,50,.5);
+            background: rgba(50, 50, 50, 0.5);
             width: 100%;
             font-size: 2rem;
             color: #fff;
             padding: 10px;
             font-weight: 700;
             line-height: 1.1;
-            font-family: Source Sans Pro,Helvetica,Arial,sans-serif;
+            font-family: Source Sans Pro, Helvetica, Arial, sans-serif;
             text-decoration: none;
         }
-        .category-block:hover .title { 
+        .category-block:hover .title {
             text-decoration: none;
             outline: 0;
-            color: #333337;;
-            transition: all .4s;
-            background: rgba(250,250,250,.5);
+            color: #333337;
+            transition: all 0.4s;
+            background: rgba(250, 250, 250, 0.5);
         }
         @media (min-width: 768px) {
             .category-block {
                 width: 100%;
-            }       
+            }
         }
         @media (min-width: 992px) {
             .category-block {
@@ -43,21 +43,18 @@ let Category = ({ category }) => html`
             }
         }
     </style>
-    
-    <${Link}
-        to=${category.uri}
+
+    <a
+        href=${category.uri}
         class="category-block"
         style=${{
             backgroundImage: `url(${category.image})`,
         }}
+        onClick=${(event) => {
+            avoidReload(event)
+            setActivePanel('posts')
+        }}
     >
-        <h2 
-            class="title"
-            title=${category.title}
-        >
-            ${category.title}
-        </h2>
-    <//>
+        <h2 class="title" title=${category.title}>${category.title}</h2>
+    </a>
 `
-
-export default Category

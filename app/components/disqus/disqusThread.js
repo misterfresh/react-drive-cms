@@ -1,50 +1,56 @@
-import { html, Component } from '../../../deps/react.js'
+import { html, useEffect, useState } from '../../../deps/react.js'
+import { to } from '../../utils/to.js'
+
 const conf = window.appConf
+const DISQUS_THREAD_URL = `//${conf.shortname}.disqus.com/embed.js`
 
-export default class DisqusThread extends Component {
-    constructor() {
-        super()
-        this.addDisqusScript = this.addDisqusScript.bind(this)
-        this.removeDisqusScript = this.removeDisqusScript.bind(this)
+export const DisqusThread = ({ articleId, articleTitle }) => {
+    const [disqusThreadScript, setDisqusThreadScript] = useState(null)
+
+    const loadDisqusThreadScript = async () => {
+        const [loadError, loadedScript] = await to(
+            new Promise(function (resolve, reject) {
+                const head = document.getElementsByTagName('head')[0]
+                const script = document.createElement('script')
+
+                script.type = 'text/javascript'
+                script.addEventListener('load', function (scriptData) {
+                    console.log('loaded', scriptData)
+                    resolve(scriptData)
+                })
+                script.defer = true
+                script.className = 'disqus-thread-script'
+                script.src = DISQUS_THREAD_URL
+                head.appendChild(script)
+            })
+        )
+        if (loadError) {
+            console.log('failed loading disqus thread script', loadError)
+        } else {
+            setDisqusThreadScript(loadedScript)
+        }
     }
-
-    addDisqusScript() {
-        let child = (this.disqus = document.createElement('script'))
-        let parent =
-            document.getElementsByTagName('head')[0] ||
-            document.getElementsByTagName('body')[0]
-        child.async = true
-        child.type = 'text/javascript'
-        child.src = '//' + conf.shortname + '.disqus.com/embed.js'
-        parent.appendChild(child)
-    }
-
-    removeDisqusScript() {
-        if (this.disqus && this.disqus.parentNode) {
-            this.disqus.parentNode.removeChild(this.disqus)
-            this.disqus = null
+    const removeDisqusThreadScript = () => {
+        console.log('removing disqus thread script')
+        if (disqusThreadScript && disqusThreadScript.parentNode) {
+            disqusThreadScript.parentNode.removeChild(disqusThreadScript)
+            setDisqusThreadScript(null)
         }
     }
 
-    componentDidMount() {
-        let { id, title } = this.props
+    useEffect(async () => {
         window.disqus_shortname = conf.shortname
-        window.disqus_identifier = id
-        window.disqus_title = title
+        window.disqus_identifier = articleId
+        window.disqus_title = articleTitle
         window.disqus_url = window.location.href
 
         if (typeof window.DISQUS !== 'undefined') {
             window.DISQUS.reset({ reload: true })
         } else {
-            this.addDisqusScript()
+            await loadDisqusThreadScript()
         }
-    }
+        return removeDisqusThreadScript
+    }, [articleId, articleTitle])
 
-    componentWillUnmount() {
-        this.removeDisqusScript()
-    }
-
-    render() {
-        return html`<div id="disqus_thread" />`
-    }
+    return html`<div id="disqus_thread" />`
 }

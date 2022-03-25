@@ -1,45 +1,54 @@
-import { html, Component } from '../../../deps/react.js'
+import { html, useEffect, useState } from '../../../deps/react.js'
+import { to } from '../../utils/to.js'
+
 const conf = window.appConf
+const DISQUS_COUNT_URL = `https://${conf.shortname}.disqus.com/count.js`
 
-export default class DisqusCount extends Component {
-    constructor(props) {
-        super(props)
-        this.addDisqusScript = this.addDisqusScript.bind(this)
-        this.removeDisqusScript = this.removeDisqusScript.bind(this)
+export const DisqusCount = ({ categories }) => {
+    const [disqusCountScript, setDisqusCountScript] = useState(null)
+
+    const loadDisqusCountScript = async () => {
+        const [loadError, loadedScript] = await to(
+            new Promise(function (resolve, reject) {
+                const head = document.getElementsByTagName('head')[0]
+                const script = document.createElement('script')
+
+                script.type = 'text/javascript'
+                script.addEventListener('load', function (scriptData) {
+                    console.log('loaded', scriptData)
+                    resolve(scriptData)
+                })
+                script.defer = true
+                script.className = 'disqus-count-script'
+                script.src = DISQUS_COUNT_URL
+                head.appendChild(script)
+            })
+        )
+        if (loadError) {
+            console.log('failed loading disqus count script', loadError)
+        } else {
+            setDisqusCountScript(loadedScript)
+        }
     }
-
-    addDisqusScript() {
-        this.disqusCount = document.createElement('script')
-        let child = this.disqusCount
-        let parent =
-            document.getElementsByTagName('head')[0] ||
-            document.getElementsByTagName('body')[0]
-        child.async = true
-        child.type = 'text/javascript'
-        child.src = `https://${conf.shortname}.disqus.com/count.js`
-        parent.appendChild(child)
-    }
-
-    removeDisqusScript() {
-        if (this.disqusCount && this.disqusCount.parentNode) {
-            this.disqusCount.parentNode.removeChild(this.disqusCount)
-            this.disqusCount = null
+    const removeDisqusCountScript = () => {
+        console.log('removing disqus count script')
+        if (disqusCountScript && disqusCountScript.parentNode) {
+            disqusCountScript.parentNode.removeChild(disqusCountScript)
+            setDisqusCountScript(null)
         }
     }
 
-    componentDidMount() {
+    useEffect(async () => {
         window.disqus_shortname = conf.shortname
         if (typeof window.DISQUSWIDGETS !== 'undefined') {
             window.DISQUSWIDGETS = undefined
         }
-        this.addDisqusScript()
-    }
+        if (Object.values(categories).length) {
+            await loadDisqusCountScript()
+        }
 
-    componentWillUnmount() {
-        this.removeDisqusScript()
-    }
+        return removeDisqusCountScript
+    }, [categories])
 
-    render() {
-        return html`<span id="disqus-comments-count" />`
-    }
+    return html`<span id="disqus-comments-count" />`
 }

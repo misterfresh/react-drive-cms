@@ -1,5 +1,5 @@
 export default function jsonpCall(url, callback) {
-    let handleJsonpResults =
+    const handleJsonpResults =
         'handleJsonpResults_' +
         Date.now() +
         '_' +
@@ -13,7 +13,7 @@ export default function jsonpCall(url, callback) {
         delete window[handleJsonpResults]
     }
 
-    let serviceUrl = `${url}${
+    const serviceUrl = `${url}${
         url.indexOf('?') > -1 ? '&' : '?'
     }callback=${handleJsonpResults}`
     //console.log('service', serviceUrl)
