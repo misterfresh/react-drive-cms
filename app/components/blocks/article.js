@@ -57,6 +57,9 @@ export const Article = ({ article, category }) => html`
             transition: all 0.4s;
             border-bottom: 1px solid #b6b6b6;
         }
+        article .meta a {
+            margin-left: 0.5rem;
+        }
         @media (min-width: 992px) {
             article .title {
                 font-size: 3.2rem;

@@ -1,7 +1,7 @@
 import { html } from '../../../deps/react.js'
 import { avoidReload } from '../../utils/avoidReload.js'
 
-export const Category = ({ category }) => html`
+export const Category = ({ category, setActivePanel }) => html`
     <style>
         .category-block {
             height: 30rem;
@@ -50,7 +50,10 @@ export const Category = ({ category }) => html`
         style=${{
             backgroundImage: `url(${category.image})`,
         }}
-        onClick=${avoidReload}
+        onClick=${(event) => {
+            avoidReload(event)
+            setActivePanel('posts')
+        }}
     >
         <h2 class="title" title=${category.title}>${category.title}</h2>
     </a>

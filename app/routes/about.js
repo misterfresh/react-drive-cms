@@ -5,11 +5,11 @@ import { avoidReload } from '../utils/avoidReload.js'
 
 export const About = ({ state, dispatch }) => html`
     <style>
-        .content {
+        .about-content {
             display: block;
         }
 
-        .image {
+        .about-content img.image {
             border-radius: 50%;
             width: 150px;
             border: 0;
@@ -41,7 +41,7 @@ export const About = ({ state, dispatch }) => html`
             text-transform: uppercase;
         }
 
-        footer .contact: {
+        footer a.contact {
             text-decoration: none;
             background-color: transparent;
             color: #999;
@@ -49,7 +49,7 @@ export const About = ({ state, dispatch }) => html`
             font-size: 1.4rem;
         }
 
-        footer .contact:hover {
+        footer a.contact:hover {
             text-decoration: none;
             background-color: transparent;
             color: #333;
@@ -67,7 +67,7 @@ export const About = ({ state, dispatch }) => html`
         state=${state}
         dispatch=${dispatch}
     >
-        <div class="content">
+        <div class="about-content">
             <img src=${resolveAsset('/assets/react_logo.png')} class="image" />
             <div class="info">
                 <h1 class="info-title">React Drive CMS Demo</h1>

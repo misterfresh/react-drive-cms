@@ -52,11 +52,12 @@ export const Menu = ({ categories, articles, menuVisible }) => {
                 color: #dadada;
                 font-size: 1.6rem;
             }
-            ul.menu-list: {
+            .menu ul.menu-list: {
                 padding: 10px 0;
                 font-size: 1.6rem;
                 margin-bottom: 20px;
                 margin-top: 0px;
+                list-style-type: none;
             }
             .item {
                 margin: 0;

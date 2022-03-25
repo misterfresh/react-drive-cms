@@ -42,10 +42,7 @@ export const Page = ({
             .setAttribute('content', subtitle)
     }, [subtitle])
     return html` <style>
-            ${buttonsStyles} 
-            ${inputStyles} 
-            ${blocksStyles} 
-            .page {
+            ${buttonsStyles} ${inputStyles} ${blocksStyles} .page {
                 display: flex;
                 width: 100%;
                 justify-content: flex-end;
@@ -78,7 +75,7 @@ export const Page = ({
                 width: 100%;
                 margin-left: 0;
             }
-            @media (min-width: 768px) : {
+            @media (min-width: 768px) {
                 main.page-main {
                     display: block;
                 }
@@ -93,7 +90,7 @@ export const Page = ({
                     width: 100%;
                 }
             }
-            @media (min-width: 992px) : {
+            @media (min-width: 992px) {
                 main.page-main {
                     flex-direction: row;
                     display: flex;
@@ -110,7 +107,7 @@ export const Page = ({
                     width: 100%;
                 }
             }
-            @media (min-width: 1200px) : {
+            @media (min-width: 1200px) {
                 main.page-main.main-narrow {
                     width: 75%;
                     display: flex;
@@ -125,7 +122,7 @@ export const Page = ({
                 }
             }
         </style>
-        <div class="block wrapper page">
+        <div class="wrapper page">
             <${MenuBurger} toggleMenuVisible=${toggleMenuVisible} />
             <${Menu}
                 articles=${articles}
@@ -133,9 +130,9 @@ export const Page = ({
                 menuVisible=${menuVisible}
             />
             <main
-                class="block wrapper page-main ${menuVisible
+                class="wrapper page-main ${menuVisible
                     ? 'main-narrow'
-                    : ''} wrapper blocks-fadein"
+                    : ''} blocks-fadein"
             >
                 <${Sidebar}
                     title=${title}
@@ -145,7 +142,11 @@ export const Page = ({
                     menuVisible=${menuVisible}
                     showLinks=${showLinks}
                 />
-                <section class="page-content ${menuVisible ? 'content-narrow' : ''}">
+                <section
+                    class="wrapper page-content ${menuVisible
+                        ? 'content-narrow'
+                        : ''}"
+                >
                     ${children}
                 </section>
             </main>

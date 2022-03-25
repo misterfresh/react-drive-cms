@@ -3,7 +3,12 @@ import resolveAsset from '../../utils/resolveAsset.js'
 import { avoidReload } from '../../utils/avoidReload.js'
 const conf = window.appConf
 
-export const Footer = ({ article = {}, category = {}, articles, menuVisible }) => {
+export const Footer = ({
+    article = {},
+    category = {},
+    articles,
+    menuVisible,
+}) => {
     return html`
         <style>
             footer {

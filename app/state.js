@@ -1,3 +1,6 @@
+import { getPathParts } from './utils/path.js'
+const parts = getPathParts()
+
 export const initialState = {
     isFetching: {
         categories: false,
@@ -7,8 +10,8 @@ export const initialState = {
     texts: {},
     menuVisible: !(typeof window !== 'undefined' && window.innerWidth < 769),
     activePanel: 'posts',
-    pageName: '',
-    activeItemId: '',
+    pageName: parts[1],
+    activeItemId: parts[2],
 }
 
 export const reducer = (state, action) => {

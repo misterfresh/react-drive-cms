@@ -2,10 +2,10 @@ import { html, useEffect } from '../../deps/react.js'
 import { Menu } from '../components/layout/menu.js'
 import { blocksStyles } from '../styles/blocks.js'
 import { Footer } from '../components/layout/footer.js'
-import DisqusThread from '../components/disqus/disqusThread.js'
+import {DisqusThread} from '../components/disqus/disqusThread.js'
 import { getPathParts } from '../utils/path.js'
 import { MenuBurger } from '../components/layout/menuBurger.js'
-import {Drive} from "../lib/drive.js";
+import { Drive } from '../lib/drive.js'
 
 export const Article = ({ state, dispatch }) => {
     const articles = state.articles
@@ -35,9 +35,10 @@ export const Article = ({ state, dispatch }) => {
             .querySelector('meta[name="description"]')
             .setAttribute('content', subtitle)
     }, [subtitle])
-    useEffect(async ()=> {
-        if(!texts?.[activeArticleId] && !isFetchingArticle){
+    useEffect(async () => {
+        if (!texts?.[activeArticleId] && !isFetchingArticle) {
             await Drive.fetchArticle(activeArticleId, dispatch)
+            document.getElementById('article-header')?.scrollIntoView()
         }
     }, [texts, activeArticleId, isFetchingArticle, dispatch])
     return html` <style>
@@ -69,7 +70,7 @@ export const Article = ({ state, dispatch }) => {
                 margin: 0.67em 0 10px;
             }
 
-            p {
+            .article-content p {
                 margin: 0;
                 padding-top: 0;
                 color: #666666;
@@ -119,7 +120,7 @@ export const Article = ({ state, dispatch }) => {
                 padding: 3rem 8%;
             }
 
-            @media (min-width: 768px) : {
+            @media (min-width: 768px) {
                 .hero {
                     height: 30rem;
                 }
@@ -134,7 +135,7 @@ export const Article = ({ state, dispatch }) => {
                 }
             }
 
-            @media (min-width: 992px) : {
+            @media (min-width: 992px) {
                 main.article.main-narrow {
                     width: 70%;
                 }
@@ -146,7 +147,7 @@ export const Article = ({ state, dispatch }) => {
                 }
             }
 
-            @media (min-width: 1200px) : {
+            @media (min-width: 1200px) {
                 main.article.main-narrow {
                     width: 75%;
                 }
@@ -157,15 +158,15 @@ export const Article = ({ state, dispatch }) => {
                     padding: 3rem 20%;
                 }
             }
-         
         </style>
         <div class="wrapper page">
             <${MenuBurger} toggleMenuVisible=${toggleMenuVisible} />
-            <${Menu} menuVisible=${menuVisible} articles=${articles}
-                     categories=${categories} />
-            <main
-                class="wrapper article ${menuVisible ? 'main-narrow' : ''}"
-            >
+            <${Menu}
+                menuVisible=${menuVisible}
+                articles=${articles}
+                categories=${categories}
+            />
+            <main class="wrapper article ${menuVisible ? 'main-narrow' : ''}">
                 <header
                     class="hero"
                     role="banner"
@@ -174,7 +175,11 @@ export const Article = ({ state, dispatch }) => {
                     }}
                     id="article-header"
                 />
-                <section class="block article-content ${menuVisible ? 'content-narrow' : ''}">
+                <section
+                    class="block article-content ${menuVisible
+                        ? 'content-narrow'
+                        : ''}"
+                >
                     <h1 id="article-title" class="title">
                         ${activeArticle?.title}
                     </h1>
@@ -184,8 +189,8 @@ export const Article = ({ state, dispatch }) => {
                         dangerouslySetInnerHTML=${{ __html: activeText }}
                     />
                     <${DisqusThread}
-                        id=${activeArticle.id}
-                        title=${activeArticle.title}
+                        articleId=${activeArticle.id}
+                        articleTitle=${activeArticle.title}
                     />
                 </section>
                 <${Footer}
