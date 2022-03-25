@@ -3,12 +3,12 @@ import { Drive } from '../../lib/drive.js'
 import { DisqusCount } from '../disqus/disqusCount.js'
 import { Article as ArticleBlock } from '../blocks/article.js'
 import { Category as CategoryBlock } from '../blocks/category.js'
-import { getPathParts } from '../../utils/path.js'
+import { getActiveItemId } from '../../utils/path.js'
 
 export const PostsAndCategories = ({ state, dispatch }) => {
     const categories = state?.categories ?? {}
     const articles = state?.articles ?? {}
-    const activeCategoryId = state?.activeItemId ?? getPathParts()?.[2]
+    const activeCategoryId = state?.activeItemId ?? getActiveItemId()
 
     const activePanel = state.activePanel
     const isFetchingCategories = state?.isFetching?.categories
