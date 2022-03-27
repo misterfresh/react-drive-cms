@@ -68,7 +68,10 @@ export const About = ({ state, dispatch }) => html`
         dispatch=${dispatch}
     >
         <div class="about-content">
-            <img src=${prefixUriIfNeeded('/assets/react_logo.png')} class="image" />
+            <img
+                src=${prefixUriIfNeeded('/assets/react_logo.png')}
+                class="image"
+            />
             <div class="info">
                 <h1 class="info-title">React Drive CMS Demo</h1>
                 <p>
@@ -85,7 +88,11 @@ export const About = ({ state, dispatch }) => html`
         </div>
 
         <footer>
-            <a href="${prefixUriIfNeeded( '/contact')}" class="contact" onClick=${avoidReload}>
+            <a
+                href="${prefixUriIfNeeded('/contact')}"
+                class="contact"
+                onClick=${avoidReload}
+            >
                 Contact
             </a>
         </footer>

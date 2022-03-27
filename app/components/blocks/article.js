@@ -1,6 +1,6 @@
 import { html } from '../../../deps/react.js'
 import { avoidReload } from '../../utils/avoidReload.js'
-import prefixUriIfNeeded from "../../utils/prefixUriIfNeeded.js";
+import prefixUriIfNeeded from '../../utils/prefixUriIfNeeded.js'
 
 export const Article = ({ article, category }) => html`
     <style>

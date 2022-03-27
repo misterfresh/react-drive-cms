@@ -7,7 +7,7 @@ import { Mail } from '../lib/mail.js'
 import prefixUriIfNeeded from '../utils/prefixUriIfNeeded.js'
 import { avoidReload } from '../utils/avoidReload.js'
 import debounce from '../../deps/debounce.js'
-import {Spinner} from "../styles/Spinner.js";
+import { Spinner } from '../styles/Spinner.js'
 
 const validateEmailRegex =
     /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/
@@ -130,7 +130,7 @@ export const Contact = ({ state, dispatch }) => {
                 return
             }
         }
-        if(isSending) {
+        if (isSending) {
             return false
         }
         setIsSending(true)
@@ -142,7 +142,7 @@ export const Contact = ({ state, dispatch }) => {
             message,
         })
         setIsSending(false)
-        if(sendError) {
+        if (sendError) {
             setSentError(sendError)
         } else {
             setIsSent(true)
@@ -174,10 +174,12 @@ export const Contact = ({ state, dispatch }) => {
             form button .spinner {
                 margin-right: 1rem;
             }
-            form button.green, form button.green:disabled {
+            form button.green,
+            form button.green:disabled {
                 background-color: green;
             }
-            form button.red, form button.red:disabled {
+            form button.red,
+            form button.red:disabled {
                 background-color: red;
             }
             form .error {
@@ -296,41 +298,59 @@ export const Contact = ({ state, dispatch }) => {
                         required
                     />
                 </div>
-                <br/>
-                <${SubmitButton} isSending=${isSending} isSent=${isSent} formError=${formError} sentError=${sentError} sendMessage=${sendMessage} />
+                <br />
+                <${SubmitButton}
+                    isSending=${isSending}
+                    isSent=${isSent}
+                    formError=${formError}
+                    sentError=${sentError}
+                    sendMessage=${sendMessage}
+                />
             </form>
             <footer>
-                <a href="${prefixUriIfNeeded( '/about')}" class="contact" onClick=${avoidReload}>
+                <a
+                    href="${prefixUriIfNeeded('/about')}"
+                    class="contact"
+                    onClick=${avoidReload}
+                >
                     About
                 </a>
             </footer>
         <//>`
 }
 
-const SubmitButton = ({ isSending, isSent, formError, sentError, sendMessage}) => {
+const SubmitButton = ({
+    isSending,
+    isSent,
+    formError,
+    sentError,
+    sendMessage,
+}) => {
     const isDisabled = isSending || isSent || formError || sentError
-    let message = "  Send message"
+    let message = '  Send message'
     let colorClass = ''
-    if(formError) {
-        message = "Invalid form"
-    } else if(isSending) {
-        message = "Sending..."
+    if (formError) {
+        message = 'Invalid form'
+    } else if (isSending) {
+        message = 'Sending...'
     } else if (sentError) {
-        message = "Failed to send message"
-        colorClass = "red"
+        message = 'Failed to send message'
+        colorClass = 'red'
     } else if (isSent) {
-        message = "Message sent!"
-        colorClass = "green"
+        message = 'Message sent!'
+        colorClass = 'green'
     }
     return html`<button
             class="base button ${colorClass}"
             type="submit"
             onClick=${sendMessage}
             disabled=${isDisabled}
-    >${isSending && html`<${Spinner}
-                    stroke="#eee"
-                    height=${18}
-                    width=${18}
-                />`}${message}</button>${sentError &&
-    html` <span class="error"> ${sentError} </span> `}`
+        >
+            ${isSending &&
+            html`<${Spinner}
+                stroke="#eee"
+                height=${18}
+                width=${18}
+            />`}${message}</button
+        >${sentError && html` <span class="error"> ${sentError} </span> `}`
 }

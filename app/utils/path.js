@@ -3,12 +3,16 @@ export const getPathParts = function (uri) {
     return uriToSplit.split('/')
 }
 
-export const getPageName = function(uri) {
+export const getPageName = function (uri) {
     const pathParts = getPathParts(uri)
-    return window.location.origin.includes('localhost') ? pathParts[1] : pathParts[2]
+    return window.location.origin.includes('localhost')
+        ? pathParts[1]
+        : pathParts[2]
 }
 
-export const getActiveItemId = function(uri) {
+export const getActiveItemId = function (uri) {
     const pathParts = getPathParts(uri)
-    return window.location.origin.includes('localhost') ? pathParts[2] : pathParts[3]
+    return window.location.origin.includes('localhost')
+        ? pathParts[2]
+        : pathParts[3]
 }

@@ -1,6 +1,6 @@
 import { html } from '../../../deps/react.js'
 import { avoidReload } from '../../utils/avoidReload.js'
-import prefixUriIfNeeded from "../../utils/prefixUriIfNeeded.js";
+import prefixUriIfNeeded from '../../utils/prefixUriIfNeeded.js'
 const conf = window.appConf
 
 export const Footer = ({
@@ -213,7 +213,7 @@ export const Footer = ({
         <footer>
             <div class="top ${menuVisible ? 'top-narrow' : ''}">
                 <a
-                    href="${prefixUriIfNeeded( '/about')}"
+                    href="${prefixUriIfNeeded('/about')}"
                     title="About"
                     class="profile-link"
                     onClick=${avoidReload}
@@ -231,7 +231,7 @@ export const Footer = ({
                         <span class="underline"> ${article.date} </span>
                         ${' '}by${' '}
                         <a
-                            href="${prefixUriIfNeeded( '/about')}"
+                            href="${prefixUriIfNeeded('/about')}"
                             title="About"
                             class="blue-link"
                             onClick=${avoidReload}
@@ -274,7 +274,7 @@ export const Footer = ({
                         <a
                             class="social-icon"
                             data-platform="mail"
-                            href="${prefixUriIfNeeded( '/contact')}"
+                            href="${prefixUriIfNeeded('/contact')}"
                             onClick=${avoidReload}
                         >
                             <i class="icon-mail-alt" />
@@ -295,7 +295,7 @@ export const Footer = ({
                         >
                             <div class="overlay" />
                             <a
-                                href="${prefixUriIfNeeded( article.uri)}"
+                                href="${prefixUriIfNeeded(article.uri)}"
                                 title=${article.title}
                                 class="other-article-title"
                                 onClick=${avoidReload}

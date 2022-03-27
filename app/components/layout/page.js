@@ -37,8 +37,8 @@ export const Page = ({
     }, [title])
     useEffect(() => {
         document
-            .querySelector('meta[name="description"]')
-            .setAttribute('content', subtitle)
+            ?.querySelector('meta[name="description"]')
+            ?.setAttribute('content', subtitle)
     }, [subtitle])
     return html` <style>
             ${buttonsStyles} ${blocksStyles} .page {
