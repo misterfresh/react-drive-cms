@@ -1,5 +1,6 @@
 import { html } from '../../../deps/react.js'
 import { avoidReload } from '../../utils/avoidReload.js'
+import prefixUriIfNeeded from "../../utils/prefixUriIfNeeded.js";
 
 export const Article = ({ article, category }) => html`
     <style>
@@ -73,7 +74,7 @@ export const Article = ({ article, category }) => html`
     <article>
         <h2>
             <a
-                href=${article.uri}
+                href=${prefixUriIfNeeded(article.uri)}
                 title=${article.title}
                 class="title"
                 onClick=${avoidReload}
@@ -94,7 +95,7 @@ export const Article = ({ article, category }) => html`
             - Published in :
             <a
                 title=${category.title}
-                href=${category.uri}
+                href=${prefixUriIfNeeded(category.uri)}
                 class="category"
                 onClick=${avoidReload}
             >

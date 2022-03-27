@@ -4,7 +4,7 @@ import { BaseInput } from '../components/form/baseInput.js'
 import { Page } from '../components/layout/page.js'
 import { inputStyles } from '../styles/input.js'
 import { Mail } from '../lib/mail.js'
-import resolveAsset from '../utils/resolveAsset.js'
+import prefixUriIfNeeded from '../utils/prefixUriIfNeeded.js'
 import { avoidReload } from '../utils/avoidReload.js'
 import debounce from '../../deps/debounce.js'
 import {Spinner} from "../styles/Spinner.js";
@@ -215,7 +215,7 @@ export const Contact = ({ state, dispatch }) => {
             title="Contact"
             subtitle="Get in touch with us"
             description=""
-            sidebarImage=${resolveAsset('/assets/default-contact.jpg')}
+            sidebarImage=${prefixUriIfNeeded('/assets/default-contact.jpg')}
             state=${state}
             dispatch=${dispatch}
         >
@@ -300,7 +300,7 @@ export const Contact = ({ state, dispatch }) => {
                 <${SubmitButton} isSending=${isSending} isSent=${isSent} formError=${formError} sentError=${sentError} sendMessage=${sendMessage} />
             </form>
             <footer>
-                <a href="/about" class="contact" onClick=${avoidReload}>
+                <a href="${prefixUriIfNeeded( '/about')}" class="contact" onClick=${avoidReload}>
                     About
                 </a>
             </footer>
