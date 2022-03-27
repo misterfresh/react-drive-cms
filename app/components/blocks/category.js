@@ -1,5 +1,6 @@
 import { html } from '../../../deps/react.js'
 import { avoidReload } from '../../utils/avoidReload.js'
+import prefixUriIfNeeded from '../../utils/prefixUriIfNeeded.js'
 
 export const Category = ({ category, setActivePanel }) => html`
     <style>
@@ -45,7 +46,7 @@ export const Category = ({ category, setActivePanel }) => html`
     </style>
 
     <a
-        href=${category.uri}
+        href=${prefixUriIfNeeded(category.uri)}
         class="category-block"
         style=${{
             backgroundImage: `url(${category.image})`,

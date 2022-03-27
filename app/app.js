@@ -8,7 +8,7 @@ import { Category } from './routes/category.js'
 import { About } from './routes/about.js'
 import { Contact } from './routes/contact.js'
 import { Home } from './routes/home.js'
-import { getPathParts } from './utils/path.js'
+import { getActiveItemId, getPageName } from './utils/path.js'
 
 const App = () => {
     const [state, dispatch] = useReducer(reducer, initialState)
@@ -40,11 +40,10 @@ const App = () => {
 
     useEffect(() => {
         const updatePath = () => {
-            const parts = getPathParts()
             dispatch({
                 type: 'URI_CHANGE',
-                pageName: parts[1],
-                activeItemId: parts[2],
+                pageName: getPageName(),
+                activeItemId: getActiveItemId(),
             })
         }
         window.addEventListener('popstate', updatePath)

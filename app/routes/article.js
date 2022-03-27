@@ -3,7 +3,7 @@ import { Menu } from '../components/layout/menu.js'
 import { blocksStyles } from '../styles/blocks.js'
 import { Footer } from '../components/layout/footer.js'
 import { DisqusThread } from '../components/disqus/disqusThread.js'
-import { getPathParts } from '../utils/path.js'
+import { getActiveItemId } from '../utils/path.js'
 import { MenuBurger } from '../components/layout/menuBurger.js'
 import { Drive } from '../lib/drive.js'
 
@@ -11,7 +11,7 @@ export const Article = ({ state, dispatch }) => {
     const articles = state.articles
     const categories = state.categories
     const texts = state.texts
-    const activeArticleId = state?.activeItemId ?? getPathParts()[2]
+    const activeArticleId = state?.activeItemId ?? getActiveItemId()
     const activeArticle = articles?.[activeArticleId] ?? {}
     const activeText = texts?.[activeArticleId]
     const category = categories?.[activeArticle?.categoryId]
@@ -32,9 +32,17 @@ export const Article = ({ state, dispatch }) => {
     }, [title])
     useEffect(() => {
         document
-            .querySelector('meta[name="description"]')
-            .setAttribute('content', subtitle)
+            ?.querySelector('meta[name="description"]')
+            ?.setAttribute('content', subtitle)
     }, [subtitle])
+
+    const isFetchingCategories = state?.isFetching?.categories
+    useEffect(async () => {
+        if (!isFetchingCategories && !Object.values(categories).length) {
+            await Drive.fetchCategories(dispatch)
+        }
+    }, [categories, dispatch, isFetchingCategories])
+
     useEffect(async () => {
         if (!texts?.[activeArticleId] && !isFetchingArticle) {
             await Drive.fetchArticle(activeArticleId, dispatch)

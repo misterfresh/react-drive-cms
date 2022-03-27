@@ -32,8 +32,11 @@ Some users were having trouble setting up their Google Drive folder properly for
 - You should not need to manually edit the "Images" sheet. After adding new images to the Images folder, you can re-run the Update/Update Dashboard script to make them available.
 - Click on "File", then click on "Publish on the web". You can leave the default settings "Full Document" and "web page". Click the green "Publish" button. This will make the "Dashboard" public.
 
-##### 7. Now let's make sure it works. Fork this repo, then clone it to your computer. Open the project in a text editor.
+##### 7. Create a new project and related API key in Google Cloud Console
+From September 2021, the Google Spreadsheet API v3 was discontinued. In order to use v4 of the API, you need to create a project in the Google Cloud Console, then create an API key linked to that project, with access to your Google Drive and Spreadsheet. Also you should restrict the API key to work only on your domain. You need to set that API key in /app/lib/drive.js file.
+
+##### 8. Now let's make sure it works. Fork this repo, then clone it to your computer. Open the project in a text editor.
 - in the "dev" folder of the project, open "conf.js". You need to change the "dashboardId" parameter and set it to the ID of your "Dashboard" spreadsheet. You can find that ID by opening the "Dashboard" spreadsheet and looking at the URL in the address bar. The ID is the string between "https://docs.google.com/spreadsheets/d/" and "/edit#gid=0"
 - run command "npm run start". Open your browser to http://localhost:8080/. You should see the list of your Posts and Categories displayed in the right pane.
 
-##### 8. To remove a Post you can delete it from the "Posts" folder, then re-run the Update/Update Dashboard script.
+##### 9. To remove a Post you can delete it from the "Posts" folder, then re-run the Update/Update Dashboard script.

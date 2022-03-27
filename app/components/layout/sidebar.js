@@ -170,7 +170,7 @@ export const Sidebar = ({
                 <div class="links ${showLinks ? 'show-links' : ''}">
                     <a
                         class="button"
-                        href="https://docs.google.com/folderview?id=0B0A_zASTMp9WU0NMYW9wXzVQWjg&usp=drivesdk"
+                        href="https://drive.google.com/drive/folders/0B0A_zASTMp9WU0NMYW9wXzVQWjg?resourcekey=0-k6M28TIgKjp_9hvDeT623Q&usp=sharing"
                         target="_blank"
                     >
                         Original posts on Drive

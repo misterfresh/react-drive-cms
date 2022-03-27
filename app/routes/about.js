@@ -1,6 +1,6 @@
 import { html } from '../../deps/react.js'
 import { Page } from '../components/layout/page.js'
-import resolveAsset from '../utils/resolveAsset.js'
+import prefixUriIfNeeded from '../utils/prefixUriIfNeeded.js'
 import { avoidReload } from '../utils/avoidReload.js'
 
 export const About = ({ state, dispatch }) => html`
@@ -62,13 +62,16 @@ export const About = ({ state, dispatch }) => html`
         title="About"
         subtitle="React Drive CMS Demo"
         description="An easy way to publish articles directly from Google Drive"
-        sidebarImage=${resolveAsset('/assets/default-about.jpg')}
+        sidebarImage=${prefixUriIfNeeded('/assets/default-about.jpg')}
         showLinks=${true}
         state=${state}
         dispatch=${dispatch}
     >
         <div class="about-content">
-            <img src=${resolveAsset('/assets/react_logo.png')} class="image" />
+            <img
+                src=${prefixUriIfNeeded('/assets/react_logo.png')}
+                class="image"
+            />
             <div class="info">
                 <h1 class="info-title">React Drive CMS Demo</h1>
                 <p>
@@ -85,7 +88,11 @@ export const About = ({ state, dispatch }) => html`
         </div>
 
         <footer>
-            <a href="/contact" class="contact" onClick=${avoidReload}>
+            <a
+                href="${prefixUriIfNeeded('/contact')}"
+                class="contact"
+                onClick=${avoidReload}
+            >
                 Contact
             </a>
         </footer>
