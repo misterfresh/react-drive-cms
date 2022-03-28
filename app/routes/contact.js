@@ -45,12 +45,10 @@ export const Contact = ({ state, dispatch }) => {
             if (isRequired && value.length < 4) {
                 setFormError('4 characters minimum.')
                 setErrorProperty(property)
-                console.log('invalid', property, value, isRequired)
                 return false
             } else if (errorProperty === property) {
                 setFormError('')
                 setErrorProperty('')
-                console.log('valid', property, value, isRequired)
             }
             return true
         },
@@ -66,7 +64,6 @@ export const Contact = ({ state, dispatch }) => {
             setText[property](text)
             const required = Boolean(event.target.required)
             validateText(property, text, required)
-            console.log('required', required)
         },
         [validateText]
     )
@@ -81,17 +78,14 @@ export const Contact = ({ state, dispatch }) => {
             if (email.length < 4) {
                 setFormError('4 characters minimum.')
                 setErrorProperty('email')
-                console.log('invalid', 'email', email, 'required')
                 return false
             } else if (!validateEmailRegex.test(email)) {
                 setFormError('Enter valid email')
                 setErrorProperty('email')
-                console.log('invalid', 'email', email, 'not valid')
                 return false
             } else if (errorProperty === 'email') {
                 setFormError('')
                 setErrorProperty('')
-                console.log('valid', 'email', email)
             }
             return true
         },
@@ -139,6 +133,10 @@ export const Contact = ({ state, dispatch }) => {
             return false
         }
         setIsSending(true)
+        setTimeout(() => {
+            setIsSending(false)
+            setSentError('timeout error, no response from server')
+        }, 10000)
         const [sendError, sent] = await Mail.send({
             name,
             email,

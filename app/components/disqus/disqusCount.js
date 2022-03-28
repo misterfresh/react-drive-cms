@@ -19,7 +19,6 @@ export const DisqusCount = ({ categories }) => {
 
                 script.type = 'text/javascript'
                 script.addEventListener('load', function (scriptData) {
-                    console.log('loaded', scriptData)
                     resolve(scriptData)
                 })
                 script.defer = true
@@ -35,7 +34,6 @@ export const DisqusCount = ({ categories }) => {
         }
     }
     const removeDisqusCountScript = () => {
-        console.log('removing disqus count script')
         if (disqusCountScript && disqusCountScript.parentNode) {
             disqusCountScript.parentNode.removeChild(disqusCountScript)
             setDisqusCountScript(null)

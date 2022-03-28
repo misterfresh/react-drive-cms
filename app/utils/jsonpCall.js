@@ -16,7 +16,7 @@ export default function jsonpCall(url, callback) {
     const serviceUrl = `${url}${
         url.indexOf('?') > -1 ? '&' : '?'
     }callback=${handleJsonpResults}`
-    //console.log('service', serviceUrl)
+
     const jsonpScript = document.createElement('script')
     jsonpScript.setAttribute('src', serviceUrl)
     jsonpScript.id = handleJsonpResults

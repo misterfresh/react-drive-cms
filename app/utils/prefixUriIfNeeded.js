@@ -2,6 +2,9 @@ const conf = window.appConf
 
 // this is to adapt URL to work on GitHub Pages
 export default function prefixUriIfNeeded(uri) {
+    if (!uri) {
+        return ''
+    }
     const base = window.location.origin
     uri = uri.startsWith(base) ? uri : base + uri
     const root = `/${conf.root}`

@@ -19,7 +19,6 @@ export const DisqusThread = ({ articleId, articleTitle }) => {
 
                 script.type = 'text/javascript'
                 script.addEventListener('load', function (scriptData) {
-                    console.log('loaded', scriptData)
                     resolve(scriptData)
                 })
                 script.defer = true
@@ -35,7 +34,6 @@ export const DisqusThread = ({ articleId, articleTitle }) => {
         }
     }
     const removeDisqusThreadScript = () => {
-        console.log('removing disqus thread script')
         if (disqusThreadScript && disqusThreadScript.parentNode) {
             disqusThreadScript.parentNode.removeChild(disqusThreadScript)
             setDisqusThreadScript(null)

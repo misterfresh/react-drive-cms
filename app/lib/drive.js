@@ -1,7 +1,6 @@
 import { Api } from './api.js'
 import { to } from '../utils/to.js'
 const conf = window.appConf
-const GOOGLE_API_KEY = 'AIzaSyBYOwC55SpcCZaG9d87UuHkxkQ8GRI_39M'
 
 export const Drive = {
     ...Api,
@@ -11,7 +10,7 @@ export const Drive = {
     async getSpreadsheet(fileId) {
         return await to(
             this.get(
-                `https://sheets.googleapis.com/v4/spreadsheets/${fileId}/values/Posts?alt=json&key=${GOOGLE_API_KEY}`,
+                `https://sheets.googleapis.com/v4/spreadsheets/${fileId}/values/Posts?alt=json&key=${conf.googleApiKey}`,
                 {
                     credentials: 'omit',
                 }
@@ -41,7 +40,6 @@ export const Drive = {
             return [getSpreadsheetError]
         }
         const rows = spreadsheet.values
-        console.log('rows', rows)
         rows.shift()
 
         const categories = {}
@@ -109,7 +107,6 @@ export const Drive = {
     },
 
     async getArticleHtml(articleId) {
-        console.log('get article', articleId)
         const [getDocumentError, doc] = await this.getDocument(articleId)
         if (getDocumentError) {
             console.log('getDocumentError', getDocumentError)

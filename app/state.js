@@ -16,7 +16,6 @@ export const initialState = {
 export const reducer = (state, action) => {
     switch (action.type) {
         case 'URI_CHANGE':
-            console.log('uri change', action)
             return {
                 ...state,
                 pageName: action?.pageName,
