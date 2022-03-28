@@ -1,4 +1,4 @@
-import { html } from '../../deps/react.js'
+import { html } from 'https://unpkg.com/htm@3.1.0/preact/standalone.module.js'
 import { Page } from '../components/layout/page.js'
 import prefixUriIfNeeded from '../utils/prefixUriIfNeeded.js'
 import { avoidReload } from '../utils/avoidReload.js'

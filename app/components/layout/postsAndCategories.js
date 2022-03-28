@@ -1,4 +1,8 @@
-import { html, useState, useEffect } from '../../../deps/react.js'
+import {
+    html,
+    useState,
+    useEffect,
+} from 'https://unpkg.com/htm@3.1.0/preact/standalone.module.js'
 import { Drive } from '../../lib/drive.js'
 import { DisqusCount } from '../disqus/disqusCount.js'
 import { Article as ArticleBlock } from '../blocks/article.js'

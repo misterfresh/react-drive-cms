@@ -1,4 +1,7 @@
-import { html, useEffect } from '../../deps/react.js'
+import {
+    html,
+    useEffect,
+} from 'https://unpkg.com/htm@3.1.0/preact/standalone.module.js'
 import { Menu } from '../components/layout/menu.js'
 import { blocksStyles } from '../styles/blocks.js'
 import { Footer } from '../components/layout/footer.js'

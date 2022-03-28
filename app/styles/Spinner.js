@@ -1,4 +1,4 @@
-import { html } from '../../deps/react.js'
+import { html } from 'https://unpkg.com/htm@3.1.0/preact/standalone.module.js'
 
 export const Spinner = ({ stroke = '#2f3d4c', width, height, rayon = 45 }) => {
     return html`<style>

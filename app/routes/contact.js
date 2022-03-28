@@ -1,4 +1,9 @@
-import { html, useState, useMemo, useCallback } from '../../deps/react.js'
+import {
+    html,
+    useState,
+    useMemo,
+    useCallback,
+} from 'https://unpkg.com/htm@3.1.0/preact/standalone.module.js'
 
 import { BaseInput } from '../components/form/baseInput.js'
 import { Page } from '../components/layout/page.js'
@@ -6,7 +11,7 @@ import { inputStyles } from '../styles/input.js'
 import { Mail } from '../lib/mail.js'
 import prefixUriIfNeeded from '../utils/prefixUriIfNeeded.js'
 import { avoidReload } from '../utils/avoidReload.js'
-import debounce from '../../deps/debounce.js'
+import debounce from '../utils/debounce.js'
 import { Spinner } from '../styles/Spinner.js'
 
 const validateEmailRegex =

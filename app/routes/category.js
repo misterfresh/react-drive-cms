@@ -1,4 +1,7 @@
-import { html, useEffect } from '../../deps/react.js'
+import {
+    html,
+    useEffect,
+} from 'https://unpkg.com/htm@3.1.0/preact/standalone.module.js'
 import { Page } from '../components/layout/page.js'
 import { PostsAndCategories } from '../components/layout/postsAndCategories.js'
 import { getActiveItemId } from '../utils/path.js'

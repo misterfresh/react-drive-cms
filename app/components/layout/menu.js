@@ -1,4 +1,8 @@
-import { html, useEffect, useState } from '../../../deps/react.js'
+import {
+    html,
+    useEffect,
+    useState,
+} from 'https://unpkg.com/htm@3.1.0/preact/standalone.module.js'
 import { avoidReload } from '../../utils/avoidReload.js'
 import prefixUriIfNeeded from '../../utils/prefixUriIfNeeded.js'
 

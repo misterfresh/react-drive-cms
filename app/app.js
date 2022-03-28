@@ -1,5 +1,11 @@
-import { html, render, useReducer, useMemo, useEffect } from '../deps/react.js'
-import debounce from '../deps/debounce.js'
+import {
+    html,
+    render,
+    useReducer,
+    useMemo,
+    useEffect,
+} from 'https://unpkg.com/htm@3.1.0/preact/standalone.module.js'
+import debounce from './utils/debounce.js'
 import { reducer, initialState } from './state.js'
 
 import { Article } from './routes/article.js'

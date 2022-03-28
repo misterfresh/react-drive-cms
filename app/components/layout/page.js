@@ -1,4 +1,8 @@
-import { html, useState, useEffect } from '../../../deps/react.js'
+import {
+    html,
+    useState,
+    useEffect,
+} from 'https://unpkg.com/htm@3.1.0/preact/standalone.module.js'
 import { Menu } from './menu.js'
 import { Sidebar } from './sidebar.js'
 import { buttonsStyles } from '../../styles/buttons.js'
