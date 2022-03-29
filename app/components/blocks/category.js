@@ -1,6 +1,6 @@
 import { html } from 'https://unpkg.com/htm@3.1.0/preact/standalone.module.js'
 import { avoidReload } from '../../utils/avoidReload.js'
-import prefixUriIfNeeded from '../../utils/prefixUriIfNeeded.js'
+import prefixUriWhenNeeded from '../../utils/prefixUriIfNeeded.js'
 
 export const Category = ({ category, setActivePanel }) => html`
     <style>
@@ -46,7 +46,7 @@ export const Category = ({ category, setActivePanel }) => html`
     </style>
 
     <a
-        href=${prefixUriIfNeeded(category.uri)}
+        href=${prefixUriWhenNeeded(category.uri)}
         class="category-block"
         style=${{
             backgroundImage: `url(${category.image})`,

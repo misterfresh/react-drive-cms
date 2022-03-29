@@ -4,7 +4,7 @@ import {
     useState,
 } from 'https://unpkg.com/htm@3.1.0/preact/standalone.module.js'
 import { avoidReload } from '../../utils/avoidReload.js'
-import prefixUriIfNeeded from '../../utils/prefixUriIfNeeded.js'
+import prefixUriWhenNeeded from '../../utils/prefixUriIfNeeded.js'
 
 export const Menu = ({ categories, articles, menuVisible }) => {
     const [activeCategory, setActiveCategory] = useState(false)
@@ -141,7 +141,7 @@ export const Menu = ({ categories, articles, menuVisible }) => {
                 <li class="item">
                     <i class="fas fa-home icon" />
                     <a
-                        href="${prefixUriIfNeeded('/')}"
+                        href="${prefixUriWhenNeeded('/')}"
                         title="Home"
                         class="item-link"
                         onClick=${avoidReload}
@@ -152,7 +152,7 @@ export const Menu = ({ categories, articles, menuVisible }) => {
                 <li class="item">
                     <i class="fas fa-user icon" />
                     <a
-                        href="${prefixUriIfNeeded('/about')}"
+                        href="${prefixUriWhenNeeded('/about')}"
                         title="About"
                         class="item-link"
                         onClick=${avoidReload}
@@ -163,7 +163,7 @@ export const Menu = ({ categories, articles, menuVisible }) => {
                 <li class="item">
                     <i class="fas fa-paper-plane icon" />
                     <a
-                        href="${prefixUriIfNeeded('/contact')}"
+                        href="${prefixUriWhenNeeded('/contact')}"
                         title="Contact"
                         class="item-link"
                         onClick=${avoidReload}
@@ -205,7 +205,7 @@ export const Menu = ({ categories, articles, menuVisible }) => {
                                                 <a
                                                     key=${article.id}
                                                     title=${article.title}
-                                                    href="${prefixUriIfNeeded(
+                                                    href="${prefixUriWhenNeeded(
                                                         article.uri
                                                     )}"
                                                     class="sub-item-link"
