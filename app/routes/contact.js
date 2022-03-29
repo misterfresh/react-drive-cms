@@ -9,7 +9,7 @@ import { BaseInput } from '../components/form/baseInput.js'
 import { Page } from '../components/layout/page.js'
 import { inputStyles } from '../styles/input.js'
 import { Mail } from '../lib/mail.js'
-import prefixUriWhenNeeded from '../utils/prefixUriIfNeeded.js'
+import prefixUriIfNeeded from '../utils/prefixUriIfNeeded.js'
 import { avoidReload } from '../utils/avoidReload.js'
 import debounce from '../utils/debounce.js'
 import { Spinner } from '../styles/Spinner.js'
@@ -220,7 +220,7 @@ export const Contact = ({ state, dispatch }) => {
             title="Contact"
             subtitle="Get in touch with us"
             description=""
-            sidebarImage=${prefixUriWhenNeeded('/assets/default-contact.jpg')}
+            sidebarImage=${prefixUriIfNeeded('/assets/default-contact.jpg')}
             state=${state}
             dispatch=${dispatch}
         >
@@ -312,7 +312,7 @@ export const Contact = ({ state, dispatch }) => {
             </form>
             <footer>
                 <a
-                    href="${prefixUriWhenNeeded('/about')}"
+                    href="${prefixUriIfNeeded('/about')}"
                     class="contact"
                     onClick=${avoidReload}
                 >

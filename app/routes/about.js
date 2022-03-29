@@ -1,6 +1,6 @@
 import { html } from 'https://unpkg.com/htm@3.1.0/preact/standalone.module.js'
 import { Page } from '../components/layout/page.js'
-import prefixUriWhenNeeded from '../utils/prefixUriIfNeeded.js'
+import prefixUriIfNeeded from '../utils/prefixUriIfNeeded.js'
 import { avoidReload } from '../utils/avoidReload.js'
 
 export const About = ({ state, dispatch }) => html`
@@ -62,14 +62,14 @@ export const About = ({ state, dispatch }) => html`
         title="About"
         subtitle="React Drive CMS Demo"
         description="An easy way to publish articles directly from Google Drive"
-        sidebarImage=${prefixUriWhenNeeded('/assets/default-about.jpg')}
+        sidebarImage=${prefixUriIfNeeded('/assets/default-about.jpg')}
         showLinks=${true}
         state=${state}
         dispatch=${dispatch}
     >
         <div class="about-content">
             <img
-                src=${prefixUriWhenNeeded('/assets/react_logo.png')}
+                src=${prefixUriIfNeeded('/assets/react_logo.png')}
                 class="image"
             />
             <div class="info">
@@ -89,7 +89,7 @@ export const About = ({ state, dispatch }) => html`
 
         <footer>
             <a
-                href="${prefixUriWhenNeeded('/contact')}"
+                href="${prefixUriIfNeeded('/contact')}"
                 class="contact"
                 onClick=${avoidReload}
             >

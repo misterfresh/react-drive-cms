@@ -1,6 +1,6 @@
 import { html } from 'https://unpkg.com/htm@3.1.0/preact/standalone.module.js'
 import { avoidReload } from '../../utils/avoidReload.js'
-import prefixUriWhenNeeded from '../../utils/prefixUriIfNeeded.js'
+import prefixUriIfNeeded from '../../utils/prefixUriIfNeeded.js'
 const conf = window.appConf
 
 export const Footer = ({
@@ -213,13 +213,13 @@ export const Footer = ({
         <footer>
             <div class="top ${menuVisible ? 'top-narrow' : ''}">
                 <a
-                    href="${prefixUriWhenNeeded('/about')}"
+                    href="${prefixUriIfNeeded('/about')}"
                     title="About"
                     class="profile-link"
                     onClick=${avoidReload}
                 >
                     <img
-                        src=${prefixUriWhenNeeded('/assets/profile-1.jpg')}
+                        src=${prefixUriIfNeeded('/assets/profile-1.jpg')}
                         class="profile"
                         alt="user-image"
                     />
@@ -231,7 +231,7 @@ export const Footer = ({
                         <span class="underline"> ${article.date} </span>
                         ${' '}by${' '}
                         <a
-                            href="${prefixUriWhenNeeded('/about')}"
+                            href="${prefixUriIfNeeded('/about')}"
                             title="About"
                             class="blue-link"
                             onClick=${avoidReload}
@@ -240,7 +240,7 @@ export const Footer = ({
                         </a>
                         ${' '}in${' '}
                         <a
-                            href=${prefixUriWhenNeeded(category.uri)}
+                            href=${prefixUriIfNeeded(category.uri)}
                             title=${category.title}
                             class="blue-link"
                             onClick=${avoidReload}
@@ -274,7 +274,7 @@ export const Footer = ({
                         <a
                             class="social-icon"
                             data-platform="mail"
-                            href="${prefixUriWhenNeeded('/contact')}"
+                            href="${prefixUriIfNeeded('/contact')}"
                             onClick=${avoidReload}
                         >
                             <i class="icon-mail-alt" />
@@ -295,7 +295,7 @@ export const Footer = ({
                         >
                             <div class="overlay" />
                             <a
-                                href="${prefixUriWhenNeeded(article.uri)}"
+                                href="${prefixUriIfNeeded(article.uri)}"
                                 title=${article.title}
                                 class="other-article-title"
                                 onClick=${avoidReload}
