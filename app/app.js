@@ -4,7 +4,7 @@ import {
     useReducer,
     useMemo,
     useEffect,
-} from 'https://unpkg.com/htm@3.1.0/preact/standalone.module.js'
+} from './lib/htm-preact.js'
 import debounce from './utils/debounce.js'
 import { reducer, initialState } from './state.js'
 

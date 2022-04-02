@@ -1,57 +1,28 @@
-import {
-    html,
-    useEffect,
-} from 'https://unpkg.com/htm@3.1.0/preact/standalone.module.js'
+import { html, useEffect } from '../lib/htm-preact.js'
 import { Menu } from '../components/layout/menu.js'
 import { blocksStyles } from '../styles/blocks.js'
 import { Footer } from '../components/layout/footer.js'
 import { DisqusThread } from '../components/disqus/disqusThread.js'
 import { getActiveItemId } from '../utils/path.js'
 import { MenuBurger } from '../components/layout/menuBurger.js'
-import { Drive } from '../lib/drive.js'
+import { useCategoriesAndArticles } from '../hooks/useCategoriesAndArticles.js'
+import { usePageMeta } from '../hooks/usePageMeta.js'
+import { useArticleText } from '../hooks/useArticleText.js'
+import { useMenuVisible } from '../hooks/useMenuVisible.js'
 
 export const Article = ({ state, dispatch }) => {
-    const articles = state.articles
-    const categories = state.categories
-    const texts = state.texts
+    const { articles, categories } = useCategoriesAndArticles()
     const activeArticleId = state?.activeItemId ?? getActiveItemId()
     const activeArticle = articles?.[activeArticleId] ?? {}
-    const activeText = texts?.[activeArticleId]
+    const activeText = useArticleText(activeArticleId)
     const category = categories?.[activeArticle?.categoryId]
-    const isFetchingArticle = state?.isFetching?.[activeArticleId]
 
     const title = activeArticle?.title
     const subtitle = activeArticle?.subtitle
-    const menuVisible = state?.menuVisible
-    const toggleMenuVisible = () =>
-        dispatch({
-            type: 'TOGGLE_MENU_VISIBLE',
-        })
 
-    useEffect(() => {
-        document.title = title
-            ? `${title} - React Drive CMS`
-            : 'React Drive CMS'
-    }, [title])
-    useEffect(() => {
-        document
-            ?.querySelector('meta[name="description"]')
-            ?.setAttribute('content', subtitle)
-    }, [subtitle])
+    const { menuVisible, toggleMenuVisible } = useMenuVisible()
+    usePageMeta(title, subtitle)
 
-    const isFetchingCategories = state?.isFetching?.categories
-    useEffect(async () => {
-        if (!isFetchingCategories && !Object.values(categories).length) {
-            await Drive.fetchCategories(dispatch)
-        }
-    }, [categories, dispatch, isFetchingCategories])
-
-    useEffect(async () => {
-        if (!texts?.[activeArticleId] && !isFetchingArticle) {
-            await Drive.fetchArticle(activeArticleId, dispatch)
-            document.getElementById('article-header')?.scrollIntoView()
-        }
-    }, [texts, activeArticleId, isFetchingArticle, dispatch])
     return html` <style>
             ${blocksStyles} .hero {
                 position: relative;

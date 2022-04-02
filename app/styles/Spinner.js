@@ -1,4 +1,4 @@
-import { html } from 'https://unpkg.com/htm@3.1.0/preact/standalone.module.js'
+import { html } from '../lib/htm-preact.js'
 
 export const Spinner = ({ stroke = '#2f3d4c', width, height, rayon = 45 }) => {
     return html`<style>

@@ -1,9 +1,4 @@
-import {
-    html,
-    useState,
-    useMemo,
-    useCallback,
-} from 'https://unpkg.com/htm@3.1.0/preact/standalone.module.js'
+import { html, useState, useMemo, useCallback } from '../lib/htm-preact.js'
 
 import { BaseInput } from '../components/form/baseInput.js'
 import { Page } from '../components/layout/page.js'
@@ -221,8 +216,6 @@ export const Contact = ({ state, dispatch }) => {
             subtitle="Get in touch with us"
             description=""
             sidebarImage=${prefixUriIfNeeded('/assets/default-contact.jpg')}
-            state=${state}
-            dispatch=${dispatch}
         >
             <h3 class="contact-title">Send me an email</h3>
             <form>

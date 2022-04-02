@@ -1,4 +1,4 @@
-import { html } from 'https://unpkg.com/htm@3.1.0/preact/standalone.module.js'
+import { html } from '../../lib/htm-preact.js'
 import capitalize from '../../utils/capitalize.js'
 
 export const BaseInput = ({

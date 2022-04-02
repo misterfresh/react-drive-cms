@@ -1,9 +1,9 @@
-import { html } from 'https://unpkg.com/htm@3.1.0/preact/standalone.module.js'
+import { html } from '../lib/htm-preact.js'
 import { Page } from '../components/layout/page.js'
 import prefixUriIfNeeded from '../utils/prefixUriIfNeeded.js'
 import { avoidReload } from '../utils/avoidReload.js'
 
-export const About = ({ state, dispatch }) => html`
+export const About = () => html`
     <style>
         .about-content {
             display: block;
@@ -64,8 +64,6 @@ export const About = ({ state, dispatch }) => html`
         description="An easy way to publish articles directly from Google Drive"
         sidebarImage=${prefixUriIfNeeded('/assets/default-about.jpg')}
         showLinks=${true}
-        state=${state}
-        dispatch=${dispatch}
     >
         <div class="about-content">
             <img

@@ -1,18 +1,14 @@
-import {
-    html,
-    useState,
-    useEffect,
-} from 'https://unpkg.com/htm@3.1.0/preact/standalone.module.js'
+import { html } from '../../lib/htm-preact.js'
 import { Menu } from './menu.js'
 import { Sidebar } from './sidebar.js'
 import { buttonsStyles } from '../../styles/buttons.js'
 import { blocksStyles } from '../../styles/blocks.js'
 import { MenuBurger } from './menuBurger.js'
-import { Drive } from '../../lib/drive.js'
+import { useCategoriesAndArticles } from '../../hooks/useCategoriesAndArticles.js'
+import { usePageMeta } from '../../hooks/usePageMeta.js'
+import { useMenuVisible } from '../../hooks/useMenuVisible.js'
 
 export const Page = ({
-    state,
-    dispatch,
     title,
     subtitle,
     description,
@@ -20,30 +16,11 @@ export const Page = ({
     showLinks,
     children,
 }) => {
-    const articles = state?.articles
-    const categories = state?.categories
-    const menuVisible = state?.menuVisible
-    const toggleMenuVisible = () =>
-        dispatch({
-            type: 'TOGGLE_MENU_VISIBLE',
-        })
+    const { categories, articles } = useCategoriesAndArticles()
+    const { menuVisible, toggleMenuVisible } = useMenuVisible()
 
-    const isFetchingCategories = state?.isFetching?.categories
-    useEffect(async () => {
-        if (!isFetchingCategories && !Object.values(categories).length) {
-            await Drive.fetchCategories(dispatch)
-        }
-    }, [categories, dispatch, isFetchingCategories])
-    useEffect(() => {
-        document.title = title
-            ? `${title} - React Drive CMS`
-            : 'React Drive CMS'
-    }, [title])
-    useEffect(() => {
-        document
-            ?.querySelector('meta[name="description"]')
-            ?.setAttribute('content', subtitle)
-    }, [subtitle])
+    usePageMeta(title, subtitle)
+
     return html` <style>
             ${buttonsStyles} ${blocksStyles} .page {
                 display: flex;

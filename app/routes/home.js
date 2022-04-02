@@ -1,4 +1,4 @@
-import { html } from 'https://unpkg.com/htm@3.1.0/preact/standalone.module.js'
+import { html } from '../lib/htm-preact.js'
 
 import { Page } from '../components/layout/page.js'
 import prefixUriIfNeeded from '../utils/prefixUriIfNeeded.js'
@@ -10,8 +10,6 @@ export const Home = ({ state, dispatch }) => html` <${Page}
     description="Publish articles directly from Google Drive to your website."
     sidebarImage=${prefixUriIfNeeded('/assets/default-sidebar.jpg')}
     showLinks=${true}
-    state=${state}
-    dispatch=${dispatch}
 >
     <${PostsAndCategories} state=${state} dispatch=${dispatch} />
 <//>`

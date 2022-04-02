@@ -1,38 +1,20 @@
-import {
-    html,
-    useState,
-    useEffect,
-} from 'https://unpkg.com/htm@3.1.0/preact/standalone.module.js'
-import { Drive } from '../../lib/drive.js'
+import { html } from '../../lib/htm-preact.js'
 import { DisqusCount } from '../disqus/disqusCount.js'
 import { Article as ArticleBlock } from '../blocks/article.js'
 import { Category as CategoryBlock } from '../blocks/category.js'
 import { getActiveItemId } from '../../utils/path.js'
+import { useCategoriesAndArticles } from '../../hooks/useCategoriesAndArticles.js'
+import { useActivePanel } from '../../hooks/useActivePanel.js'
 
 export const PostsAndCategories = ({ state, dispatch }) => {
-    const categories = state?.categories ?? {}
-    const articles = state?.articles ?? {}
+    const { categories, articles } = useCategoriesAndArticles()
     const activeCategoryId = state?.activeItemId ?? getActiveItemId()
 
-    const activePanel = state.activePanel
-    const isFetchingCategories = state?.isFetching?.categories
-
-    const setActivePanel = (panel) => {
-        dispatch({
-            type: 'SET_ACTIVE_PANEL',
-            selectedPanel: panel,
-        })
-    }
+    const { activePanel, setActivePanel } = useActivePanel()
     const handleSelectPanel = (event) => {
         const selectedPanel = event.target.dataset.panel
         setActivePanel(selectedPanel)
     }
-
-    useEffect(async () => {
-        if (!isFetchingCategories && !Object.values(categories).length) {
-            await Drive.fetchCategories(dispatch)
-        }
-    }, [categories, dispatch, isFetchingCategories])
 
     return html`<style>
             .toggle-posts-category {

@@ -1,8 +1,4 @@
-import {
-    html,
-    useEffect,
-    useState,
-} from 'https://unpkg.com/htm@3.1.0/preact/standalone.module.js'
+import { html, useEffect, useState } from '../../lib/htm-preact.js'
 import { to } from '../../utils/to.js'
 
 const conf = window.appConf

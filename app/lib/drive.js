@@ -4,7 +4,7 @@ const conf = window.appConf
 
 export const Drive = {
     ...Api,
-    driveExportUrl: 'https://drive.google.com/uc?export=download&id=',
+    driveExportUrl: 'https://drive.google.com/uc?export=view&id=',
     isFetchingCategories: false,
 
     async getSpreadsheet(fileId) {
@@ -31,7 +31,7 @@ export const Drive = {
         )
     },
 
-    async getCategories(dashboardId) {
+    async fetchCategories(dashboardId) {
         const [getSpreadsheetError, spreadsheet] = await this.getSpreadsheet(
             dashboardId
         )
@@ -83,30 +83,7 @@ export const Drive = {
         ]
     },
 
-    async fetchCategories(dispatch) {
-        const dashboardId = conf.dashboardId
-        if (this.isFetchingCategories) {
-            return ['fetching']
-        }
-        this.isFetchingCategories = true
-        dispatch({
-            type: 'REQUEST_CATEGORIES',
-        })
-        const [getCategoriesError, response] = await this.getCategories(
-            dashboardId
-        )
-        if (getCategoriesError) {
-            return [getCategoriesError]
-        }
-        const { articles, categories } = response
-        dispatch({
-            type: 'RECEIVE_CATEGORIES',
-            articles,
-            categories,
-        })
-    },
-
-    async getArticleHtml(articleId) {
+    async fetchArticle(articleId) {
         const [getDocumentError, doc] = await this.getDocument(articleId)
         if (getDocumentError) {
             console.log('getDocumentError', getDocumentError)
@@ -135,24 +112,6 @@ export const Drive = {
         <div>${splitHtmlEnd[0]}</div>
         `,
         ]
-    },
-
-    async fetchArticle(articleId, dispatch) {
-        dispatch({
-            type: 'REQUEST_ARTICLE',
-            articleId,
-        })
-        const [getArticleError, articleHtml] = await this.getArticleHtml(
-            articleId
-        )
-        if (getArticleError) {
-            return [getArticleError]
-        }
-        dispatch({
-            type: 'RECEIVE_ARTICLE',
-            articleId,
-            articleHtml,
-        })
     },
 
     slug(str, type = 'type') {

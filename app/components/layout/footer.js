@@ -1,4 +1,4 @@
-import { html } from 'https://unpkg.com/htm@3.1.0/preact/standalone.module.js'
+import { html } from '../../lib/htm-preact.js'
 import { avoidReload } from '../../utils/avoidReload.js'
 import prefixUriIfNeeded from '../../utils/prefixUriIfNeeded.js'
 const conf = window.appConf
