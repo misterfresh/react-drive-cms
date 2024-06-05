@@ -4,6 +4,8 @@ import prefixUriIfNeeded from '../../utils/prefixUriIfNeeded.js'
 
 export const Article = ({ article, category }) => html`
     <style>
+    /******************************************************************adding new font family*********************************************************************/
+    @import url('https://fonts.googleapis.com/css2?family=Didact+Gothic&family=Joan&family=Noto+Sans+JP:wght@100;400&family=Noto+Serif+JP:wght@200;400;500&family=Playfair+Display&display=swap');
         article {
             padding: 30px 0;
             display: block;
@@ -15,7 +17,7 @@ export const Article = ({ article, category }) => html`
             color: #333337;
             font-size: 2.4rem;
             margin-top: 0;
-            font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif;
+            font-family: 'Noto Sans JP', sans-serif; /****************************** changed font style******************************/
             font-weight: 700;
             margin-bottom: 10px;
             line-height: 1.1;
@@ -28,8 +30,8 @@ export const Article = ({ article, category }) => html`
         }
         article p {
             margin: 0 0 10px;
-            font-family: 'Droid Serif', serif;
-            font-size: 1.6rem;
+            font-family: 'Noto Serif JP', serif; /******************************changed font family*****************************************************/
+            font-size: 1.5rem;/********************************changed font size***************************************************/
         }
         article p.description {
             margin-bottom: 30px;

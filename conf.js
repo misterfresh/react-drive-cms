@@ -1,10 +1,10 @@
 window.appConf = {
-    author: 'React Drive CMS',
-    dashboardId: '1-on_GfmvaEcOk7HcWfKb8B6KFRv166RkLN2YmDEtDn4',
+    author: 'The Purple Club',
+    dashboardId: '1WYSZbWkOVJ1Hw7aetftM_j-j7n2_AOg-F6lWPyPP6qU',
     sendContactMessageUrlId:
-        'AKfycbyL4vW1UWs4mskuDjLoLmf1Hjan1rTLEca6i2Hi2H_4CtKUN84d',
+        'AKfycbzbSGucaLQx0fk21bXL6EPzP6GfY6Dp1FHwNoL2m_HeZyyfA7XYZLP5cOZMIi751TOoQQ',
     shortname: 'easydrivecms',
-    root: 'react-drive-cms',
-    ipInfoToken: '6efb7a808a4857',
-    googleApiKey: 'AIzaSyBYOwC55SpcCZaG9d87UuHkxkQ8GRI_39M',
+    root: 'home',
+    ipInfoToken: '0efb550629ccad',
+    googleApiKey: 'AIzaSyDK37LHCky4_yIggqcKAYmFoXx6mryW7GM',
 }
