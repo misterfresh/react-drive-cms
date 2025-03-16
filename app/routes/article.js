@@ -167,6 +167,7 @@ export const Article = ({ state, dispatch }) => {
                     </h1>
                     <p>${activeArticle?.subtitle}</p>
                     <div
+                        
                         class="text"
                         dangerouslySetInnerHTML=${{ __html: activeText }}
                     />

@@ -15,6 +15,10 @@ import { About } from './routes/about.js'
 import { Contact } from './routes/contact.js'
 import { Home } from './routes/home.js'
 import { getActiveItemId, getPageName } from './utils/path.js'
+import { Memoriam } from './routes/memoriam.js'
+import { Music } from './routes/music.js'
+import { Japanese } from './routes/japanese.js'
+import { Chinese } from './routes/chinese.js'
 
 const App = () => {
     const [state, dispatch] = useReducer(reducer, initialState)
@@ -30,6 +34,14 @@ const App = () => {
             Page = Category
         } else if (pageName === 'articles') {
             Page = Article
+        } else if (pageName === 'memoriam') {
+            Page = Memoriam
+        } else if (pageName === 'music'){
+            Page = Music
+        }else if(pageName === 'japanese'){
+            Page = Japanese
+        }else if(pageName === 'chinese'){
+            Page = Chinese
         }
         return Page
     }, [pageName])

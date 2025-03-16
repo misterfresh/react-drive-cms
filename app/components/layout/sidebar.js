@@ -9,6 +9,8 @@ export const Sidebar = ({
     showLinks,
 }) => {
     return html` <style>
+    /**************************importing new font styles******************************/
+    @import url('https://fonts.googleapis.com/css2?family=Didact+Gothic&family=Joan&family=Noto+Sans+JP&family=Noto+Serif+JP:wght@400;500&&family=Playfair+Display&display=swap');
             aside.sidebar {
                 justify-content: flex-start;
                 align-items: flex-end;
@@ -86,7 +88,7 @@ export const Sidebar = ({
                 padding: 5%;
                 background: rgba(50, 50, 50, 0.5);
                 color: #fafafa;
-                height: 28rem;
+                height: 25rem; /**2023 edits**/
                 width: 100%;
                 display: flex;
                 justify-content: flex-end;
@@ -96,7 +98,7 @@ export const Sidebar = ({
 
             aside.sidebar .primary {
                 border-bottom: solid 1px rgba(255, 255, 255, 0.3);
-                margin-bottom: 1.6rem;
+                margin-bottom: 1.2rem; /**2023 edits**/
             }
 
             aside.sidebar .primary h1 {
@@ -104,15 +106,17 @@ export const Sidebar = ({
                 margin-bottom: 0;
                 font-size: 3.4rem;
                 text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
-                font-weight: 700;
-                font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif;
+                font-family: 'Noto Serif JP', serif;/***********************changing font family******************************/
+                font-weight: 500; /***************changing font weight******************/
+                
             }
 
             aside.sidebar .primary p {
                 margin-bottom: 1rem;
                 text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
-                line-height: 2.4rem;
-                font-size: 1.8rem;
+                line-height: 2rem; /***************changed line height******************/
+                font-size: 1.6rem; /******************changed font size*****************/
+                font-weight: 100; /***************changed font weight******************/
             }
 
             aside.sidebar .links: {
@@ -129,7 +133,7 @@ export const Sidebar = ({
                 color: #fff;
                 margin-right: 20px;
                 margin-bottom: 0;
-                background-color: #337ab7;
+                background-color: #8700A3; /******2023 edit****/
                 font-weight: 400;
                 text-align: center;
                 touch-action: manipulation;
@@ -145,15 +149,15 @@ export const Sidebar = ({
 
             aside.sidebar .links a.button:hover {
                 color: #fff;
-                background-color: #286090;
-                border-color: #204d74;
+                background-color: #75018e; /**2023 edits**/
+                border-color: #75018e;/**2023 edits**/
                 text-decoration: none;
             }
 
             aside.sidebar .links a.button:focus {
                 color: #fff;
-                background-color: #286090;
-                border-color: #122b40;
+                background-color: #75018e;  /**2023 edits**/
+                border-color: #75018e;/**2023 edits**/
                 text-decoration: none;
             }
         </style>
@@ -177,7 +181,7 @@ export const Sidebar = ({
                     </a>
                     <a
                         class="button"
-                        href="https://github.com/misterfresh/react-drive-cms/tree/master"
+                        href="https://github.com/potinmak/birds"
                         target="_blank"
                     >
                         Source on GitHub

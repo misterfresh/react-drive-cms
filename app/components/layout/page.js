@@ -22,18 +22,21 @@ export const Page = ({
     usePageMeta(title, subtitle)
 
     return html` <style>
+    /**************************importing new font families******************************/
+    @import url('https://fonts.googleapis.com/css2?family=Didact+Gothic&family=Joan&family=Noto+Sans+JP&family=Noto+Serif+JP:wght@200;400;500&family=Playfair+Display&display=swap');
             ${buttonsStyles} ${blocksStyles} .page {
                 display: flex;
                 width: 100%;
                 justify-content: flex-end;
                 overflow-x: hidden;
                 max-width: 100%;
+                font-family: 'Noto Serif JP', serif;/**************************adding font family attributes************************/
             }
             main.page-main {
                 opacity: 1;
                 width: 100%;
                 display: block;
-                transition: width linear 750ms;
+                transition: width linear 1000ms; /***********************changed speed*************/
                 margin: 0;
                 padding: 0;
                 overflow-x: hidden;
@@ -47,7 +50,7 @@ export const Page = ({
                 padding: 5rem;
                 overflow-x: hidden;
                 max-width: 100%;
-                transition: width linear 750ms;
+                transition: width linear 1000ms; /***************************changed speed*************/
                 width: 100%;
                 margin-left: 0;
             }

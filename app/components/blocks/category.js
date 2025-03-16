@@ -14,6 +14,13 @@ export const Category = ({ category, setActivePanel }) => html`
             display: flex;
             align-items: flex-end;
             cursor: pointer;
+            transition-timing-function: ease-in-out; /*************filter added************/
+            transition-duration: 2s; /************filter added************/
+        }
+        .category-block:hover{
+            filter: hue-rotate(360deg); /******************filter added***************/
+            transition-timing-function: ease-in-out; /****************filter added*******************/
+            transition-duration: 2s; /****************filter added*******************/
         }
         .category-block .title {
             background: rgba(50, 50, 50, 0.5);

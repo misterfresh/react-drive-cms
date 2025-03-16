@@ -14,6 +14,7 @@ export const blocksStyles = `<style>
         background-size: cover;
         background-repeat: no-repeat;
         background-position: center center;
+        box-shadow: #000 2px 2px 12px; /***************************added box shadow****************/
     }
     .center {
         width: 30%;

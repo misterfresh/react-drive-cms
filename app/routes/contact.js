@@ -148,11 +148,13 @@ export const Contact = ({ state, dispatch }) => {
     }
 
     return html` <style>
+    /**************adding font family imports***********/
+   @import url('https://fonts.googleapis.com/css2?family=Didact+Gothic&family=Joan&family=Noto+Sans+JP:wght@100;400&family=Noto+Serif+JP:wght@200;400;500&family=Playfair+Display&display=swap');
             ${inputStyles} .contact-title {
                 font-size: 2.6rem;
                 margin-top: 20px;
-                font-family: inherit;
-                font-weight: 500;
+                font-family: 'Noto Serif JP', serif;/**************adding font family attributes***********/
+                font-weight: 700; /**************adding font weight********************/
                 line-height: 1.1;
                 color: inherit;
                 margin-bottom: 10px;
@@ -162,12 +164,12 @@ export const Contact = ({ state, dispatch }) => {
             }
             form label {
                 font-size: 2rem;
-                font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif;
-                font-weight: 700;
+                font-family: 'Noto Serif JP', serif;/**************adding font family attributes***********/
+                font-weight: 500; /**************adding font weight********************/
                 margin: 15px 0 0;
             }
             form button {
-                font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif;
+                font-family: 'Noto Serif JP', serif;/**************adding font family attributes***********/
             }
             form button .spinner {
                 margin-right: 1rem;
@@ -212,12 +214,12 @@ export const Contact = ({ state, dispatch }) => {
             }
         </style>
         <${Page}
-            title="Contact"
-            subtitle="Get in touch with us"
-            description=""
-            sidebarImage=${prefixUriIfNeeded('/assets/default-contact.jpg')}
+            title="Leukistic Bald Eagle"
+            subtitle=""
+            description="This eagle has a pale coloration on his feathers, the cause of this is unknown. But the colors of his feet and eyes are normal, and his health status is normal. ~Photo: 2020 The Journal of the San Juan Islands"
+            sidebarImage=${prefixUriIfNeeded('/assets/white_bald_eagle.jpg')}
         >
-            <h3 class="contact-title">Send me an email</h3>
+            <h3 class="contact-title">Contact us for further inquiries. </h3>
             <form>
                 <div>
                     <label for="name" class="required"> Your name </label>

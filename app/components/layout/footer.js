@@ -135,10 +135,10 @@ export const Footer = ({
                 }
             }
             .profile {
-                width: 6rem;
+                width: 8.06rem;
                 padding: 0;
                 border: 0;
-                border-radius: 50%;
+                border-radius: 0%;
                 height: 6rem;
                 margin-bottom: 1rem;
             }
@@ -219,7 +219,7 @@ export const Footer = ({
                     onClick=${avoidReload}
                 >
                     <img
-                        src=${prefixUriIfNeeded('/assets/profile-1.jpg')}
+                        src=${prefixUriIfNeeded('/assets/キョロちゃん.jpg')}
                         class="profile"
                         alt="user-image"
                     />

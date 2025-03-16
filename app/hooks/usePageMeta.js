@@ -3,8 +3,8 @@ import { useEffect } from '../lib/htm-preact.js'
 export const usePageMeta = (title, subtitle) => {
     useEffect(() => {
         document.title = title
-            ? `${title} - React Drive CMS`
-            : 'React Drive CMS'
+            ? `${title} - The Purple Club` /***********changed name******************/
+            : 'The Purple Club'
     }, [title])
 
     useEffect(() => {

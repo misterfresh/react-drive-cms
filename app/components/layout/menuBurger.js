@@ -14,18 +14,21 @@ export const MenuBurger = ({ toggleMenuVisible }) => {
                 padding-top: 8px;
                 cursor: pointer;
                 border-bottom: 0 transparent;
-                box-shadow: #948b8b 2px 2px 10px;
+                box-shadow:  #000 2px 2px 12px; /***********************************/
                 color: #fff;
                 display: flex;
                 flex-direction: column;
                 align-items: center;
                 outline: 0;
                 border: 0;
+                background:#810541; /**************** #f06236changed background color****************/
+                transition: 1s ease-in-out; /******************************/
             }
             .menu-burger:hover {
                 color: #fff;
                 outline: 0;
-                background: #999;
+                background: #6236f0; /******************************/
+                transition: 1s ease-in-out; /******************************/
             }
             .menu-burger:focus {
                 outline: 0;

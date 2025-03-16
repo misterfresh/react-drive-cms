@@ -5,12 +5,14 @@ import { avoidReload } from '../utils/avoidReload.js'
 
 export const About = () => html`
     <style>
+    /*************************************adding font family imports***********************************/
+    @import url('https://fonts.googleapis.com/css2?family=Didact+Gothic&family=Joan&family=Noto+Sans+JP&family=Noto+Serif+JP:wght@200;400;500&family=Playfair+Display&display=swap');
         .about-content {
             display: block;
         }
 
         .about-content img.image {
-            border-radius: 50%;
+            border-radius: 0%;
             width: 150px;
             border: 0;
             max-width: 100%;
@@ -24,12 +26,14 @@ export const About = () => html`
             font-size: 3.8rem;
             font-weight: 700;
             line-height: 1.1;
-            font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif;
+            font-family: 'Noto Serif JP', serif;/**************adding font family attributes***********/
         }
 
         .info p {
             font-size: 2rem;
             margin: 0 0 30px;
+            font-family: 'Noto Serif JP', serif; /**************adding font family attributes***********/
+            font-weight: 100; /**************adding font weight********************/
         }
 
         footer {
@@ -59,29 +63,25 @@ export const About = () => html`
         }
     </style>
     <${Page}
-        title="About"
-        subtitle="React Drive CMS Demo"
-        description="An easy way to publish articles directly from Google Drive"
+        title="Gyrfalcon"
+        subtitle=""
+        description="Gyrfalcon is a strong and festy predator in the High Arctic. They are also the world's fastest bird. They can fly with an average speed of 50-68 mph. ~Photo: 2023 Gilligallou Bird"
         sidebarImage=${prefixUriIfNeeded('/assets/default-about.jpg')}
         showLinks=${true}
     >
         <div class="about-content">
-            <img
-                src=${prefixUriIfNeeded('/assets/react_logo.png')}
+            <div class="info">
+                <h1 class="info-title">The Purple Club</h1>
+                <img
+                src=${prefixUriIfNeeded('/assets/キョロちゃん.jpg')}
                 class="image"
             />
-            <div class="info">
-                <h1 class="info-title">React Drive CMS Demo</h1>
                 <p>
-                    A demo site to showcase the use of Google Drive as a Content
-                    Management System. Write articles in Google Docs and publish
-                    them directly from there.
+                   Hello! Welcome to The Purple Club. This is my personal blog where I write about things, people and animals that are surrounding my life.
+                   I hope that some of my stories would resonate with yours. Feel free to leave a comment in the posts. Thank you for your time and appreciation.
                 </p>
-                <p>
-                    Google Drive is the backend, only a few static files are
-                    hosted on GitHub Pages, and the content is displayed with
-                    React JS.
-                </p>
+                <p style="text-align: left;"> <i>~Po Tin Mak Elly</i></p>
+                
             </div>
         </div>
 

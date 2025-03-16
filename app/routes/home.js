@@ -5,10 +5,10 @@ import prefixUriIfNeeded from '../utils/prefixUriIfNeeded.js'
 import { PostsAndCategories } from '../components/layout/postsAndCategories.js'
 
 export const Home = ({ state, dispatch }) => html` <${Page}
-    title="Cats"
-    subtitle="React Drive CMS Demo"
-    description="Publish articles directly from Google Drive to your website."
-    sidebarImage=${prefixUriIfNeeded('/assets/default-sidebar.jpg')}
+    title="WELCOME! 歡迎! いらっしゃいませ!"
+    subtitle=""
+    description="This is a harpy eagle. Harpy eagles are originally from South America. Looking at their eyes, isn't this one a baddie?"
+    sidebarImage=${prefixUriIfNeeded('/assets/harpy_eagle_1.jpg')}
     showLinks=${true}
 >
     <${PostsAndCategories} state=${state} dispatch=${dispatch} />
