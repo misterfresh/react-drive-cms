@@ -1,25 +1,26 @@
-export const blocksStyles = `<style>
+export const blocksStyles = `
     @keyframes fadein {
-                from {
-                    opacity: 0;
-                }
-                to {
-                    opacity: 1;
-                }
-            }
+        /* opacity only: a transform here would break position: fixed children */
+        from {
+            opacity: 0;
+        }
+        to {
+            opacity: 1;
+        }
+    }
     .outline {
-        border: 0.1rem solid transparent;
+        border: 1px solid transparent;
     }
     .image {
         background-size: cover;
         background-repeat: no-repeat;
         background-position: center center;
-        box-shadow: #000 2px 2px 12px; /***************************added box shadow****************/
+        box-shadow: var(--shadow-md);
     }
     .center {
         width: 30%;
         margin: auto;
-    },
+    }
     .container {
         padding: 0.5rem;
     }
@@ -31,29 +32,20 @@ export const blocksStyles = `<style>
     }
     .wrapper {
         position: relative;
-        top: 0;
-        bottom: 0;
-        left: 0;
-        right: 0;
         width: 100%;
-        height: 100%;
         margin: 0;
         padding: 0;
         overflow-x: hidden;
         max-width: 100%;
     }
     .block {
-        background: #fff;
+        background: var(--c-surface);
         padding: 1rem;
-        border-radius: 4px;
+        border-radius: var(--radius-sm);
         position: relative;
         cursor: default;
     }
     .blocks-fadein {
-        animation-name: fadein;
-        animation-duration: 1s, 1s;
-        animation-iteration-count: 1;
+        animation: fadein 400ms var(--ease) both;
     }
-</style>`
-    .replace('<style>', '')
-    .replace('</style>', '')
+`

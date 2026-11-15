@@ -9,42 +9,27 @@ export const Sidebar = ({
     showLinks,
 }) => {
     return html` <style>
-    /**************************importing new font styles******************************/
-    @import url('https://fonts.googleapis.com/css2?family=Didact+Gothic&family=Joan&family=Noto+Sans+JP&family=Noto+Serif+JP:wght@400;500&&family=Playfair+Display&display=swap');
             aside.sidebar {
-                justify-content: flex-start;
-                align-items: flex-end;
-                transition: width linear 750ms, height linear 750ms,
-                    left linear 750ms;
-                padding: 0;
-                background-position: center;
-                background-repeat: no-repeat;
-                background-size: cover;
-                display: flex;
                 position: relative;
+                display: flex;
+                align-items: flex-end;
+                justify-content: flex-start;
                 width: 100%;
-                overflow-x: hidden;
                 max-width: 100%;
-            }
-
-            aside.sidebar.sidebar-narrow {
+                min-height: 38rem;
                 padding: 0;
+                overflow: hidden;
+                background-color: var(--c-menu-bg);
                 background-position: center;
                 background-repeat: no-repeat;
                 background-size: cover;
-                display: flex;
-                width: 100%;
+                transition: width 320ms var(--ease), left 320ms var(--ease);
             }
 
             @media (min-width: 768px) {
-                aside.sidebar {
-                    height: 45rem;
-                    position: relative;
-                    width: 100%;
-                }
-
+                aside.sidebar,
                 aside.sidebar.sidebar-narrow {
-                    height: 45rem;
+                    height: 48rem;
                     position: relative;
                     width: 100%;
                 }
@@ -52,113 +37,99 @@ export const Sidebar = ({
 
             @media (min-width: 992px) {
                 aside.sidebar {
-                    height: 100vh;
-                    background-color: #f5f5f5;
                     position: fixed;
-                    width: 40%;
                     left: 0;
+                    width: 40%;
+                    height: 100vh;
                 }
-
                 aside.sidebar.sidebar-narrow {
-                    height: 45rem;
                     position: relative;
+                    left: auto;
                     width: 100%;
+                    height: 48rem;
                 }
             }
 
             @media (min-width: 1200px) {
-                aside.sidebar {
-                    height: 100vh;
-                    background-color: #f5f5f5;
-                    position: fixed;
-                    width: 40%;
-                    left: 0;
-                }
-
                 aside.sidebar.sidebar-narrow {
-                    height: 100vh;
-                    background-color: #f5f5f5;
                     position: fixed;
-                    width: 35%;
                     left: 25%;
+                    width: 35%;
+                    height: 100vh;
                 }
             }
 
             aside.sidebar .info {
-                padding: 5%;
-                background: rgba(50, 50, 50, 0.5);
-                color: #fafafa;
-                height: 25rem; /**2023 edits**/
                 width: 100%;
+                padding: 12rem clamp(2.4rem, 5%, 5rem) clamp(2.4rem, 5%, 4.8rem);
+                background: var(--c-scrim);
+                color: #fff;
                 display: flex;
-                justify-content: flex-end;
-                align-items: end;
                 flex-direction: column;
-            }
-
-            aside.sidebar .primary {
-                border-bottom: solid 1px rgba(255, 255, 255, 0.3);
-                margin-bottom: 1.2rem; /**2023 edits**/
+                justify-content: flex-end;
             }
 
             aside.sidebar .primary h1 {
-                letter-spacing: 0;
-                margin-bottom: 0;
-                font-size: 3.4rem;
-                text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
-                font-family: 'Noto Serif JP', serif;/***********************changing font family******************************/
-                font-weight: 500; /***************changing font weight******************/
-                
+                margin: 0 0 1.2rem;
+                color: #fff;
+                font-family: var(--font-serif);
+                font-size: clamp(3rem, 2.4rem + 1.8vw, 4.6rem);
+                font-weight: 600;
+                line-height: 1.15;
+                letter-spacing: -0.01em;
+                text-shadow: 0 2px 12px rgba(0, 0, 0, 0.35);
+                text-wrap: balance;
             }
 
             aside.sidebar .primary p {
-                margin-bottom: 1rem;
-                text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
-                line-height: 2rem; /***************changed line height******************/
-                font-size: 1.6rem; /******************changed font size*****************/
-                font-weight: 100; /***************changed font weight******************/
+                margin: 0 0 1rem;
+                max-width: 52ch;
+                color: rgba(255, 255, 255, 0.88);
+                font-size: 1.5rem;
+                line-height: 1.65;
+                text-shadow: 0 1px 6px rgba(0, 0, 0, 0.35);
             }
-
-            aside.sidebar .links: {
+            aside.sidebar .primary p:empty {
                 display: none;
             }
 
-            aside.sidebar .show-links: {
+            aside.sidebar .links {
+                display: none;
+            }
+
+            aside.sidebar .links.show-links {
                 display: flex;
+                flex-wrap: wrap;
+                gap: 1rem;
+                margin-top: 1.6rem;
+                padding-top: 2rem;
+                border-top: 1px solid rgba(255, 255, 255, 0.2);
             }
 
             aside.sidebar .links a.button {
-                font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif;
-                display: inline-block;
+                display: inline-flex;
+                align-items: center;
+                gap: 0.8rem;
+                padding: 0.8rem 1.6rem;
+                border: 1px solid rgba(255, 255, 255, 0.3);
+                border-radius: 999px;
+                background-color: rgba(255, 255, 255, 0.12);
+                -webkit-backdrop-filter: blur(8px);
+                backdrop-filter: blur(8px);
                 color: #fff;
-                margin-right: 20px;
-                margin-bottom: 0;
-                background-color: #8700A3; /******2023 edit****/
-                font-weight: 400;
-                text-align: center;
-                touch-action: manipulation;
-                cursor: pointer;
-                border: 1px solid transparent;
+                font-family: var(--font-sans);
+                font-size: 1.35rem;
+                font-weight: 500;
                 white-space: nowrap;
-                padding: 6px 12px;
-                font-size: 14px;
-                line-height: 1.42857;
-                border-radius: 4px;
-                user-select: none;
+                transition: background-color var(--dur) var(--ease),
+                    border-color var(--dur) var(--ease);
             }
 
-            aside.sidebar .links a.button:hover {
+            aside.sidebar .links a.button:hover,
+            aside.sidebar .links a.button:focus-visible {
                 color: #fff;
-                background-color: #75018e; /**2023 edits**/
-                border-color: #75018e;/**2023 edits**/
-                text-decoration: none;
-            }
-
-            aside.sidebar .links a.button:focus {
-                color: #fff;
-                background-color: #75018e;  /**2023 edits**/
-                border-color: #75018e;/**2023 edits**/
-                text-decoration: none;
+                background-color: rgba(255, 255, 255, 0.24);
+                border-color: rgba(255, 255, 255, 0.5);
             }
         </style>
         <aside
@@ -176,14 +147,18 @@ export const Sidebar = ({
                         class="button"
                         href="https://drive.google.com/drive/folders/0B0A_zASTMp9WU0NMYW9wXzVQWjg?resourcekey=0-k6M28TIgKjp_9hvDeT623Q&usp=sharing"
                         target="_blank"
+                        rel="noopener"
                     >
+                        <i class="fa-brands fa-google-drive" aria-hidden="true" />
                         Original posts on Drive
                     </a>
                     <a
                         class="button"
                         href="https://github.com/potinmak/birds"
                         target="_blank"
+                        rel="noopener"
                     >
+                        <i class="fa-brands fa-github" aria-hidden="true" />
                         Source on GitHub
                     </a>
                 </div>

@@ -3,309 +3,231 @@ import { avoidReload } from '../../utils/avoidReload.js'
 import prefixUriIfNeeded from '../../utils/prefixUriIfNeeded.js'
 const conf = window.appConf
 
-export const Footer = ({
-    article = {},
-    category = {},
-    articles,
-    menuVisible,
-}) => {
+export const Footer = ({ article = {}, category = {}, articles = {} }) => {
+    const pageUrl = encodeURIComponent(window.location.href)
+    const shareText = encodeURIComponent(article.title ?? conf.author)
+    const otherArticles = Object.values(articles).filter(
+        (other) => other.id !== article.id
+    )
+
     return html`
         <style>
-            footer {
+            footer.article-footer {
                 width: 100%;
-                background-color: #f5f5f5;
-                border-top: solid 1px #e9e9e9;
-                padding: 3rem;
+                padding: clamp(3rem, 5vw, 5rem) clamp(2rem, 6vw, 6rem);
+                background-color: var(--c-surface-2);
+                border-top: 1px solid var(--c-border);
+                font-family: var(--font-sans);
             }
-
-            footer .top {
-                display: flex;
-                flex-direction: column;
-                justify-content: space-evenly;
-                margin-bottom: 3rem;
-                align-items: center;
-            }
-
-            .credits {
-                width: 100%;
-                margin-bottom: 1rem;
-            }
-
-            .other-article {
-                display: flex;
-                justify-content: center;
-                background-position: center center;
-                background-size: cover;
-                height: 20rem;
-                pointer-events: auto;
-                width: 80%;
-                position: relative;
-                margin-right: 10%;
-                margin-left: 10%;
-                margin-bottom: 3rem;
-            }
-
-            .other-article-narrow {
-                width: 80%;
-                margin-right: 10%;
-                margin-left: 10%;
-            }
-
-            @media (min-width: 768px) : {
-                footer .top {
-                    flex-direction: row;
-                }
-
-                .top-narrow {
-                    flex-direction: column;
-                }
-
-                .credits {
-                    border-right: solid 4px #e9e9e9;
-                    padding: 0;
-                    width: 50%;
-                }
-
-                .credits-narrow {
-                    border-right: none;
-                    border-bottom: solid 4px #e9e9e9;
-                    padding: 0;
-                    width: 100%;
-                }
-
-                .other-article {
-                    width: 40%;
-                    margin-right: 5%;
-                    margin-left: 5%;
-                }
-
-                .other-article-narrow {
-                    width: 80%;
-                    margin-right: 10%;
-                    margin-left: 10%;
-                }
-            }
-
-            @media (min-width: 992px) : {
-                footer .top {
-                    flex-direction: row;
-                }
-
-                .top-narrow {
-                    flex-direction: row;
-                }
-
-                .credits {
-                    border-right: solid 4px #e9e9e9;
-                    padding: 0;
-                    width: 50%;
-                }
-
-                .credits-narrow {
-                    border-bottom: none;
-                    border-right: solid 4px #e9e9e9;
-                    padding: 0;
-                    width: 50%;
-                }
-
-                .other-article {
-                    width: 27.3%;
-                    margin-right: 3%;
-                    margin-left: 3%;
-                }
-
-                .other-article-narrow {
-                    width: 40%;
-                    margin-right: 5%;
-                    margin-left: 5%;
-                }
-            }
-
-            @media (min-width: 1200px) : {
-                .other-article {
-                    width: 27.3%;
-                    margin-right: 3%;
-                    margin-left: 3%;
-                }
-
-                .other-article-narrow {
-                    width: 27.3%;
-                    margin-right: 3%;
-                    margin-left: 3%;
-                }
-            }
-            .profile {
-                width: 8.06rem;
-                padding: 0;
-                border: 0;
-                border-radius: 0%;
-                height: 6rem;
-                margin-bottom: 1rem;
-            }
-            .credits p {
-                padding-right: 2rem;
-                letter-spacing: 2px;
-                font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif;
-                font-size: 1.1rem;
-                text-transform: uppercase;
-                color: #000000;
-                line-height: 30px;
-                margin: 0;
-            }
-            .underline: {
-                border-bottom: solid 1px #222;
-            }
-            .blue-link: {
-                color: #337ab7;
-                text-decoration: none;
-            }
-            .social-links: {
-                display: flex;
-            }
-            .social-icon: {
-                margin: 0 10px;
-                display: inline-block;
-                color: #ccc;
-                border-bottom: solid 1px #fafafa;
-                text-decoration: none;
-                background-color: transparent;
-                font-size: 2.4rem;
-            }
-            .social-icon:hover {
-                color: #aaa;
-            }
-
-            .footer-bottom {
+            .article-footer .footer-top {
                 display: flex;
                 flex-wrap: wrap;
-                justify-content: end;
+                align-items: center;
+                justify-content: space-between;
+                gap: 2.4rem;
+                max-width: 72rem;
+                margin: 0 auto 4rem;
+                padding-bottom: 3rem;
+                border-bottom: 1px solid var(--c-border);
             }
-
-            .overlay {
-                position: absolute;
-                width: 100%;
-                height: 100%;
-                z-index: 2;
-                background-color: rgba(50, 50, 50, 0.5);
-                top: 0;
-                left: 0;
-                pointer-events: none;
+            .article-footer .author {
+                display: flex;
+                align-items: center;
+                gap: 1.6rem;
+                min-width: 0;
             }
-            .other-article-title {
-                color: #e9e9e9;
-                cursor: pointer;
-                border-bottom: solid 1px #fafafa;
-                text-decoration: none;
-                background-color: transparent;
-                font-size: large;
-                letter-spacing: 2px;
-                font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif;
-                text-transform: uppercase;
-                line-height: 30px;
+            .article-footer .avatar {
+                flex: none;
+                width: 6.4rem;
+                height: 6.4rem;
+                object-fit: cover;
+                border-radius: 50%;
+                border: 3px solid var(--c-surface);
+                box-shadow: var(--shadow-sm);
+            }
+            .article-footer .byline {
                 margin: 0;
-                align-self: center;
-                z-index: 5;
+                font-size: 1.4rem;
+                line-height: 1.6;
+                color: var(--c-text-muted);
             }
-            .other-article-title:hover {
+            .article-footer .byline a {
+                font-weight: 600;
+            }
+            .article-footer .social {
+                display: flex;
+                align-items: center;
+                gap: 1rem;
+            }
+            .article-footer .social-label {
+                margin-right: 0.4rem;
+                font-size: 1.2rem;
+                font-weight: 600;
+                letter-spacing: 0.12em;
+                text-transform: uppercase;
+                color: var(--c-text-muted);
+            }
+            .article-footer .social-icon {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                width: 4rem;
+                height: 4rem;
+                border-radius: 50%;
+                border: 1px solid var(--c-border);
+                background: var(--c-surface);
+                color: var(--c-text-muted);
+                font-size: 1.6rem;
+                transition: color var(--dur) var(--ease),
+                    background-color var(--dur) var(--ease),
+                    border-color var(--dur) var(--ease);
+            }
+            .article-footer .social-icon:hover {
+                color: var(--c-on-brand);
+                background: var(--c-brand);
+                border-color: var(--c-brand);
+            }
+            .article-footer .more-title {
+                max-width: 72rem;
+                margin: 0 auto 2rem;
+                font-size: 1.2rem;
+                font-weight: 600;
+                letter-spacing: 0.14em;
+                text-transform: uppercase;
+                color: var(--c-text-muted);
+            }
+            .article-footer .more-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(22rem, 1fr));
+                gap: 1.6rem;
+                max-width: 120rem;
+                margin: 0 auto;
+            }
+            .article-footer .other-article {
+                position: relative;
+                display: flex;
+                align-items: flex-end;
+                aspect-ratio: 16 / 10;
+                overflow: hidden;
+                border-radius: var(--radius);
+                background-color: var(--c-menu-bg);
+                background-position: center;
+                background-size: cover;
+                box-shadow: var(--shadow-sm);
+                isolation: isolate;
+                transition: transform var(--dur) var(--ease),
+                    box-shadow var(--dur) var(--ease);
+            }
+            .article-footer .other-article::before {
+                content: '';
+                position: absolute;
+                inset: 0;
+                z-index: -1;
+                background: var(--c-scrim);
+            }
+            .article-footer .other-article:hover {
+                transform: translateY(-2px);
+                box-shadow: var(--shadow-lg);
+            }
+            .article-footer .other-article-title {
+                padding: 1.6rem 1.8rem;
                 color: #fff;
+                font-family: var(--font-serif);
+                font-size: 1.7rem;
+                font-weight: 600;
+                line-height: 1.3;
+                text-shadow: 0 1px 6px rgba(0, 0, 0, 0.35);
             }
         </style>
-        <footer>
-            <div class="top ${menuVisible ? 'top-narrow' : ''}">
-                <a
-                    href="${prefixUriIfNeeded('/about')}"
-                    title="About"
-                    class="profile-link"
-                    onClick=${avoidReload}
-                >
-                    <img
-                        src=${prefixUriIfNeeded('/assets/キョロちゃん.jpg')}
-                        class="profile"
-                        alt="user-image"
-                    />
-                </a>
-
-                <div class="credits ${menuVisible ? 'credits-narrow' : ''}">
-                    <p>
-                        Published on the${' '}
-                        <span class="underline"> ${article.date} </span>
-                        ${' '}by${' '}
+        <footer class="article-footer">
+            <div class="footer-top">
+                <div class="author">
+                    <a
+                        href="${prefixUriIfNeeded('/about')}"
+                        title="About"
+                        onClick=${avoidReload}
+                    >
+                        <img
+                            src=${prefixUriIfNeeded('/assets/キョロちゃん.jpg')}
+                            class="avatar"
+                            alt=${conf.author}
+                        />
+                    </a>
+                    <p class="byline">
+                        ${article.date && html`Published ${article.date}${' '}`}
+                        by${' '}
                         <a
                             href="${prefixUriIfNeeded('/about')}"
                             title="About"
-                            class="blue-link"
                             onClick=${avoidReload}
                         >
                             ${conf.author}
                         </a>
-                        ${' '}in${' '}
-                        <a
-                            href=${prefixUriIfNeeded(category.uri)}
-                            title=${category.title}
-                            class="blue-link"
-                            onClick=${avoidReload}
-                        >
-                            ${category.title}
-                        </a>
+                        ${category.title &&
+                        html`${' '}in${' '}
+                            <a
+                                href=${prefixUriIfNeeded(category.uri)}
+                                title=${category.title}
+                                onClick=${avoidReload}
+                            >
+                                ${category.title}
+                            </a>`}
                     </p>
                 </div>
 
                 <div class="social">
-                    <p>Share this article</p>
-                    <div class="social-links">
-                        <a
-                            class="social-icon"
-                            href="#"
-                            data-platform="twitter"
-                            data-message="Message about this post"
-                        >
-                            <i class="icon-twitter" />
-                        </a>
-
-                        <a
-                            class="social-icon"
-                            href="#"
-                            data-platform="facebook"
-                            data-message="Message about this post"
-                        >
-                            <i class="icon-facebook-official" />
-                        </a>
-
-                        <a
-                            class="social-icon"
-                            data-platform="mail"
-                            href="${prefixUriIfNeeded('/contact')}"
-                            onClick=${avoidReload}
-                        >
-                            <i class="icon-mail-alt" />
-                        </a>
-                    </div>
+                    <span class="social-label">Share</span>
+                    <a
+                        class="social-icon"
+                        href="https://twitter.com/intent/tweet?url=${pageUrl}&text=${shareText}"
+                        target="_blank"
+                        rel="noopener"
+                        aria-label="Share on X"
+                    >
+                        <i class="fa-brands fa-x-twitter" aria-hidden="true" />
+                    </a>
+                    <a
+                        class="social-icon"
+                        href="https://www.facebook.com/sharer/sharer.php?u=${pageUrl}"
+                        target="_blank"
+                        rel="noopener"
+                        aria-label="Share on Facebook"
+                    >
+                        <i class="fa-brands fa-facebook-f" aria-hidden="true" />
+                    </a>
+                    <a
+                        class="social-icon"
+                        href="${prefixUriIfNeeded('/contact')}"
+                        onClick=${avoidReload}
+                        aria-label="Contact"
+                    >
+                        <i class="fa-solid fa-envelope" aria-hidden="true" />
+                    </a>
                 </div>
             </div>
-            <div class="footer-bottom">
-                ${Object.values(articles).map(
-                    (article) => html`
-                        <div
-                            class="other-article ${menuVisible
-                                ? 'other-article-narrow'
-                                : ''}"
-                            style=${{
-                                backgroundImage: `url(${article.image})`,
-                            }}
-                        >
-                            <div class="overlay" />
+
+            ${otherArticles.length > 0 &&
+            html`<h3 class="more-title">More from ${conf.author}</h3>
+                <div class="more-grid">
+                    ${otherArticles.map(
+                        (other) => html`
                             <a
-                                href="${prefixUriIfNeeded(article.uri)}"
-                                title=${article.title}
-                                class="other-article-title"
+                                key=${other.id}
+                                href="${prefixUriIfNeeded(other.uri)}"
+                                title=${other.title}
+                                class="other-article"
+                                style=${{
+                                    backgroundImage: `url(${other.image})`,
+                                }}
                                 onClick=${avoidReload}
                             >
-                                ${article.title}
+                                <span class="other-article-title">
+                                    ${other.title}
+                                </span>
                             </a>
-                        </div>
-                    `
-                )}
-            </div>
+                        `
+                    )}
+                </div>`}
         </footer>
     `
 }

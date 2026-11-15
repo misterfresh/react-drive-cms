@@ -1,16 +1,18 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
-    <meta name="description"
-          content="A Simple React Hooks Demo Using Google Sheets API">
-    <title>The Purple Club</title> 
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="The Purple Club: a personal blog about birds, people and places, in English, 日本語 and 繁體中文.">
+    <meta name="color-scheme" content="light dark">
+    <meta name="theme-color" content="#2e1238">
+    <title>The Purple Club</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/css/bootstrap-reboot.css" rel="stylesheet" crossorigin="anonymous"/>
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/solid.css" integrity="sha384-r/k8YTFqmlOaqRkZuSiE9trsrDXkh07mRaoGBMoDcmA58OHILZPsk29i2BsFng1B" crossorigin="anonymous"/>
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/fontawesome.css" integrity="sha384-4aon80D8rXCGx9ayDt85LbyUHeMWd3UiBaWliBlJ53yzm9hqN21A+o1pqoyK04h+" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600&family=Noto+Sans+JP:wght@400;500&family=Noto+Serif:ital,wght@0,400;0,600;0,700;1,400&family=Noto+Serif+JP:wght@400;600&family=Noto+Serif+TC:wght@400;600&display=swap">
     <link href="./../assets/favicon.ico" rel="shortcut icon" type="image/x-icon"/>
     <script type="text/javascript">
         // Credits: Single Page Apps for GitHub Pages
@@ -37,48 +39,127 @@
     <script type="text/javascript" src="/dev/conf.js"></script>
     <script async src="/app/app.js" type="module"></script>
     <style>
+        /* ---------- Design tokens ---------- */
+        :root {
+            --c-bg: #fcfafd;
+            --c-surface: #ffffff;
+            --c-surface-2: #f5f0f7;
+            --c-text: #2b2430;
+            --c-text-muted: #6e6577;
+            --c-border: #ebe4ef;
+            --c-brand: #6d2c7f;
+            --c-brand-strong: #561f66;
+            --c-brand-soft: #f1e6f5;
+            --c-on-brand: #ffffff;
+            --c-menu-bg: #2e1238;
+            --c-menu-text: #f6eef9;
+            --c-menu-muted: #c9b6d2;
+            --c-menu-accent: #e6bcf4;
+            --c-success: #2f7d4f;
+            --c-danger: #b3261e;
+            --c-scrim: linear-gradient(to top, rgba(20, 8, 26, 0.82) 0%, rgba(20, 8, 26, 0.35) 55%, rgba(20, 8, 26, 0) 100%);
+
+            --font-serif: 'Noto Serif', 'Noto Serif JP', Georgia, serif;
+            --font-sans: 'Noto Sans', 'Noto Sans JP', system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+            --radius: 12px;
+            --radius-sm: 8px;
+            --shadow-sm: 0 1px 2px rgba(40, 14, 52, 0.06), 0 1px 3px rgba(40, 14, 52, 0.08);
+            --shadow-md: 0 4px 14px rgba(40, 14, 52, 0.09), 0 2px 4px rgba(40, 14, 52, 0.06);
+            --shadow-lg: 0 14px 36px rgba(40, 14, 52, 0.16), 0 4px 10px rgba(40, 14, 52, 0.08);
+            --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+            --dur: 200ms;
+        }
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --c-bg: #141016;
+                --c-surface: #1c1720;
+                --c-surface-2: #251e2a;
+                --c-text: #ece6f0;
+                --c-text-muted: #a99fb2;
+                --c-border: #322a38;
+                --c-brand: #cf9be3;
+                --c-brand-strong: #e0b8ef;
+                --c-brand-soft: #2c2033;
+                --c-on-brand: #1a0f20;
+                --c-menu-bg: #1b0f21;
+                --c-success: #6fcf97;
+                --c-danger: #f28b82;
+                --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+                --shadow-md: 0 4px 14px rgba(0, 0, 0, 0.45);
+                --shadow-lg: 0 14px 36px rgba(0, 0, 0, 0.55);
+            }
+        }
+        :lang(zh-Hant) {
+            --font-serif: 'Noto Serif', 'Noto Serif TC', Georgia, serif;
+        }
+
+        /* ---------- Base ---------- */
         html {
             font-size: 10px;
             -webkit-tap-highlight-color: transparent;
-            height: 100%;
             overflow-x: hidden;
-            max-width: 100%;
+            scroll-behavior: smooth;
         }
         body {
-            color: #333337;
-            font-family: 'Droid Serif',serif;
-            line-height: 1.65;
-            font-size: 14px;
-            height: 100vh;
+            color: var(--c-text);
+            background-color: var(--c-bg);
+            font-family: var(--font-serif);
+            font-size: 1.7rem;
+            line-height: 1.7;
             min-height: 100vh;
-            width: 100vw;
-            background-color: #fff;
             margin: 0;
             padding: 0;
             overflow-x: hidden;
-            max-width: 100%;
+            -webkit-font-smoothing: antialiased;
+            text-rendering: optimizeLegibility;
         }
         #app-mount {
-            height: 100vh;
             min-height: 100vh;
-            width: 100vw;
             position: relative;
-            top: 0;
-            left: 0;
-            bottom: 0;
-            right: 0;
             margin: 0;
             padding: 0;
             overflow-x: hidden;
-            max-width: 100%;
         }
-        a, a:hover, a:focus, a:visited {
+        h1, h2, h3, h4 {
+            color: var(--c-text);
+            line-height: 1.25;
+        }
+        a {
+            color: var(--c-brand);
             text-decoration: none;
             background-color: transparent;
-            outline: 0;
+            transition: color var(--dur) var(--ease);
         }
-        a:hover {
-            transition: all .4s;
+        a:hover, a:focus {
+            color: var(--c-brand-strong);
+            text-decoration: none;
+        }
+        img {
+            max-width: 100%;
+        }
+        ::selection {
+            background: var(--c-brand-soft);
+            color: var(--c-text);
+        }
+
+        /* ---------- Focus: visible for keyboard users only ---------- */
+        html :focus-visible {
+            outline: 2px solid var(--c-brand);
+            outline-offset: 3px;
+            border-radius: 4px;
+        }
+        html :focus:not(:focus-visible) {
+            outline: none;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            html { scroll-behavior: auto; }
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
         }
     </style>
 </head>

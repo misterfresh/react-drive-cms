@@ -14,6 +14,7 @@ export const Page = ({
     description,
     sidebarImage,
     showLinks,
+    lang,
     children,
 }) => {
     const { categories, articles } = useCategoriesAndArticles()
@@ -22,21 +23,18 @@ export const Page = ({
     usePageMeta(title, subtitle)
 
     return html` <style>
-    /**************************importing new font families******************************/
-    @import url('https://fonts.googleapis.com/css2?family=Didact+Gothic&family=Joan&family=Noto+Sans+JP&family=Noto+Serif+JP:wght@200;400;500&family=Playfair+Display&display=swap');
             ${buttonsStyles} ${blocksStyles} .page {
                 display: flex;
                 width: 100%;
                 justify-content: flex-end;
                 overflow-x: hidden;
                 max-width: 100%;
-                font-family: 'Noto Serif JP', serif;/**************************adding font family attributes************************/
+                font-family: var(--font-serif);
             }
             main.page-main {
-                opacity: 1;
                 width: 100%;
                 display: block;
-                transition: width linear 1000ms; /***********************changed speed*************/
+                transition: width 320ms var(--ease);
                 margin: 0;
                 padding: 0;
                 overflow-x: hidden;
@@ -47,36 +45,26 @@ export const Page = ({
                 width: 100%;
             }
             section.page-content {
-                padding: 5rem;
+                padding: clamp(3rem, 5vw, 6rem) clamp(2rem, 5vw, 6rem);
                 overflow-x: hidden;
                 max-width: 100%;
-                transition: width linear 1000ms; /***************************changed speed*************/
                 width: 100%;
                 margin-left: 0;
+                transition: width 320ms var(--ease);
             }
             section.page-content.content-narrow {
                 width: 100%;
                 margin-left: 0;
             }
             @media (min-width: 768px) {
-                main.page-main {
-                    display: block;
-                }
                 main.page-main.main-narrow {
                     width: 60%;
-                    display: block;
-                }
-                section.page-content {
-                    width: 100%;
-                }
-                section.page-content.content-narrow {
-                    width: 100%;
                 }
             }
             @media (min-width: 992px) {
                 main.page-main {
-                    flex-direction: row;
                     display: flex;
+                    flex-direction: row;
                     justify-content: flex-end;
                 }
                 main.page-main.main-narrow {
@@ -97,16 +85,16 @@ export const Page = ({
                     flex-direction: row;
                     justify-content: flex-end;
                 }
-                section.page-content {
-                    width: 60%;
-                }
                 section.page-content.content-narrow {
                     width: 52%;
                 }
             }
         </style>
-        <div class="wrapper page">
-            <${MenuBurger} toggleMenuVisible=${toggleMenuVisible} />
+        <div class="wrapper page" lang=${lang}>
+            <${MenuBurger}
+                toggleMenuVisible=${toggleMenuVisible}
+                menuVisible=${menuVisible}
+            />
             <${Menu}
                 articles=${articles}
                 categories=${categories}

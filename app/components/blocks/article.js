@@ -2,107 +2,133 @@ import { html } from '../../lib/htm-preact.js'
 import { avoidReload } from '../../utils/avoidReload.js'
 import prefixUriIfNeeded from '../../utils/prefixUriIfNeeded.js'
 
-export const Article = ({ article, category }) => html`
+export const Article = ({ article, category = {} }) => html`
     <style>
-    /******************************************************************adding new font family*********************************************************************/
-    @import url('https://fonts.googleapis.com/css2?family=Didact+Gothic&family=Joan&family=Noto+Sans+JP:wght@100;400&family=Noto+Serif+JP:wght@200;400;500&family=Playfair+Display&display=swap');
-        article {
-            padding: 30px 0;
-            display: block;
-            border-bottom: solid 1px #f5f5f5;
-            width: 100%;
+        article.post-card {
+            position: relative;
+            display: grid;
+            grid-template-columns: 1fr;
+            overflow: hidden;
+            border: 1px solid var(--c-border);
+            border-radius: var(--radius);
+            background: var(--c-surface);
+            box-shadow: var(--shadow-sm);
+            transition: box-shadow var(--dur) var(--ease),
+                transform var(--dur) var(--ease),
+                border-color var(--dur) var(--ease);
         }
-        article .title {
-            text-decoration: none;
-            color: #333337;
-            font-size: 2.4rem;
-            margin-top: 0;
-            font-family: 'Noto Sans JP', sans-serif; /****************************** changed font style******************************/
-            font-weight: 700;
-            margin-bottom: 10px;
-            line-height: 1.1;
-            cursor: pointer;
-            background-color: transparent;
-            border: none;
+        article.post-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+            border-color: color-mix(in srgb, var(--c-brand) 25%, var(--c-border));
         }
-        article .title:hover {
-            color: #b6b6b6;
+        article.post-card .thumb {
+            aspect-ratio: 16 / 9;
+            background-color: var(--c-surface-2);
+            background-position: center;
+            background-size: cover;
         }
-        article p {
-            margin: 0 0 10px;
-            font-family: 'Noto Serif JP', serif; /******************************changed font family*****************************************************/
-            font-size: 1.5rem;/********************************changed font size***************************************************/
+        article.post-card .body {
+            padding: 2rem 2.4rem 2.2rem;
         }
-        article p.description {
-            margin-bottom: 30px;
+        article.post-card h2 {
+            margin: 0 0 0.8rem;
+            font-size: 2.2rem;
+            font-weight: 600;
+            line-height: 1.3;
         }
-        article p.meta {
-            color: #b6b6b6;
+        article.post-card .title {
+            color: var(--c-text);
         }
-        article p.meta .disqus-comment-count {
-            margin-right: 0.5rem;
+        /* whole card is clickable */
+        article.post-card .title::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            z-index: 1;
         }
-        article .category {
-            text-decoration: none;
-            cursor: pointer;
-            background-color: transparent;
-            outline: 0;
-            transition: all 0.4s;
-            color: #b6b6b6;
-            border-bottom: 1px solid #b6b6b6;
+        article.post-card:hover .title {
+            color: var(--c-brand);
         }
-        article .category:hover {
-            text-decoration: none;
-            cursor: pointer;
-            background-color: transparent;
-            color: #333337;
-            outline: 0;
-            transition: all 0.4s;
-            border-bottom: 1px solid #b6b6b6;
+        article.post-card p {
+            margin: 0;
         }
-        article .meta a {
-            margin-left: 0.5rem;
+        article.post-card p.description {
+            margin-bottom: 1.4rem;
+            color: var(--c-text-muted);
+            font-size: 1.6rem;
+            line-height: 1.6;
         }
-        @media (min-width: 992px) {
-            article .title {
-                font-size: 3.2rem;
+        article.post-card p.meta {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 1rem;
+            font-family: var(--font-sans);
+            font-size: 1.3rem;
+            color: var(--c-text-muted);
+        }
+        article.post-card .category {
+            position: relative;
+            z-index: 2;
+            padding: 0.3rem 1.1rem;
+            border-radius: 999px;
+            background: var(--c-brand-soft);
+            color: var(--c-brand);
+            font-weight: 500;
+        }
+        article.post-card .category:hover {
+            background: var(--c-brand);
+            color: var(--c-on-brand);
+        }
+        @media (min-width: 600px) {
+            article.post-card.has-thumb {
+                grid-template-columns: 20rem 1fr;
             }
-            article p {
-                font-size: 1.8rem;
+            article.post-card .thumb {
+                aspect-ratio: auto;
+                min-height: 100%;
             }
         }
     </style>
 
-    <article>
-        <h2>
-            <a
-                href=${prefixUriIfNeeded(article.uri)}
-                title=${article.title}
-                class="title"
-                onClick=${avoidReload}
-            >
-                ${article.title}
-            </a>
-        </h2>
-        <p class="description">${article.subtitle}</p>
-        <p class="meta">
-            <span
-                title=${'Comments for ' + article.title}
-                data-disqus-url=${window.location.protocol +
-                window.location.hostname +
-                article.uri}
-                data-disqus-identifier=${article.id}
-                class="disqus-comment-count"
-            />
-            - Published in :
-            <a
-                title=${category.title}
-                href=${prefixUriIfNeeded(category.uri)}
-                class="category"
-                onClick=${avoidReload}
-            >
-                ${category.title}
-            </a>
-        </p>
+    <article class="post-card ${article.image ? 'has-thumb' : ''}">
+        ${article.image &&
+        html`<div
+            class="thumb"
+            style=${{ backgroundImage: `url(${article.image})` }}
+            aria-hidden="true"
+        />`}
+        <div class="body">
+            <h2>
+                <a
+                    href=${prefixUriIfNeeded(article.uri)}
+                    title=${article.title}
+                    class="title"
+                    onClick=${avoidReload}
+                >
+                    ${article.title}
+                </a>
+            </h2>
+            <p class="description">${article.subtitle}</p>
+            <p class="meta">
+                <a
+                    title=${category.title}
+                    href=${prefixUriIfNeeded(category.uri)}
+                    class="category"
+                    onClick=${avoidReload}
+                >
+                    ${category.title}
+                </a>
+                <span
+                    title=${'Comments for ' + article.title}
+                    data-disqus-url=${window.location.protocol +
+                    window.location.hostname +
+                    article.uri}
+                    data-disqus-identifier=${article.id}
+                    class="disqus-comment-count"
+                />
+            </p>
+        </div>
     </article>
 `

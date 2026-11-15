@@ -9,6 +9,9 @@ import { useCategoriesAndArticles } from '../hooks/useCategoriesAndArticles.js'
 import { usePageMeta } from '../hooks/usePageMeta.js'
 import { useArticleText } from '../hooks/useArticleText.js'
 import { useMenuVisible } from '../hooks/useMenuVisible.js'
+import { Spinner } from '../styles/Spinner.js'
+import prefixUriIfNeeded from '../utils/prefixUriIfNeeded.js'
+import { avoidReload } from '../utils/avoidReload.js'
 
 export const Article = ({ state, dispatch }) => {
     const { articles, categories } = useCategoriesAndArticles()
@@ -24,49 +27,7 @@ export const Article = ({ state, dispatch }) => {
     usePageMeta(title, subtitle)
 
     return html` <style>
-            ${blocksStyles} .hero {
-                position: relative;
-                display: block;
-                height: 15rem;
-                width: 100%;
-                background-position: center;
-                background-repeat: no-repeat;
-                background-size: cover;
-                overflow-x: hidden;
-                max-width: 100%;
-            }
-
-            .title {
-                padding-top: 20pt;
-                color: #000000;
-                font-size: 20pt;
-                padding-bottom: 6pt;
-                font-family: Arial;
-                line-height: 1.15;
-                page-break-after: avoid;
-                orphans: 2;
-                widows: 2;
-                text-align: left;
-                letter-spacing: -1pt;
-                font-weight: 700;
-                margin: 0.67em 0 10px;
-            }
-
-            .article-content p {
-                margin: 0;
-                padding-top: 0;
-                color: #666666;
-                font-size: 15pt;
-                padding-bottom: 16pt;
-                font-family: Arial;
-                line-height: 1.15;
-                page-break-after: avoid;
-                orphans: 2;
-                widows: 2;
-                text-align: left;
-            }
-
-            .page {
+            ${blocksStyles} .page {
                 display: flex;
                 width: 100%;
                 justify-content: flex-end;
@@ -75,74 +36,205 @@ export const Article = ({ state, dispatch }) => {
             }
 
             main.article {
-                opacity: 1;
                 width: 100%;
-                overflow-x: hidden;
-                display: block;
-                transition: width linear 750ms;
+                max-width: 100%;
                 margin: 0;
                 padding: 0;
-                animation-name: fadein;
-                animation-duration: 1s, 1s;
-                animation-iteration-count: 1;
-                max-width: 100%;
-            }
-
-            section.article-content: {
-                display: block;
-                width: 100%;
-                padding: 3rem 8%;
                 overflow-x: hidden;
-                max-width: 100%;
+                display: block;
+                transition: width 320ms var(--ease);
+                animation: fadein 400ms var(--ease) both;
             }
 
-            section.article-content.content-narrow: {
-                display: block;
+            .hero {
+                position: relative;
+                display: flex;
+                align-items: flex-end;
                 width: 100%;
-                padding: 3rem 8%;
+                min-height: clamp(32rem, 55vh, 60rem);
+                background-color: var(--c-menu-bg);
+                background-position: center;
+                background-repeat: no-repeat;
+                background-size: cover;
+            }
+            .hero::before {
+                content: '';
+                position: absolute;
+                inset: 0;
+                background: var(--c-scrim);
+            }
+            .hero-text {
+                position: relative;
+                width: 100%;
+                max-width: 76rem;
+                margin: 0 auto;
+                padding: 10rem clamp(2rem, 6vw, 4rem) clamp(3rem, 5vw, 5rem);
+            }
+            .hero .category-pill {
+                display: inline-block;
+                margin-bottom: 1.6rem;
+                padding: 0.4rem 1.2rem;
+                border-radius: 999px;
+                border: 1px solid rgba(255, 255, 255, 0.35);
+                background: rgba(255, 255, 255, 0.14);
+                -webkit-backdrop-filter: blur(8px);
+                backdrop-filter: blur(8px);
+                color: #fff;
+                font-family: var(--font-sans);
+                font-size: 1.25rem;
+                font-weight: 600;
+                letter-spacing: 0.1em;
+                text-transform: uppercase;
+            }
+            .hero .category-pill:hover {
+                background: rgba(255, 255, 255, 0.26);
+                color: #fff;
+            }
+            .hero .title {
+                margin: 0 0 1.2rem;
+                padding: 0;
+                color: #fff;
+                font-family: var(--font-serif);
+                font-size: clamp(3.2rem, 2.4rem + 2.6vw, 5.4rem);
+                font-weight: 700;
+                line-height: 1.12;
+                letter-spacing: -0.015em;
+                text-shadow: 0 2px 16px rgba(0, 0, 0, 0.35);
+                text-wrap: balance;
+            }
+            .hero .subtitle {
+                margin: 0;
+                max-width: 60ch;
+                color: rgba(255, 255, 255, 0.88);
+                font-family: var(--font-serif);
+                font-size: clamp(1.7rem, 1.5rem + 0.5vw, 2.1rem);
+                line-height: 1.55;
+                text-shadow: 0 1px 8px rgba(0, 0, 0, 0.35);
+            }
+            .hero .subtitle:empty {
+                display: none;
+            }
+
+            section.article-content {
+                width: 100%;
+                max-width: 76rem;
+                margin: 0 auto;
+                padding: clamp(3.2rem, 6vw, 6rem) clamp(2rem, 6vw, 4rem);
+                background: transparent;
+            }
+
+            /* ---- Readable typography for the Google Docs HTML ---- */
+            .article-body .gdoc,
+            .article-body .gdoc p,
+            .article-body .gdoc li {
+                font-family: var(--font-serif) !important;
+                font-size: 1.9rem !important;
+                line-height: 1.85 !important;
+                color: var(--c-text) !important;
+            }
+            .article-body .gdoc p {
+                margin: 0 0 1.4em !important;
+                padding: 0 !important;
+                text-align: left;
+            }
+            .article-body .gdoc span {
+                font-family: inherit !important;
+                font-size: inherit !important;
+                line-height: inherit !important;
+                color: inherit !important;
+            }
+            .article-body .gdoc h1,
+            .article-body .gdoc h2,
+            .article-body .gdoc h3,
+            .article-body .gdoc h4 {
+                margin: 1.8em 0 0.6em !important;
+                padding: 0 !important;
+                font-family: var(--font-serif) !important;
+                font-weight: 600 !important;
+                line-height: 1.3 !important;
+                color: var(--c-text) !important;
+            }
+            .article-body .gdoc h1 {
+                font-size: 3rem !important;
+            }
+            .article-body .gdoc h2 {
+                font-size: 2.5rem !important;
+            }
+            .article-body .gdoc h3,
+            .article-body .gdoc h4 {
+                font-size: 2.1rem !important;
+            }
+            .article-body .gdoc a,
+            .article-body .gdoc a span {
+                color: var(--c-brand) !important;
+                text-decoration: underline !important;
+                text-decoration-thickness: 1px !important;
+                text-underline-offset: 3px;
+            }
+            .article-body .gdoc ul,
+            .article-body .gdoc ol {
+                margin: 0 0 1.4em !important;
+                padding-left: 1.6em !important;
+            }
+            .article-body .gdoc li {
+                margin: 0 0 0.4em !important;
+                padding: 0 !important;
+            }
+            .article-body .gdoc span:has(> img) {
+                display: block !important;
+                width: auto !important;
+                height: auto !important;
+                max-width: 100% !important;
+                margin: 2.4rem auto !important;
+            }
+            .article-body .gdoc img {
+                display: block;
+                max-width: 100% !important;
+                height: auto !important;
+                margin: 0 auto !important;
+                border-radius: var(--radius-sm);
+                box-shadow: var(--shadow-md);
+            }
+            .article-body .gdoc hr {
+                margin: 3.2rem auto;
+                width: 30%;
+                border: 0;
+                border-top: 1px solid var(--c-border);
+            }
+
+            .loading {
+                display: flex;
+                justify-content: center;
+                padding: 6rem 0;
+            }
+
+            #disqus_thread {
+                margin-top: 5rem;
+                padding-top: 3rem;
+                border-top: 1px solid var(--c-border);
             }
 
             @media (min-width: 768px) {
-                .hero {
-                    height: 30rem;
-                }
                 main.article.main-narrow {
                     width: 60%;
                 }
-                section.article-content {
-                    padding: 3rem 16%;
-                }
-                section.article-content.content-narrow: {
-                    padding: 3rem 8%;
-                }
             }
-
             @media (min-width: 992px) {
                 main.article.main-narrow {
                     width: 70%;
                 }
-                section.article-content {
-                    padding: 3rem 18%;
-                }
-                section.article-content.content-narrow: {
-                    padding: 3rem 12%;
-                }
             }
-
             @media (min-width: 1200px) {
                 main.article.main-narrow {
                     width: 75%;
                 }
-                section.article-content {
-                    padding: 3rem 24%;
-                }
-                section.article-content.content-narrow: {
-                    padding: 3rem 20%;
-                }
             }
         </style>
         <div class="wrapper page">
-            <${MenuBurger} toggleMenuVisible=${toggleMenuVisible} />
+            <${MenuBurger}
+                toggleMenuVisible=${toggleMenuVisible}
+                menuVisible=${menuVisible}
+            />
             <${Menu}
                 menuVisible=${menuVisible}
                 articles=${articles}
@@ -156,21 +248,35 @@ export const Article = ({ state, dispatch }) => {
                         backgroundImage: `url(${activeArticle?.image})`,
                     }}
                     id="article-header"
-                />
-                <section
-                    class="block article-content ${menuVisible
-                        ? 'content-narrow'
-                        : ''}"
                 >
-                    <h1 id="article-title" class="title">
-                        ${activeArticle?.title}
-                    </h1>
-                    <p>${activeArticle?.subtitle}</p>
-                    <div
-                        
-                        class="text"
-                        dangerouslySetInnerHTML=${{ __html: activeText }}
-                    />
+                    <div class="hero-text">
+                        ${category?.title &&
+                        html`<a
+                            class="category-pill"
+                            href=${prefixUriIfNeeded(category.uri)}
+                            onClick=${avoidReload}
+                        >
+                            ${category.title}
+                        </a>`}
+                        <h1 id="article-title" class="title">
+                            ${activeArticle?.title}
+                        </h1>
+                        <p class="subtitle">${activeArticle?.subtitle}</p>
+                    </div>
+                </header>
+                <section class="article-content">
+                    ${activeText
+                        ? html`<div
+                              class="article-body"
+                              dangerouslySetInnerHTML=${{ __html: activeText }}
+                          />`
+                        : html`<div class="loading">
+                              <${Spinner}
+                                  stroke="var(--c-brand)"
+                                  width=${40}
+                                  height=${40}
+                              />
+                          </div>`}
                     <${DisqusThread}
                         articleId=${activeArticle.id}
                         articleTitle=${activeArticle.title}
@@ -180,7 +286,6 @@ export const Article = ({ state, dispatch }) => {
                     article=${activeArticle}
                     articles=${articles}
                     category=${category}
-                    menuVisible=${menuVisible}
                 />
             </main>
         </div>`

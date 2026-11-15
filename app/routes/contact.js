@@ -148,69 +148,79 @@ export const Contact = ({ state, dispatch }) => {
     }
 
     return html` <style>
-    /**************adding font family imports***********/
-   @import url('https://fonts.googleapis.com/css2?family=Didact+Gothic&family=Joan&family=Noto+Sans+JP:wght@100;400&family=Noto+Serif+JP:wght@200;400;500&family=Playfair+Display&display=swap');
             ${inputStyles} .contact-title {
-                font-size: 2.6rem;
-                margin-top: 20px;
-                font-family: 'Noto Serif JP', serif;/**************adding font family attributes***********/
-                font-weight: 700; /**************adding font weight********************/
-                line-height: 1.1;
-                color: inherit;
-                margin-bottom: 10px;
+                margin: 1rem 0 0.8rem;
+                font-family: var(--font-serif);
+                font-size: clamp(2.8rem, 2.2rem + 1.4vw, 3.6rem);
+                font-weight: 600;
+                line-height: 1.2;
+                color: var(--c-text);
             }
-            form {
+            .contact-lead {
+                margin: 0 0 3.2rem;
+                color: var(--c-text-muted);
+            }
+            form.contact-form {
+                max-width: 60rem;
                 margin-bottom: 5rem;
+                padding: clamp(2.4rem, 4vw, 3.6rem);
+                border: 1px solid var(--c-border);
+                border-radius: var(--radius);
+                background: var(--c-surface);
+                box-shadow: var(--shadow-sm);
             }
-            form label {
-                font-size: 2rem;
-                font-family: 'Noto Serif JP', serif;/**************adding font family attributes***********/
-                font-weight: 500; /**************adding font weight********************/
-                margin: 15px 0 0;
+            form.contact-form label {
+                display: inline-block;
+                margin: 0;
+                font-family: var(--font-sans);
+                font-size: 1.4rem;
+                font-weight: 600;
+                color: var(--c-text);
             }
-            form button {
-                font-family: 'Noto Serif JP', serif;/**************adding font family attributes***********/
+            form.contact-form .error {
+                margin-left: 0.8rem;
+                font-family: var(--font-sans);
+                font-size: 1.3rem;
+                color: var(--c-danger);
             }
-            form button .spinner {
-                margin-right: 1rem;
-            }
-            form button.green,
-            form button.green:disabled {
-                background-color: green;
-            }
-            form button.red,
-            form button.red:disabled {
-                background-color: red;
-            }
-            form .error {
-                color: red;
-            }
-            form .required:after {
-                color: red;
+            form.contact-form .required:after {
+                color: var(--c-brand);
                 content: ' *';
             }
-            footer {
-                padding: 10px 0;
-                font-size: 1.4rem;
-                letter-spacing: 1px;
-                font-weight: 700;
-                font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif;
+            form.contact-form .actions {
+                display: flex;
+                flex-wrap: wrap;
+                align-items: center;
+                gap: 1.2rem;
+                margin-top: 0.8rem;
+            }
+            form.contact-form button.green,
+            form.contact-form button.green:disabled {
+                background-color: var(--c-success);
+                color: #fff;
+                opacity: 1;
+            }
+            form.contact-form button.red,
+            form.contact-form button.red:disabled {
+                background-color: var(--c-danger);
+                color: #fff;
+                opacity: 1;
+            }
+            .page-links {
+                padding: 2rem 0 0;
+                border-top: 1px solid var(--c-border);
+                max-width: 60rem;
+            }
+            .page-links a {
+                font-family: var(--font-sans);
+                font-size: 1.3rem;
+                font-weight: 600;
+                letter-spacing: 0.12em;
                 text-transform: uppercase;
+                color: var(--c-text-muted);
             }
-            footer a.contact {
-                text-decoration: none;
-                background-color: transparent;
-                color: #999;
-                border-bottom: none;
-                font-size: 1.4rem;
-            }
-            footer a.contact:hover {
-                text-decoration: none;
-                background-color: transparent;
-                color: #333;
-                outline: 0;
-                transition: all 0.4s;
-                border-bottom: none;
+            .page-links a:hover {
+                color: var(--c-brand);
             }
         </style>
         <${Page}
@@ -219,8 +229,9 @@ export const Contact = ({ state, dispatch }) => {
             description="This eagle has a pale coloration on his feathers, the cause of this is unknown. But the colors of his feet and eyes are normal, and his health status is normal. ~Photo: 2020 The Journal of the San Juan Islands"
             sidebarImage=${prefixUriIfNeeded('/assets/white_bald_eagle.jpg')}
         >
-            <h3 class="contact-title">Contact us for further inquiries. </h3>
-            <form>
+            <h1 class="contact-title">Get in touch</h1>
+            <p class="contact-lead">Contact us for further inquiries.</p>
+            <form class="contact-form">
                 <div>
                     <label for="name" class="required"> Your name </label>
                     ${errorProperty === 'name' &&
@@ -288,7 +299,7 @@ export const Contact = ({ state, dispatch }) => {
                         value=${message.value}
                         name="message"
                         placeholder="Hello, let's chat!"
-                        Component="textarea"
+                        Input="textarea"
                         onInput=${debouncedUpdateText}
                         className="input-base ${errorProperty === 'message'
                             ? 'input-error'
@@ -296,7 +307,7 @@ export const Contact = ({ state, dispatch }) => {
                         required
                     />
                 </div>
-                <br />
+                <div class="actions">
                 <${SubmitButton}
                     isSending=${isSending}
                     isSent=${isSent}
@@ -304,8 +315,9 @@ export const Contact = ({ state, dispatch }) => {
                     sentError=${sentError}
                     sendMessage=${sendMessage}
                 />
+                </div>
             </form>
-            <footer>
+            <nav class="page-links">
                 <a
                     href="${prefixUriIfNeeded('/about')}"
                     class="contact"
@@ -313,7 +325,7 @@ export const Contact = ({ state, dispatch }) => {
                 >
                     About
                 </a>
-            </footer>
+            </nav>
         <//>`
 }
 
@@ -325,7 +337,7 @@ const SubmitButton = ({
     sendMessage,
 }) => {
     const isDisabled = isSending || isSent || formError || sentError
-    let message = '  Send message'
+    let message = 'Send message'
     let colorClass = ''
     if (formError) {
         message = 'Invalid form'
@@ -346,7 +358,7 @@ const SubmitButton = ({
         >
             ${isSending &&
             html`<${Spinner}
-                stroke="#eee"
+                stroke="currentColor"
                 height=${18}
                 width=${18}
             />`}${message}</button

@@ -4,7 +4,9 @@ const conf = window.appConf
 
 export const Drive = {
     ...Api,
-    driveExportUrl: 'https://drive.google.com/uc?export=view&id=',
+    // drive.google.com/uc links now send Cross-Origin-Resource-Policy: same-site,
+    // so browsers block them on other sites. This host serves the same file.
+    driveExportUrl: 'https://lh3.googleusercontent.com/d/',
     isFetchingCategories: false,
 
     async getSpreadsheet(fileId) {
@@ -104,12 +106,23 @@ export const Drive = {
         splitHtmlStart = splitStyleEnd[1].split(htmlStartFull)
         let splitHtmlEnd = splitHtmlStart[1].split(htmlEnd)
 
+        // Scope Google Docs' stylesheet to the article body so its global
+        // rules (p, h1, li...) don't leak onto the rest of the site.
+        const scopedStyle = splitStyleEnd[0].replace(
+            /(^|[};])\s*([^{}@;]+)\{/g,
+            (match, end, selectors) =>
+                `${end}${selectors
+                    .split(',')
+                    .map((selector) => `.gdoc ${selector.trim()}`)
+                    .join(',')}{`
+        )
+
         return [
             null,
             `${styleStart}
-        ${splitStyleEnd[0]}
+        ${scopedStyle}
         ${styleEnd}
-        <div>${splitHtmlEnd[0]}</div>
+        <div class="gdoc">${splitHtmlEnd[0]}</div>
         `,
         ]
     },

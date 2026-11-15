@@ -5,64 +5,65 @@ import prefixUriIfNeeded from '../../utils/prefixUriIfNeeded.js'
 export const Category = ({ category, setActivePanel }) => html`
     <style>
         .category-block {
-            height: 30rem;
-            background-position: center center;
-            background-size: cover;
-            width: 100%;
             position: relative;
-            margin-bottom: 2rem;
             display: flex;
             align-items: flex-end;
-            cursor: pointer;
-            transition-timing-function: ease-in-out; /*************filter added************/
-            transition-duration: 2s; /************filter added************/
+            aspect-ratio: 4 / 3;
+            overflow: hidden;
+            border-radius: var(--radius);
+            background-color: var(--c-surface-2);
+            box-shadow: var(--shadow-sm);
+            isolation: isolate;
+            transition: box-shadow var(--dur) var(--ease),
+                transform var(--dur) var(--ease);
         }
-        .category-block:hover{
-            filter: hue-rotate(360deg); /******************filter added***************/
-            transition-timing-function: ease-in-out; /****************filter added*******************/
-            transition-duration: 2s; /****************filter added*******************/
+        .category-block .category-bg {
+            position: absolute;
+            inset: 0;
+            z-index: -1;
+            background-position: center;
+            background-size: cover;
+            transition: transform 600ms var(--ease);
+        }
+        .category-block::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            z-index: -1;
+            background: var(--c-scrim);
+        }
+        .category-block:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+        .category-block:hover .category-bg {
+            transform: scale(1.06);
         }
         .category-block .title {
-            background: rgba(50, 50, 50, 0.5);
-            width: 100%;
-            font-size: 2rem;
+            margin: 0;
+            padding: 2rem 2.2rem;
             color: #fff;
-            padding: 10px;
-            font-weight: 700;
-            line-height: 1.1;
-            font-family: Source Sans Pro, Helvetica, Arial, sans-serif;
-            text-decoration: none;
-        }
-        .category-block:hover .title {
-            text-decoration: none;
-            outline: 0;
-            color: #333337;
-            transition: all 0.4s;
-            background: rgba(250, 250, 250, 0.5);
-        }
-        @media (min-width: 768px) {
-            .category-block {
-                width: 100%;
-            }
-        }
-        @media (min-width: 992px) {
-            .category-block {
-                width: 48%;
-            }
+            font-family: var(--font-serif);
+            font-size: 2.2rem;
+            font-weight: 600;
+            line-height: 1.2;
+            text-shadow: 0 1px 8px rgba(0, 0, 0, 0.35);
         }
     </style>
 
     <a
         href=${prefixUriIfNeeded(category.uri)}
         class="category-block"
-        style=${{
-            backgroundImage: `url(${category.image})`,
-        }}
         onClick=${(event) => {
             avoidReload(event)
             setActivePanel('posts')
         }}
     >
+        <div
+            class="category-bg"
+            style=${{ backgroundImage: `url(${category.image})` }}
+            aria-hidden="true"
+        />
         <h2 class="title" title=${category.title}>${category.title}</h2>
     </a>
 `

@@ -2,57 +2,11 @@ import { html } from '../lib/htm-preact.js'
 import { Page } from '../components/layout/page.js'
 import prefixUriIfNeeded from '../utils/prefixUriIfNeeded.js'
 import { avoidReload } from '../utils/avoidReload.js'
+import { infoPageStyles } from '../styles/infoPage.js'
 
 export const Chinese = () => html`
     <style>
-     /*******************import new fonts family*********************/
-     @import url('https://fonts.googleapis.com/css2?family=Didact+Gothic&family=Joan&family=Noto+Sans+JP:wght@100;400&family=Noto+Serif+JP:wght@200;400;500&family=Playfair+Display&display=swap');
-        .about-content {
-            display: block;
-        }
-        .about-content img.image {
-            border-radius: 0%;
-            width: 150px;
-            border: 0;
-            max-width: 100%;
-            vertical-align: middle;
-            float: left;
-            margin-right: 2rem;
-        }
-        .info-title {
-            margin: 30px 0 20px;
-            font-size: 3.8rem;
-            font-family: 'Noto Sans JP', sans-serif; /**************adding font family attributes***********/
-        }
-        .info p {
-            font-size: 2rem;
-            margin: 0 0 30px;
-            font-family: 'Noto Sans JP', sans-serif; /**************adding font family attributes***********/
-            font-weight: 100; /**************adding font weight********************/
-        }
-        footer {
-            padding: 10px 0;
-            font-size: 1.4rem;
-            letter-spacing: 1px;
-            font-weight: 700;
-            font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif;
-            text-transform: uppercase;
-        }
-        footer a.contact {
-            text-decoration: none;
-            background-color: transparent;
-            color: #999;
-            border-bottom: none;
-            font-size: 1.4rem;
-        }
-        footer a.contact:hover {
-            text-decoration: none;
-            background-color: transparent;
-            color: #333;
-            outline: 0;
-            transition: all 0.4s;
-            border-bottom: none;
-        }
+        ${infoPageStyles}
     </style>
     <${Page}
         title="黑臉琵鷺"
@@ -61,6 +15,7 @@ export const Chinese = () => html`
         因其扁平如湯匙狀的長嘴，與中國樂器中的琵琶極為相似，因而得名；亦因其姿態優雅，又有「黑面天使」和「黑面舞者」的雅稱。 ~維基百科"
         sidebarImage=${prefixUriIfNeeded('/assets/black_faced_spoonbill.jpg')}
         showLinks=${true}
+        lang="zh-Hant"
     >
         <div class="about-content">
             
@@ -80,14 +35,14 @@ export const Chinese = () => html`
                 
            </div>
         </div>
-        <footer>
+        <nav class="page-links">
             <a
-                href="${prefixUriIfNeeded('/home')}"
+                href="${prefixUriIfNeeded('/')}"
                 class="home"
                 onClick=${avoidReload}
             >
                 Home
             </a>
-        </footer>
+        </nav>
     <//>
 `

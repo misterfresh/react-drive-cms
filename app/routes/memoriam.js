@@ -2,73 +2,27 @@ import { html } from '../lib/htm-preact.js'
 import { Page } from '../components/layout/page.js'
 import prefixUriIfNeeded from '../utils/prefixUriIfNeeded.js'
 import { avoidReload } from '../utils/avoidReload.js'
+import { infoPageStyles } from '../styles/infoPage.js'
 
 export const Memoriam = () => html`
     <style>
-    @import url('https://fonts.googleapis.com/css2?family=Didact+Gothic&family=Joan&family=Noto+Sans+JP:wght@100;400&family=Noto+Serif+JP:wght@200;400;500&family=Playfair+Display&display=swap');
-        .about-content {
-            display: block;
-        }
-
-       .about-content img.image {
-            text-align: center;
-            display: block;
-            border: 0;
-            max-height: 130%;
-            max-width: 130%;
-            vertical-align: middle;
+        ${infoPageStyles}
+        .about-content .tribute-link {
             float: left;
-            
-            margin-right: 5rem;
-            margin-bottom: 2rem;
-            
+            margin: 0.6rem 3.2rem 2rem 0;
         }
-
-        .info-year {
-            margin: 30px 0 20px;
-            font-size: 2rem;
-            font-family: 'Noto Serif JP', serif; /**************adding font family attributes***********/
+        .about-content .tribute-link img.image {
+            float: none;
+            display: block;
+            width: 22rem;
+            margin: 0;
         }
-
-        .info-title {
-            margin: 30px 0 20px;
-            font-size: 3.8rem;
-            font-weight: 700;
-            line-height: 1.1;
-            font-family: 'Noto Serif JP', serif; /**************adding font family attributes***********/
-        }
-
-        .info p {
-            font-size: 2rem;
-            margin: 0 0 30px;
-            font-family: 'Noto Serif JP', serif; /**************adding font family attributes***********/
-            font-weight: 200; /**********************added font weight***********************************/
-        }
-
-        footer {
-            padding: 10px 0;
-            font-size: 1.4rem;
-            letter-spacing: 1px;
-            font-weight: 700;
-            font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif;
-            text-transform: uppercase;
-        }
-
-        footer a.contact {
-            text-decoration: none;
-            background-color: transparent;
-            color: #999;
-            border-bottom: none;
-            font-size: 1.4rem;
-        }
-
-        footer a.contact:hover {
-            text-decoration: none;
-            background-color: transparent;
-            color: #333;
-            outline: 0;
-            transition: all 0.4s;
-            border-bottom: none;
+        @media (max-width: 560px) {
+            .about-content .tribute-link {
+                float: none;
+                display: block;
+                margin: 0 0 2rem;
+            }
         }
     </style>
     <${Page}
@@ -81,10 +35,16 @@ export const Memoriam = () => html`
         showLinks=${true}
     >
         <div class="about-content">
-            <a href="https://willwerscheid.com/tribute/details/267398/James-Parker/obituary.html#tribute-start" target="_blank">
+            <a
+                class="tribute-link"
+                href="https://willwerscheid.com/tribute/details/267398/James-Parker/obituary.html#tribute-start"
+                target="_blank"
+                rel="noopener"
+            >
                 <img
                     src=${prefixUriIfNeeded('/assets/JamesParker.jpg')}
                     class="image"
+                    alt="James Edward Parker"
                 />
             </a>
             <div class="info">
@@ -95,18 +55,18 @@ export const Memoriam = () => html`
                     
                 </p>
          
-                <p class="info-year"><i> November 7th 1984 - January 20th 2022 </i> </p>
+                <p class="info-year">November 7th 1984 – January 20th 2022</p>
             </div>
         </div>
 
-        <footer>
+        <nav class="page-links">
             <a
-                href="${prefixUriIfNeeded('/home')}"
+                href="${prefixUriIfNeeded('/')}"
                 class="memoriam"
                 onClick=${avoidReload}
             >
                 Home
             </a>
-        </footer>
+        </nav>
     <//>
 `

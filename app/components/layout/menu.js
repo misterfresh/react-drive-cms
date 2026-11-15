@@ -2,271 +2,209 @@ import { html, useEffect, useState } from '../../lib/htm-preact.js'
 import { avoidReload } from '../../utils/avoidReload.js'
 import prefixUriIfNeeded from '../../utils/prefixUriIfNeeded.js'
 
+const mainLinks = [
+    { path: '/', title: 'Home', icon: 'fa-house' },
+    { path: '/about', title: 'About', icon: 'fa-kiwi-bird' },
+    { path: '/japanese', title: '日本語', icon: 'fa-robot', lang: 'ja' },
+    { path: '/chinese', title: '繁體中文', icon: 'fa-ship', lang: 'zh-Hant' },
+    // { path: '/music', title: 'Inspiration', icon: 'fa-music' },
+    { path: '/contact', title: 'Contact', icon: 'fa-feather-pointed' },
+    { path: '/memoriam', title: 'In Memoriam', icon: 'fa-monument' },
+]
+
 export const Menu = ({ categories, articles, menuVisible }) => {
     const [activeCategory, setActiveCategory] = useState(false)
     const toggleCategory = (event) => {
-        const category = event.target.dataset.category
+        const category = event.currentTarget.dataset.category
         setActiveCategory(category !== activeCategory ? category : false)
     }
     useEffect(() => {
         setActiveCategory(Object.values(categories)?.[0]?.id)
     }, [categories])
     return html` <style>
-    @import url('https://fonts.googleapis.com/css2?family=Didact+Gothic&family=Joan&family=Noto+Sans+JP:wght@100;400&family=Noto+Serif+JP:wght@200;400;500&family=Playfair+Display&display=swap');
             .menu {
-                background-color: #810541; /**************************orange menu#f06236*************************/
-                overflow: hidden;
-                z-index: 10;
-                display: block;
+                position: fixed;
                 top: 0;
                 left: 0;
+                z-index: 10;
                 height: 100%;
-                box-shadow: #000 2px 2px 10px;
-                padding-top: 5rem;
-                transition: opacity linear 1000ms, width linear 1000ms; /******************changed speed******************/
-                width: 0;
-                opacity: 0;
-                padding-right: 0;
-                position: fixed;
-                overflow: auto;
+                width: 100%;
+                overflow-y: auto;
+                padding: 8rem 0 4rem;
+                background: linear-gradient(
+                    165deg,
+                    var(--c-menu-bg) 0%,
+                    color-mix(in srgb, var(--c-menu-bg) 85%, #6d2c7f) 100%
+                );
+                color: var(--c-menu-text);
+                font-family: var(--font-sans);
+                box-shadow: var(--shadow-lg);
+                transform: translateX(-100%);
+                visibility: hidden;
+                transition: transform 320ms var(--ease),
+                    visibility 0s linear 320ms;
             }
             .menu-open {
-                opacity: 1;
-                width: 100%;
+                transform: none;
+                visibility: visible;
+                transition: transform 320ms var(--ease), visibility 0s;
             }
             @media (min-width: 768px) {
-                .menu-open {
+                .menu {
                     width: 40%;
                 }
             }
             @media (min-width: 992px) {
-                .menu-open {
+                .menu {
                     width: 30%;
                 }
             }
             @media (min-width: 1200px) {
-                .menu-open {
+                .menu {
                     width: 25%;
                 }
             }
-
-            .icon {
-                padding: 0 20px;
-                font-size: 1.6rem;
-                color: #fff; /**********************changed bg color**************************/
-                transition: all 1s ease-in-out; /*******************changed transition*******************/
-            }
-            
-            .icon:hover {
-                color: #6236f0; /**************changed icon color when hovered****************/
-                transition: all 1s ease-in-out; /**************changed transition****************/
-            }
             .menu ul.menu-list {
-                padding: 10px 0;
-                font-size: 1.6rem;
-                margin-bottom: 20px;
-                margin-top: 0px;
-                list-style-type: none;
-            }
-            .item {
-                margin: 0;
                 list-style: none;
-                padding: 10px 0;
-                font-size: 1.6rem;
-                transition: all 1s ease-in-out; /************added transition when hovered**************/
-            }
-            .item:hover {
-                color: #0036fd; /************************changed icon color to navy when hovered*************/
-                outline: 0; /***************added outline******************/
-                transition: all 1s ease-in-out; /************added transition when hovered************/
-            }
-            .item:focus {
-                outline: 0; /***********re-focus************/
-            }
-            .item-link {
-                color: #fff; /************changed bg color**********************/
-                font-weight: 500;
-                font-size: large;
-                border-bottom: 0 transparent;
-                background-color: transparent;
-                outline: 0;
-                border: 0;
-                cursor: pointer;
-                font-family: Arial;
-                transition: all 1s ease-in-out;  /*************added Fade in effect***************/
-            }
-            .item-link:hover {
-                color: #0036fd; /***********************changed bg color to blue*************/
-                outline: 0;
-                transform: scale(1.2); /*************text would be larger when hovered*************/
-            }
-            .item-link:focus {
-                outline: 0;
-            }
-            .separator {
-                margin: 20px auto;
-                display: block;
-                border: 1px solid #fff; /*************changed color************/
-                height: 0;
-                width: 50%;  /*******************changed width***************/
-            }
-            .sub-list {
-                margin-left: 15px;
-                position: relative;
-                padding: 10px 0;
-                margin-bottom: 0;
-                font-size: 1.6rem;
-                margin-top: 0;
-            }
-            .sub-item {
-                padding: 0;
-                height: 0;
-                overflow: hidden;
-                opacity: 0.1;
-                position: relative;
-                font-size: small;
                 margin: 0;
-                list-style: none;
-                transition: opacity ease 750ms, height linear 750ms;
+                padding: 0 1.6rem;
             }
-            .sub-item-expanded {
-                opacity: 1;
-                height: 4.5rem;
-                transition: opacity ease 750ms, height linear 750ms;
+            .menu .item {
+                margin: 0.2rem 0;
             }
-            .sub-item-link {
-                font-size: medium;
-                position: relative;
-                color: #dadada;
-                font-weight: 100; /***************************changed font weight***************/
-                border-bottom: 0 transparent;
-                text-decoration: none;
-                background-color: transparent;
-                font-style: normal;
-                top: 10px;
-                font-family: 'Noto Sans JP', sans-serif;/***************************changed font style***********************/
-            }
-            /***************************changed underline hover effect********************************/
-            .sub-item-link::before {
-                content: '';
-                position: absolute;
+            .menu .item-link {
+                display: flex;
+                align-items: center;
+                gap: 1.4rem;
                 width: 100%;
-                height: 1px;
-                border-radius: 1px;
-                background-color: #00ccff;
-                bottom: 0;
-                left: 0;
-                transform-origin: right;
-                transform: scaleX(0);
-                transition: transform .3s ease-in-out;
+                padding: 1rem 1.4rem;
+                border: 0;
+                border-radius: var(--radius-sm);
+                background: transparent;
+                color: var(--c-menu-text);
+                font-family: inherit;
+                font-size: 1.6rem;
+                font-weight: 500;
+                text-align: left;
+                cursor: pointer;
+                transition: background-color var(--dur) var(--ease),
+                    color var(--dur) var(--ease);
             }
-            .sub-item-link:hover::before {
-                transform-origin: left;
-                transform: scaleX(1);
-              }
-            /************************************************************************************************/
-            .sub-item-link:hover {
-                border-bottom: none;
-                color: #00ccff; /************************/
+            .menu .item-link:hover,
+            .menu .item-link:focus-visible {
+                background-color: rgba(255, 255, 255, 0.08);
+                color: #fff;
+            }
+            .menu .item-link .icon {
+                width: 2rem;
+                text-align: center;
+                font-size: 1.5rem;
+                color: var(--c-menu-accent);
+                opacity: 0.85;
+            }
+            .menu .item-link .chevron {
+                margin-left: auto;
+                font-size: 1.2rem;
+                color: var(--c-menu-muted);
+                transition: transform var(--dur) var(--ease);
+            }
+            .menu .item-link[aria-expanded='true'] .chevron {
+                transform: rotate(90deg);
+            }
+            .menu .separator {
+                margin: 2.4rem 3rem;
+                border: 0;
+                border-top: 1px solid rgba(255, 255, 255, 0.14);
+            }
+            .menu .section-label {
+                margin: 0 3rem 1rem;
+                font-size: 1.15rem;
+                font-weight: 600;
+                letter-spacing: 0.14em;
+                text-transform: uppercase;
+                color: var(--c-menu-muted);
+            }
+            .menu .sub-list {
+                list-style: none;
+                margin: 0 0 0.6rem 3.2rem;
+                padding: 0 0 0 1.4rem;
+                border-left: 1px solid rgba(255, 255, 255, 0.12);
+            }
+            .menu .sub-item {
+                display: none;
+            }
+            .menu .sub-item-expanded {
+                display: block;
+                animation: fadein 250ms var(--ease) both;
+            }
+            .menu .sub-item-link {
+                display: block;
+                padding: 0.6rem 1rem;
+                border-radius: 6px;
+                font-size: 1.4rem;
+                line-height: 1.45;
+                color: var(--c-menu-muted);
+                transition: color var(--dur) var(--ease),
+                    background-color var(--dur) var(--ease);
+            }
+            .menu .sub-item-link:hover,
+            .menu .sub-item-link:focus-visible {
+                color: #fff;
+                background-color: rgba(255, 255, 255, 0.06);
+            }
+            .menu :focus-visible {
+                outline-color: var(--c-menu-accent);
             }
         </style>
-        <nav id="menu" class="menu ${menuVisible ? 'menu-open' : ''}">
+        <nav
+            id="menu"
+            class="menu ${menuVisible ? 'menu-open' : ''}"
+            aria-label="Main menu"
+            aria-hidden=${!menuVisible}
+        >
             <ul class="menu-list">
-                <li class="item">
-                    <i class="fas fa-home icon" />
-                    <a
-                        href="${prefixUriIfNeeded('/')}"
-                        title="Home"
-                        class="item-link"
-                        onClick=${avoidReload}
-                    >
-                        Home
-                    </a>
-                </li>
-                <li class="item">
-                    <i class="fas fa-kiwi-bird icon" />
-             
-                    <a
-                        href="${prefixUriIfNeeded('/about')}"
-                        title="About"
-                        class="item-link"
-                        onClick=${avoidReload}
-                    >
-                        About
-                    </a>
-                </li>
-                <li class="item">
-                    <i class="fas fa-robot icon" />
-                    <a
-                        href="${prefixUriIfNeeded('/japanese')}"
-                        title="日本語"
-                        class="item-link"
-                        onClick=${avoidReload}
-                    >
-                        日本語
-                    </a>
-                </li>
-                 <li class="item">
-                    <i class="fas fa-ship icon" />
-                    <a
-                        href="${prefixUriIfNeeded('/chinese')}"
-                        title="繁體中文"
-                        class="item-link"
-                        onClick=${avoidReload}
-                    >
-                    繁體中文
-                    </a>
-                </li>
-                <!--
-                <li class="item">
-                    <i class="fas fa-music icon" />
-                    <a
-                        href="${prefixUriIfNeeded('/music')}"
-                        title="Inspire"
-                        class="item-link"
-                        onClick=${avoidReload}
-                    >
-                        Inspiration
-                    </a>
-                </li>
-                -->
-                <li class="item">
-                    <i class="fas fa-feather-alt icon" />
-                    <a
-                        href="${prefixUriIfNeeded('/contact')}"
-                        title="Contact"
-                        class="item-link"
-                        onClick=${avoidReload}
-                    >
-                        Contact
-                    </a>
-                </li>
-                 <li class="item">
-                    <i class="fas fa-monument icon" />
-                    <a
-                        href="${prefixUriIfNeeded('/memoriam')}"
-                        title="Memoriam"
-                        class="item-link"
-                        onClick=${avoidReload}
-                    >
-                        In Memoriam
-                    </a>
-                </li>
-            
+                ${mainLinks.map(
+                    (link) => html`
+                        <li class="item" key=${link.path}>
+                            <a
+                                href="${prefixUriIfNeeded(link.path)}"
+                                title=${link.title}
+                                class="item-link"
+                                lang=${link.lang}
+                                onClick=${avoidReload}
+                            >
+                                <i
+                                    class="fa-solid ${link.icon} icon"
+                                    aria-hidden="true"
+                                />
+                                ${link.title}
+                            </a>
+                        </li>
+                    `
+                )}
             </ul>
             <hr class="separator" />
+            <p class="section-label">Categories</p>
             <ul class="menu-list">
                 ${Object.values(categories).map(
-                    (category, index) => html`
-                        <li key=${category.id}>
-                            <i class="fas fa-angle-right icon" />
+                    (category) => html`
+                        <li class="item" key=${category.id}>
                             <button
                                 title=${category.title}
                                 onClick=${toggleCategory}
                                 class="item-link"
                                 data-category=${category.id}
+                                aria-expanded=${category.id === activeCategory}
                             >
+                                <i
+                                    class="fa-solid fa-feather icon"
+                                    aria-hidden="true"
+                                />
                                 ${category.title}
+                                <i
+                                    class="fa-solid fa-angle-right chevron"
+                                    aria-hidden="true"
+                                />
                             </button>
 
                             <ul class="sub-list">
@@ -285,7 +223,6 @@ export const Menu = ({ categories, articles, menuVisible }) => {
                                                     : ''}"
                                             >
                                                 <a
-                                                    key=${article.id}
                                                     title=${article.title}
                                                     href="${prefixUriIfNeeded(
                                                         article.uri

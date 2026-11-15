@@ -1,33 +1,42 @@
-export const inputStyles = `<style>
+export const inputStyles = `
     .input-base {
         display: block;
         width: 100%;
-        padding: .5rem .75rem;
+        padding: 1.1rem 1.4rem;
+        font-family: var(--font-sans);
         font-size: 1.6rem;
-        line-height: 1.25;
-        color: #464a4c;
-        background-color: #fff;
-        background-image: none;
-        background-clip: padding-box;
-        border: .1rem solid rgba(0,0,0,.15);
-        border-radius: .25rem;
-        transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
-        margin-bottom: 1rem;
+        line-height: 1.4;
+        color: var(--c-text);
+        background-color: var(--c-surface);
+        border: 1px solid var(--c-border);
+        border-radius: var(--radius-sm);
+        box-shadow: inset 0 1px 2px rgba(40, 14, 52, 0.04);
+        transition: border-color var(--dur) var(--ease),
+            box-shadow var(--dur) var(--ease);
+        margin: 0.6rem 0 1.8rem;
+    }
+    textarea.input-base {
+        min-height: 14rem;
+        resize: vertical;
     }
     .input-base::placeholder {
-        max-width: 92%;
-        overflow-x: hidden;
-        text-overflow: ellipsis;
+        color: var(--c-text-muted);
+        opacity: 0.7;
     }
-    .input-error {
-        border: .1rem solid red; 
+    .input-base:hover {
+        border-color: var(--c-text-muted);
     }
-    .input-error::placeholder {
-        max-width: 92%;
-        overflow-x: hidden;
-        text-overflow: ellipsis;
-        color: red;
+    .input-base:focus {
+        outline: none;
+        border-color: var(--c-brand);
+        box-shadow: 0 0 0 3px var(--c-brand-soft);
     }
-</style>`
-    .replace('<style>', '')
-    .replace('</style>', '')
+    .input-error,
+    .input-error:hover {
+        border-color: var(--c-danger);
+    }
+    .input-error:focus {
+        border-color: var(--c-danger);
+        box-shadow: 0 0 0 3px rgba(179, 38, 30, 0.15);
+    }
+`

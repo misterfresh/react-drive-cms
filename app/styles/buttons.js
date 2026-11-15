@@ -1,48 +1,45 @@
-export const buttonsStyles = `<style>
+export const buttonsStyles = `
     button.base {
-        display: inline-block;
-        font-weight: 400;
-        line-height: 1.25rem;
-        text-align: center;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.8rem;
+        font-family: var(--font-sans);
+        font-weight: 500;
+        font-size: 1.5rem;
+        line-height: 1.2;
         white-space: nowrap;
-        vertical-align: middle;
         user-select: none;
-        border: 0.1rem solid transparent;
-        padding: 1rem 1rem;
-        font-size: 1.6rem;
-        border-radius: .5rem;
-        transition: all .2s ease-in-out;
+        padding: 1.1rem 2.2rem;
+        border: 1px solid transparent;
+        border-radius: 999px;
+        color: var(--c-on-brand);
+        background-color: var(--c-brand);
+        box-shadow: var(--shadow-sm);
         cursor: pointer;
-        text-decoration: none;
-        color: #fff;
-        background-color: #0275d8;
-        border-color: #0275d8;    
+        transition: background-color var(--dur) var(--ease),
+            box-shadow var(--dur) var(--ease), transform var(--dur) var(--ease);
     }
     button.base:hover {
-        text-decoration: none;
-        background-color: #025aa5;
-        border-color: #01549b;
-        color: #fff;
+        background-color: var(--c-brand-strong);
+        box-shadow: var(--shadow-md);
+        transform: translateY(-1px);
+    }
+    button.base:active {
+        transform: translateY(0);
     }
     button.large {
-        padding: 1.5rem;
-        font-size: 2rem;
-        border-radius: .5rem;
+        padding: 1.4rem 2.8rem;
+        font-size: 1.7rem;
     }
     button.block {
-        display: block;
+        display: flex;
         width: 100%;
     }
-    button:disabled {
-        pointer-events: none;
-        background-color: #85c6f2;
-        border-color: #85c6f2;     
-    }
-    button:disabled:hover {
-        background-color: #85c6f2;
-        border-color: #85c6f2;
+    button.base:disabled {
         cursor: not-allowed;
+        opacity: 0.6;
+        box-shadow: none;
+        transform: none;
     }
-</style>`
-    .replace('<style>', '')
-    .replace('</style>', '')
+`

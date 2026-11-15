@@ -18,57 +18,53 @@ export const PostsAndCategories = ({ state, dispatch }) => {
 
     return html`<style>
             .toggle-posts-category {
-                border-bottom: solid 1px #f5f5f5;
-                line-height: 3rem;
+                display: inline-flex;
+                gap: 0.4rem;
+                padding: 0.4rem;
+                margin-bottom: 2.4rem;
+                border-radius: 999px;
+                background: var(--c-surface-2);
+                border: 1px solid var(--c-border);
             }
             .toggle-posts-category button.toggle-panel {
-                display: inline-block;
-                font-weight: 700;
-                margin-right: 10px;
-                font-size: 1.2rem;
-                font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif;
+                padding: 0.7rem 1.8rem;
+                border: 0;
+                border-radius: 999px;
+                background: transparent;
+                color: var(--c-text-muted);
+                font-family: var(--font-sans);
+                font-size: 1.3rem;
+                font-weight: 600;
+                letter-spacing: 0.08em;
                 text-transform: uppercase;
                 cursor: pointer;
-                background-color: transparent;
-                outline: 0;
-                line-height: 30px;
-                letter-spacing: 2pt;
-                text-decoration: none;
-                color: #b6b6b6;
-                border: none;
-                border-bottom: solid 2px transparent;
-            }
-            .toggle-posts-category button.toggle-panel:active {
-                border-bottom: solid 2px #000;
-                color: #333337;
+                transition: background-color var(--dur) var(--ease),
+                    color var(--dur) var(--ease), box-shadow var(--dur) var(--ease);
             }
             .toggle-posts-category button.toggle-panel:hover {
-                border-bottom: solid 2px #000;
-                color: #333337;
-            }
-            .toggle-posts-category button.toggle-panel:focus {
-                outline: 0;
+                color: var(--c-text);
             }
             .toggle-posts-category button.toggle-panel.button-active {
-                border-bottom: solid 2px #000;
-                color: #333337;
+                background: var(--c-surface);
+                color: var(--c-brand);
+                box-shadow: var(--shadow-sm);
             }
             .list.posts-or-categories {
-                animation: fadein 2s;
-                display: flex;
-                flex-wrap: wrap;
+                display: grid;
+                gap: 1.6rem;
                 width: 100%;
-                justify-content: space-between;
+            }
+            .list.posts-or-categories.categories-grid {
+                grid-template-columns: repeat(auto-fill, minmax(24rem, 1fr));
             }
             .hide {
-                position: absolute;
-                top: -9999px;
-                left: -9999px;
-                display: none;
+                display: none !important;
             }
         </style>
-        <div class="toggle-posts-category">
+        <div class="toggle-posts-category" role="tablist">
             <button
+                role="tab"
+                aria-selected=${activePanel === 'posts'}
                 class="toggle-panel ${activePanel === 'posts'
                     ? 'button-active'
                     : ''}"
@@ -78,6 +74,8 @@ export const PostsAndCategories = ({ state, dispatch }) => {
                 Posts
             </button>
             <button
+                role="tab"
+                aria-selected=${activePanel === 'categories'}
                 class="toggle-panel ${activePanel === 'categories'
                     ? 'button-active'
                     : ''}"
@@ -109,7 +107,7 @@ export const PostsAndCategories = ({ state, dispatch }) => {
                 )}
         </div>
         <div
-            class="list posts-or-categories  ${activePanel === 'categories'
+            class="list posts-or-categories categories-grid ${activePanel === 'categories'
                 ? 'blocks-fadein'
                 : 'hide'}"
         >
