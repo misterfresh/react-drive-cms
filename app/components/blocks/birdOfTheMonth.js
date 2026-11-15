@@ -66,6 +66,15 @@ export const BirdOfTheMonth = () => {
                 font-size: 1.6rem;
                 line-height: 1.7;
             }
+            .botm .photo-credit {
+                margin: 1.6rem 0 0;
+                font-family: var(--font-sans);
+                font-size: 1.2rem;
+                color: var(--c-text-muted);
+            }
+            .botm .photo-credit a {
+                color: inherit;
+            }
             .botm .read-more {
                 display: inline-block;
                 margin-top: 1.4rem;
@@ -100,6 +109,16 @@ export const BirdOfTheMonth = () => {
                 onClick=${avoidReload}
                 >Read my post about the ${bird.name} →</a
             >`}
+            ${bird.photo &&
+            bird.photoCredit &&
+            html`<p class="photo-credit">
+                <a
+                    href=${bird.photoCredit.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    >${bird.photoCredit.text}</a
+                >
+            </p>`}
         </div>
     </section>`
 }

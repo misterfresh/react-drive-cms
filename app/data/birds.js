@@ -3,6 +3,7 @@
 
 // photo: a file in /assets, or leave it out and set postId to use that
 //        post's header photo from the Google Sheet.
+// photoCredit: { text, url } shown under the card, for photos that aren't yours.
 // postId: the "Post Id" from the Google Sheet, if you've written about it.
 // call:   a recording from xeno-canto.org (number, recordist, license), or
 //         null if there's no good recording (none yet for the spoonbill).
@@ -63,7 +64,11 @@ export const birds = [
         id: 'gyrfalcon',
         name: 'Gyrfalcon',
         scientific: 'Falco rusticolus',
-        photo: '/assets/default-about.jpg',
+        photo: '/assets/gyrfalcon.jpg',
+        photoCredit: {
+            text: 'Photo: Ólafur Larsen, CC BY-SA 2.0, Wikimedia Commons',
+            url: 'https://commons.wikimedia.org/wiki/File:Falco_rusticolus_white.jpg',
+        },
         fact: 'The largest falcon in the world. Most gyrfalcons spend the whole year in the Arctic, hunting ptarmigan across the tundra.',
         call: {
             xc: 709104,
