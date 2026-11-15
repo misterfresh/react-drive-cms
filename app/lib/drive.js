@@ -148,38 +148,17 @@ export const Drive = {
         return str
     },
 
+    // The sheet's "Last Updated" column is M/D/YYYY H:MM:SS (US order)
     formatDate(lastUpdated) {
-        const fullDateSplit = lastUpdated.split(' ')
-        const dateSplit = fullDateSplit[0].split('/')
-        const day = parseInt(dateSplit[0])
-        const month = dateSplit[1]
-        const year = dateSplit[2]
-        const monthNames = [
-            'January',
-            'February',
-            'March',
-            'April',
-            'May',
-            'June',
-            'July',
-            'August',
-            'September',
-            'October',
-            'November',
-            'December',
-        ]
-        let daySuffix = 'th'
-        switch (day) {
-            case 1:
-                daySuffix = 'st'
-                break
-            case 2:
-                daySuffix = 'nd'
-                break
-            case 3:
-                daySuffix = 'rd'
-                break
+        const [datePart] = (lastUpdated ?? '').split(' ')
+        const [month, day, year] = datePart.split('/').map(Number)
+        if (!month || !day || !year) {
+            return ''
         }
-        return `${day}${daySuffix} of ${monthNames[month - 1]}`
+        return new Date(year, month - 1, day).toLocaleDateString('en-US', {
+            month: 'short',
+            day: 'numeric',
+            year: 'numeric',
+        })
     },
 }

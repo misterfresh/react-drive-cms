@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>The Purple Club</title>
+    <link>https://thepurpleclub.github.io/home/</link>
+    <description>A personal blog about birds, people and places, in English, 日本語 and 繁體中文.</description>
+    <atom:link href="https://thepurpleclub.github.io/home/feed.xml" rel="self" type="application/rss+xml"/>
+    <lastBuildDate>Tue, 28 Nov 2023 16:50:35 +0000</lastBuildDate>
+    <item>
+      <title>Kakapo</title>
+      <link>https://thepurpleclub.github.io/home/articles/1GAWIMMiw4YNN9Lo9aY3i-DTWEYKRYFqODOYQpetKp2s/kakapo</link>
+      <guid isPermaLink="false">1GAWIMMiw4YNN9Lo9aY3i-DTWEYKRYFqODOYQpetKp2s</guid>
+      <category>Wild Birds</category>
+      <description>&lt;p&gt;&lt;img src="https://lh3.googleusercontent.com/d/1hQuAMoRq7cfPiRVMoDdPOmTTH3NxwfE_=w1200" alt=""&gt;&lt;/p&gt;&lt;p&gt;The Endangered Species in New Zealand&lt;/p&gt;</description>
+      <pubDate>Tue, 28 Nov 2023 16:50:35 +0000</pubDate>
+    </item>
+    <item>
+      <title>Eurasian Coot</title>
+      <link>https://thepurpleclub.github.io/home/articles/1XND2Hxsj-XXbXus7vU7toJbA2L6TPkxL7fSq2HmJYCQ/eurasian-coot</link>
+      <guid isPermaLink="false">1XND2Hxsj-XXbXus7vU7toJbA2L6TPkxL7fSq2HmJYCQ</guid>
+      <category>Wild Birds</category>
+      <description>&lt;p&gt;&lt;img src="https://lh3.googleusercontent.com/d/1_kqdCpqqYZP_wI0N0KBbkFtlR8Wa5PVT=w1200" alt=""&gt;&lt;/p&gt;&lt;p&gt;My Eurasian Photobook&lt;/p&gt;</description>
+      <pubDate>Thu, 25 May 2023 07:39:53 +0000</pubDate>
+    </item>
+    <item>
+      <title>Canada Goose</title>
+      <link>https://thepurpleclub.github.io/home/articles/16KOegLGNs8CA7srEvynqCnKF7HtoJ2Tkw1V3Q0NJl9A/canada-goose</link>
+      <guid isPermaLink="false">16KOegLGNs8CA7srEvynqCnKF7HtoJ2Tkw1V3Q0NJl9A</guid>
+      <category>Wild Birds</category>
+      <description>&lt;p&gt;&lt;img src="https://lh3.googleusercontent.com/d/1sq2TjQHW2LncxM6eWDpopOWHklZIae6K=w1200" alt=""&gt;&lt;/p&gt;&lt;p&gt;The Great Adapter to Human-Altered Areas&lt;/p&gt;</description>
+      <pubDate>Mon, 15 May 2023 16:28:54 +0000</pubDate>
+    </item>
+    <item>
+      <title>Happy New Year 2023</title>
+      <link>https://thepurpleclub.github.io/home/articles/1NDkMfZ2UQnPHlMJY_9pkoqutMbztYypPxY6KlxBBEuA/happy-new-year-2023</link>
+      <guid isPermaLink="false">1NDkMfZ2UQnPHlMJY_9pkoqutMbztYypPxY6KlxBBEuA</guid>
+      <category>Celebrations</category>
+      <description>&lt;p&gt;&lt;img src="https://lh3.googleusercontent.com/d/1XJcAgrrz1zI90TdYuNVgyYHIo3sJg9LK=w1200" alt=""&gt;&lt;/p&gt;&lt;p&gt;New year&amp;#x27;s wishes &amp;amp; resolutions&lt;/p&gt;</description>
+      <pubDate>Wed, 11 Jan 2023 16:41:20 +0000</pubDate>
+    </item>
+  </channel>
+</rss>

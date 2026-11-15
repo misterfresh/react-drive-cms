@@ -1,0 +1,59 @@
+# Rebuilds feed.xml and the per-post link-preview pages from the Google Sheet.
+# Runs every day, whenever index.html or the script changes, and on demand
+# (GitHub → Actions → "Build feed and previews" → Run workflow).
+name: Build feed and previews
+
+on:
+  schedule:
+    - cron: '0 6 * * *'
+  workflow_dispatch:
+  push:
+    branches: [master]
+    paths:
+      - index.html
+      - conf.js
+      - scripts/build_static.py
+
+permissions:
+  contents: write
+  pages: write
+
+concurrency:
+  group: build-static
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Build feed.xml and preview pages
+        run: python3 scripts/build_static.py
+
+      - name: Commit changes, if any
+        id: commit
+        run: |
+          git add -A feed.xml articles
+          if git diff --cached --quiet; then
+            echo "No changes"
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git commit -m "Update feed and link previews"
+            git push
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      # Pushes made by this workflow don't always trigger a Pages rebuild,
+      # so request one explicitly.
+      - name: Rebuild GitHub Pages
+        if: steps.commit.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh api -X POST "repos/${{ github.repository }}/pages/builds" || true

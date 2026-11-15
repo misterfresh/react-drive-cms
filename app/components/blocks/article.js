@@ -77,6 +77,19 @@ export const Article = ({ article, category = {} }) => html`
             color: var(--c-brand);
             font-weight: 500;
         }
+        article.post-card .date {
+            display: block;
+            margin-bottom: 0.6rem;
+            font-family: var(--font-sans);
+            font-size: 1.2rem;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--c-text-muted);
+        }
+        article.post-card p.meta .disqus-comment-count:empty {
+            display: none;
+        }
         article.post-card .category:hover {
             background: var(--c-brand);
             color: var(--c-on-brand);
@@ -100,6 +113,10 @@ export const Article = ({ article, category = {} }) => html`
             aria-hidden="true"
         />`}
         <div class="body">
+            ${article.date &&
+            html`<time class="date" datetime=${article.lastUpdated}
+                >${article.date}</time
+            >`}
             <h2>
                 <a
                     href=${prefixUriIfNeeded(article.uri)}

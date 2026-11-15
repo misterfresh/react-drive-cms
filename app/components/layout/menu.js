@@ -152,6 +152,17 @@ export const Menu = ({ categories, articles, menuVisible }) => {
                 color: #fff;
                 background-color: rgba(255, 255, 255, 0.06);
             }
+            .menu .rss-link {
+                display: inline-flex;
+                align-items: center;
+                gap: 0.8rem;
+                margin: 0 3rem;
+                font-size: 1.3rem;
+                color: var(--c-menu-muted);
+            }
+            .menu .rss-link:hover {
+                color: #fff;
+            }
             .menu :focus-visible {
                 outline-color: var(--c-menu-accent);
             }
@@ -240,5 +251,15 @@ export const Menu = ({ categories, articles, menuVisible }) => {
                     `
                 )}
             </ul>
+            <hr class="separator" />
+            <a
+                class="rss-link"
+                href="${prefixUriIfNeeded('/feed.xml')}"
+                target="_blank"
+                rel="noopener"
+            >
+                <i class="fa-solid fa-rss" aria-hidden="true" />
+                Subscribe via RSS
+            </a>
         </nav>`
 }

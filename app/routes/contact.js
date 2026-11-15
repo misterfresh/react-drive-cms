@@ -127,12 +127,12 @@ export const Contact = ({ state, dispatch }) => {
         if (isSending) {
             return false
         }
+        // Bots fill in the hidden "botcheck" field; real visitors never see it
+        if (event.target.form?.botcheck?.checked) {
+            return
+        }
         setIsSending(true)
-        setTimeout(() => {
-            setIsSending(false)
-            setSentError('timeout error, no response from server')
-        }, 10000)
-        const [sendError, sent] = await Mail.send({
+        const [sendError] = await Mail.send({
             name,
             email,
             company,
@@ -187,6 +187,9 @@ export const Contact = ({ state, dispatch }) => {
                 color: var(--c-brand);
                 content: ' *';
             }
+            form.contact-form .botcheck {
+                display: none;
+            }
             form.contact-form .actions {
                 display: flex;
                 flex-wrap: wrap;
@@ -232,6 +235,14 @@ export const Contact = ({ state, dispatch }) => {
             <h1 class="contact-title">Get in touch</h1>
             <p class="contact-lead">Contact us for further inquiries.</p>
             <form class="contact-form">
+                <input
+                    type="checkbox"
+                    name="botcheck"
+                    class="botcheck"
+                    tabindex="-1"
+                    autocomplete="off"
+                    aria-hidden="true"
+                />
                 <div>
                     <label for="name" class="required"> Your name </label>
                     ${errorProperty === 'name' &&

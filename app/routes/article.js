@@ -1,4 +1,4 @@
-import { html, useEffect } from '../lib/htm-preact.js'
+import { html, useEffect, useMemo, useState } from '../lib/htm-preact.js'
 import { Menu } from '../components/layout/menu.js'
 import { blocksStyles } from '../styles/blocks.js'
 import { Footer } from '../components/layout/footer.js'
@@ -25,6 +25,28 @@ export const Article = ({ state, dispatch }) => {
 
     const { menuVisible, toggleMenuVisible } = useMenuVisible()
     usePageMeta(title, subtitle)
+
+    const readingMinutes = useMemo(() => getReadingMinutes(activeText), [activeText])
+
+    // Tap a photo in the article to see it full-screen
+    const [lightboxSrc, setLightboxSrc] = useState(null)
+    const openLightbox = (event) => {
+        if (event.target.tagName === 'IMG') {
+            setLightboxSrc(event.target.src)
+        }
+    }
+    useEffect(() => {
+        if (!lightboxSrc) return
+        const closeOnEscape = (event) => {
+            if (event.key === 'Escape') setLightboxSrc(null)
+        }
+        window.addEventListener('keydown', closeOnEscape)
+        document.body.style.overflow = 'hidden'
+        return () => {
+            window.removeEventListener('keydown', closeOnEscape)
+            document.body.style.overflow = ''
+        }
+    }, [lightboxSrc])
 
     return html` <style>
             ${blocksStyles} .page {
@@ -202,6 +224,57 @@ export const Article = ({ state, dispatch }) => {
                 border-top: 1px solid var(--c-border);
             }
 
+            .hero .post-meta {
+                margin: 1.6rem 0 0;
+                color: rgba(255, 255, 255, 0.8);
+                font-family: var(--font-sans);
+                font-size: 1.4rem;
+                letter-spacing: 0.02em;
+            }
+            .hero .post-meta > * + *::before {
+                content: '·';
+                margin: 0 0.8rem;
+            }
+
+            .article-body .gdoc img {
+                cursor: zoom-in;
+            }
+            .lightbox {
+                position: fixed;
+                inset: 0;
+                z-index: 50;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 2rem;
+                background: rgba(12, 6, 16, 0.92);
+                cursor: zoom-out;
+                animation: fadein 200ms var(--ease) both;
+            }
+            .lightbox img {
+                max-width: 100%;
+                max-height: 100%;
+                object-fit: contain;
+                border-radius: var(--radius-sm);
+                box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            }
+            .lightbox .close {
+                position: absolute;
+                top: 1.6rem;
+                right: 1.6rem;
+                width: 4.4rem;
+                height: 4.4rem;
+                border: 1px solid rgba(255, 255, 255, 0.25);
+                border-radius: 50%;
+                background: rgba(255, 255, 255, 0.1);
+                color: #fff;
+                font-size: 1.8rem;
+                cursor: pointer;
+            }
+            .lightbox .close:hover {
+                background: rgba(255, 255, 255, 0.2);
+            }
+
             .loading {
                 display: flex;
                 justify-content: center;
@@ -262,12 +335,23 @@ export const Article = ({ state, dispatch }) => {
                             ${activeArticle?.title}
                         </h1>
                         <p class="subtitle">${activeArticle?.subtitle}</p>
+                        ${activeArticle?.date || readingMinutes > 0
+                            ? html`<p class="post-meta">
+                            ${activeArticle?.date &&
+                            html`<time datetime=${activeArticle.lastUpdated}
+                                >${activeArticle.date}</time
+                            >`}
+                            ${readingMinutes > 0 &&
+                            html`<span>${readingMinutes} min read</span>`}
+                        </p>`
+                            : null}
                     </div>
                 </header>
                 <section class="article-content">
                     ${activeText
                         ? html`<div
                               class="article-body"
+                              onClick=${openLightbox}
                               dangerouslySetInnerHTML=${{ __html: activeText }}
                           />`
                         : html`<div class="loading">
@@ -288,5 +372,30 @@ export const Article = ({ state, dispatch }) => {
                     category=${category}
                 />
             </main>
+            ${lightboxSrc &&
+            html`<div
+                class="lightbox"
+                role="dialog"
+                aria-label="Photo"
+                onClick=${() => setLightboxSrc(null)}
+            >
+                <img src=${lightboxSrc} alt="" />
+                <button class="close" aria-label="Close photo">
+                    <i class="fa-solid fa-xmark" aria-hidden="true" />
+                </button>
+            </div>`}
         </div>`
+}
+
+// ~220 English words or ~500 Chinese/Japanese characters per minute
+const getReadingMinutes = (articleHtml) => {
+    if (!articleHtml) return 0
+    const text = articleHtml
+        .replace(/<style[\s\S]*?<\/style>/g, ' ')
+        .replace(/<[^>]+>/g, ' ')
+        .replace(/&[a-z#0-9]+;/gi, ' ')
+    const words = text.match(/[A-Za-z0-9\u00C0-\u024F'’]+/g)?.length ?? 0
+    const cjkChars =
+        text.match(/[\u3040-\u30ff\u3400-\u9fff\uf900-\ufaff]/g)?.length ?? 0
+    return Math.max(1, Math.round(words / 220 + cjkChars / 500))
 }

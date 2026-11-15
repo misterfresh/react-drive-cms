@@ -18,23 +18,25 @@ Live Demo: [https://thepurpleclub.github.io/home]
 
 1) Connecting your React App to your Google Drive : follow this detailed step-by-step guide: https://github.com/misterfresh/react-drive-cms/blob/master/GUIDE.md
 
-2) In order for the contact form to work, publish the following script as a Google Web App:
-https://gist.github.com/misterfresh/b69d29a97cf415980be2  . In your "Visitors" Google spreadsheet, go to Tools>Script Editor. You can create a free SendGrid account and paste your SendGrid API key in the script. You will also need to have a verified sender email with SendGrid, and set that email in the "From" and "ReplyTo" fields in the script on lines 55 and 59. Save the script and click on Publish>Deploy as Web App.
+2) For the contact form, create a free access key at https://web3forms.com (just enter the email address that should receive messages). Messages from the form are emailed straight to you.
 
 3) Fill in the correct values in ./conf.js :
     - "dashboardId" is the id of the "Dashboard" Google spreadsheet.
-    - "sendContactMessageUrlId" is the id of the Google Web App script that does the email forwarding
+    - "web3formsAccessKey" is your Web3Forms access key for the contact form
+    - "googleApiKey" is a Google API key with the Sheets API enabled (restrict it to your site's domain in Google Cloud Console)
     - "shortname" is the website's Disqus identifier
     - "root" is an optional url parameter, that would be the name of the project on GitHub pages.
 
 4) Push these changes to your forked repository on GitHub, go to your repo's Settings tab to publish it.
+
+5) The GitHub Action in `.github/workflows/build-static.yml` runs `scripts/build_static.py` every day. It rebuilds `feed.xml` (the RSS feed) and a small page for each post under `articles/`, so links shared on social media show that post's title and photo. To update them right after publishing a post, open the Actions tab on GitHub, choose "Build feed and previews" and click "Run workflow".
 
 That's it!
 
 ### 7 years of ReactDrive CMS!
 ReactDrive CMS was started in October 2015. The objective was to provide a free, most hassle-free way of hosting a basic dynamic website. 
 
-It uses Github Pages to host static assets, and uses React to generate the HTML on the client. The CMS part is handled using google Docs, and a google Spreadsheet is the "database". The contact form is the most complicated part : the form data will be sent to a public google apps script which will in turn write the visitor in the logbook spreadsheet and then post the form data to the sendgrid api, which will send an email to the site owner.
+It uses Github Pages to host static assets, and uses React to generate the HTML on the client. The CMS part is handled using google Docs, and a google Spreadsheet is the "database". The contact form sends messages through Web3Forms, which emails them to the site owner.
 
 This setup has proven remarkably stable over the years, requiring only minor changes every 3 years or so to stay online, and having zero operating costs.
 
