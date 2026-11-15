@@ -110,6 +110,21 @@ export const birds = [
         fact: "A rare wader that sweeps its spoon-shaped bill from side to side to catch fish. Conservation work has helped it recover from only a few hundred birds. Many spend the winter in Taiwan and at Hong Kong's Mai Po marshes.",
         call: null,
     },
+    {
+        id: 'grey-heron',
+        name: 'Grey Heron',
+        nameLocal: 'アオサギ',
+        nameLang: 'ja',
+        scientific: 'Ardea cinerea',
+        photo: '/assets/grey_heron.jpg',
+        fact: 'A patient hunter that stands perfectly still at the water\'s edge before striking. In flight it folds its neck into an S-shape, unlike cranes and storks.',
+        call: {
+            xc: 895619,
+            recordist: 'Will Scott',
+            license: 'CC BY-NC-SA 4.0',
+            licenseUrl: 'https://creativecommons.org/licenses/by-nc-sa/4.0/',
+        },
+    },
 ]
 
 export const getBird = (id) => birds.find((bird) => bird.id === id)

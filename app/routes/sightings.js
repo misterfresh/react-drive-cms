@@ -203,6 +203,7 @@ export const Sightings = () => {
             title="Sightings"
             description="Where I've met the birds on this site. ~Photo: Grey heron by Andreas Trepte, CC BY-SA 2.5, Wikimedia Commons"
             sidebarImage=${prefixUriIfNeeded('/assets/grey_heron.jpg')}
+            birdId="grey-heron"
         >
             <h1 class="sightings-title">Sightings map</h1>
             <p class="sightings-intro">
