@@ -13,6 +13,7 @@ export const Page = ({
     subtitle,
     description,
     sidebarImage,
+    sidebarPosition,
     showLinks,
     lang,
     birdId,
@@ -111,6 +112,7 @@ export const Page = ({
                     subtitle=${subtitle}
                     description=${description}
                     sidebarImage=${sidebarImage}
+                    sidebarPosition=${sidebarPosition}
                     menuVisible=${menuVisible}
                     showLinks=${showLinks}
                     birdId=${birdId}

@@ -7,6 +7,7 @@ export const Sidebar = ({
     subtitle,
     description,
     sidebarImage,
+    sidebarPosition = 'center',
     menuVisible,
     showLinks,
     birdId,
@@ -141,7 +142,10 @@ export const Sidebar = ({
         </style>
         <aside
             class="sidebar ${menuVisible ? 'sidebar-narrow' : ''}"
-            style=${{ backgroundImage: `url(${sidebarImage})` }}
+            style=${{
+                backgroundImage: `url(${sidebarImage})`,
+                backgroundPosition: sidebarPosition,
+            }}
         >
             <div class="info">
                 <div class="primary">

@@ -107,7 +107,7 @@ export const birds = [
         nameLang: 'zh-Hant',
         scientific: 'Platalea minor',
         photo: '/assets/black_faced_spoonbill.jpg',
-        fact: "An endangered wader that sweeps its spoon-shaped bill from side to side to catch fish. Many spend the winter in Taiwan and at Hong Kong's Mai Po marshes.",
+        fact: "A rare wader that sweeps its spoon-shaped bill from side to side to catch fish. Conservation work has helped it recover from only a few hundred birds. Many spend the winter in Taiwan and at Hong Kong's Mai Po marshes.",
         call: null,
     },
 ]

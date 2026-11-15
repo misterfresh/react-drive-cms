@@ -3,7 +3,8 @@ import { avoidReload } from '../utils/avoidReload.js'
 import prefixUriIfNeeded from '../utils/prefixUriIfNeeded.js'
 
 // Full-screen photo viewer.
-// items: [{ src, caption?, postTitle?, postUri? }], index: which one is open.
+// items: [{ src, caption?, postTitle?, postUri?, credit?, creditUrl? }],
+// index: which one is open.
 // Close with the ✕, a click on the backdrop or Escape; ← → to browse.
 export const Lightbox = ({ items, index, onChange, onClose }) => {
     const item = items[index]
@@ -120,9 +121,16 @@ export const Lightbox = ({ items, index, onChange, onClose }) => {
         </style>
         <figure>
             <img src=${item.src} alt=${item.caption ?? ''} onClick=${stop} />
-            ${(item.caption || item.postUri) &&
+            ${(item.caption || item.postUri || item.credit) &&
             html`<figcaption onClick=${stop}>
                 ${item.caption}
+                ${item.credit &&
+                html`${item.caption ? ' · ' : ''}<a
+                        href=${item.creditUrl}
+                        target="_blank"
+                        rel="noopener"
+                        >${item.credit}</a
+                    >`}
                 ${item.postUri &&
                 html`${item.caption ? ' · ' : ''}<a
                         href=${prefixUriIfNeeded(item.postUri)}
