@@ -4,9 +4,20 @@ import { Lightbox } from '../components/lightbox.js'
 import { Spinner } from '../styles/Spinner.js'
 import prefixUriIfNeeded from '../utils/prefixUriIfNeeded.js'
 import { endangeredBirds, statusLabels } from '../data/endangered.js'
+import { myPhotos } from '../data/myPhotos.js'
+
+// Photos from app/data/myPhotos.js, shown before the ones from posts
+const extraPhotos = myPhotos.map((photo) => ({
+    src: `/assets/my-photos/${photo.file}.jpg`,
+    thumb: `/assets/my-photos/${photo.file}-thumb.jpg`,
+    width: photo.width,
+    height: photo.height,
+    caption: photo.caption,
+}))
 
 // Two sections:
-//  - My photos: gallery.json, built by scripts/build_static.py from the posts
+//  - My photos: app/data/myPhotos.js, plus gallery.json (built by
+//    scripts/build_static.py from the photos in posts)
 //  - Endangered birds: freely licensed photos listed in app/data/endangered.js
 export const Gallery = () => {
     // /gallery#endangered opens the second tab directly
@@ -27,19 +38,32 @@ export const Gallery = () => {
     useEffect(() => {
         fetch(prefixUriIfNeeded('/gallery.json'))
             .then((response) => (response.ok ? response.json() : []))
+            .catch(() => [])
             .then((items) =>
                 setPhotos(
-                    items.map((item) => ({
+                    [...extraPhotos, ...items].map((item) => ({
                         ...item,
                         src: prefixUriIfNeeded(item.src),
                         thumb: prefixUriIfNeeded(item.thumb),
                     }))
                 )
             )
-            .catch(() => setPhotos([]))
     }, [])
 
-    const endangeredItems = endangeredBirds.map((bird) => ({
+    // Filter the endangered birds by IUCN status
+    const [statusFilter, setStatusFilter] = useState('all')
+    const shownBirds = endangeredBirds.filter(
+        (bird) => statusFilter === 'all' || bird.status === statusFilter
+    )
+    const countOf = (status) =>
+        endangeredBirds.filter((bird) => bird.status === status).length
+    const filters = [
+        ['all', 'All', endangeredBirds.length],
+        ['CR', statusLabels.CR, countOf('CR')],
+        ['EN', statusLabels.EN, countOf('EN')],
+    ]
+
+    const endangeredItems = shownBirds.map((bird) => ({
         src: bird.src,
         caption: `${bird.name} (${bird.scientific}) · ${statusLabels[bird.status]}`,
         credit: `Photo: ${bird.author}, ${bird.license}`,
@@ -116,6 +140,43 @@ export const Gallery = () => {
                 display: block;
                 width: 100%;
                 height: auto;
+            }
+            .status-filters {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 0.8rem;
+                margin: 0 0 2rem;
+            }
+            .status-filter {
+                display: inline-flex;
+                align-items: center;
+                gap: 0.6rem;
+                padding: 0.6rem 1.4rem;
+                border: 1px solid var(--c-border);
+                border-radius: 999px;
+                background: var(--c-surface);
+                color: var(--c-text);
+                font-family: var(--font-sans);
+                font-size: 1.3rem;
+                font-weight: 500;
+                cursor: pointer;
+                transition: border-color var(--dur) var(--ease),
+                    background-color var(--dur) var(--ease);
+            }
+            .status-filter:hover {
+                border-color: var(--c-brand);
+            }
+            .status-filter .count {
+                padding: 0 0.7rem;
+                border-radius: 999px;
+                background: var(--c-surface-2);
+                font-size: 1.15rem;
+                font-weight: 600;
+            }
+            .status-filter[aria-pressed='true'] {
+                border-color: var(--c-brand);
+                background: var(--c-brand-soft);
+                color: var(--c-brand);
             }
             .species-grid {
                 display: grid;
@@ -251,7 +312,7 @@ export const Gallery = () => {
             ${tab === 'mine'
                 ? html`<p class="gallery-intro">
                           Every photo here was taken by me. Tap one to see it
-                          full-size and find the post it came from.
+                          full-size.
                       </p>
                       ${photos === null
                           ? html`<div class="gallery-loading">
@@ -292,8 +353,20 @@ export const Gallery = () => {
                       </p>
                       ${endangeredBirds.length === 0
                           ? html`<p class="gallery-empty">Coming soon.</p>`
-                          : html`<div class="species-grid">
-                                ${endangeredBirds.map(
+                          : html`<div class="status-filters" role="group" aria-label="Filter by status">
+                                ${filters.map(
+                                    ([value, label, count]) => html`<button
+                                        key=${value}
+                                        class="status-filter status-filter-${value}"
+                                        aria-pressed=${statusFilter === value}
+                                        onClick=${() => setStatusFilter(value)}
+                                    >
+                                        ${label} <span class="count">${count}</span>
+                                    </button>`
+                                )}
+                            </div>
+                            <div class="species-grid">
+                                ${shownBirds.map(
                                     (bird, index) => html`<article
                                         class="species-card"
                                         key=${bird.name}
