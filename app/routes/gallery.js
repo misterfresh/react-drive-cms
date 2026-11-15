@@ -288,8 +288,8 @@ export const Gallery = () => {
         <${Page}
             title="Gallery"
             description="Birds I've met and photographed myself, and endangered birds that need our help."
-            sidebarImage=${photos?.[0]?.src ??
-            prefixUriIfNeeded('/assets/harpy_eagle_1.jpg')}
+            sidebarImage=${prefixUriIfNeeded('/assets/canada_goose.jpg')}
+            birdId="canada-goose"
         >
             <h1 class="gallery-title">Gallery</h1>
             <div class="gallery-tabs" role="tablist">
