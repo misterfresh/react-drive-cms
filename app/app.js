@@ -19,6 +19,9 @@ import { Memoriam } from './routes/memoriam.js'
 import { Music } from './routes/music.js'
 import { Japanese } from './routes/japanese.js'
 import { Chinese } from './routes/chinese.js'
+import { Gallery } from './routes/gallery.js'
+import { Sightings } from './routes/sightings.js'
+import { loadAnalytics } from './utils/analytics.js'
 
 const App = () => {
     const [state, dispatch] = useReducer(reducer, initialState)
@@ -40,11 +43,18 @@ const App = () => {
             Page = Music
         }else if(pageName === 'japanese'){
             Page = Japanese
-        }else if(pageName === 'chinese'){
+        } else if (pageName === 'chinese') {
             Page = Chinese
+        } else if (pageName === 'gallery') {
+            Page = Gallery
+        } else if (pageName === 'sightings') {
+            Page = Sightings
         }
         return Page
     }, [pageName])
+
+    // Visitor stats (Cloudflare Web Analytics), if a token is set in conf.js
+    useEffect(loadAnalytics, [])
 
     useEffect(() => {
         const showState = () => {

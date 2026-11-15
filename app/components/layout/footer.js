@@ -1,6 +1,7 @@
 import { html } from '../../lib/htm-preact.js'
 import { avoidReload } from '../../utils/avoidReload.js'
 import prefixUriIfNeeded from '../../utils/prefixUriIfNeeded.js'
+import { Subscribe } from '../subscribe.js'
 const conf = window.appConf
 
 export const Footer = ({ article = {}, category = {}, articles = {} }) => {
@@ -205,6 +206,8 @@ export const Footer = ({ article = {}, category = {}, articles = {} }) => {
                     </a>
                 </div>
             </div>
+
+            <${Subscribe} compact=${true} />
 
             ${otherArticles.length > 0 &&
             html`<h3 class="more-title">More from ${conf.author}</h3>

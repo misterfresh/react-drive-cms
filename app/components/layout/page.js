@@ -15,6 +15,7 @@ export const Page = ({
     sidebarImage,
     showLinks,
     lang,
+    birdId,
     children,
 }) => {
     const { categories, articles } = useCategoriesAndArticles()
@@ -112,6 +113,7 @@ export const Page = ({
                     sidebarImage=${sidebarImage}
                     menuVisible=${menuVisible}
                     showLinks=${showLinks}
+                    birdId=${birdId}
                 />
                 <section
                     class="wrapper page-content ${menuVisible

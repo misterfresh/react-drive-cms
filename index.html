@@ -153,6 +153,15 @@
             color: var(--c-text);
         }
 
+        .visually-hidden {
+            position: absolute !important;
+            width: 1px;
+            height: 1px;
+            overflow: hidden;
+            clip: rect(0 0 0 0);
+            white-space: nowrap;
+        }
+
         /* ---------- Focus: visible for keyboard users only ---------- */
         html :focus-visible {
             outline: 2px solid var(--c-brand);

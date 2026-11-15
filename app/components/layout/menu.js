@@ -7,6 +7,8 @@ const mainLinks = [
     { path: '/about', title: 'About', icon: 'fa-kiwi-bird' },
     { path: '/japanese', title: '日本語', icon: 'fa-robot', lang: 'ja' },
     { path: '/chinese', title: '繁體中文', icon: 'fa-ship', lang: 'zh-Hant' },
+    { path: '/gallery', title: 'Gallery', icon: 'fa-images' },
+    { path: '/sightings', title: 'Sightings map', icon: 'fa-map-location-dot' },
     // { path: '/music', title: 'Inspiration', icon: 'fa-music' },
     { path: '/contact', title: 'Contact', icon: 'fa-feather-pointed' },
     { path: '/memoriam', title: 'In Memoriam', icon: 'fa-monument' },

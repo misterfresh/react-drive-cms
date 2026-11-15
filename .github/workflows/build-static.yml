@@ -1,4 +1,5 @@
-# Rebuilds feed.xml and the per-post link-preview pages from the Google Sheet.
+# Rebuilds feed.xml, the per-post link-preview pages and the photo gallery
+# from the Google Sheet and the posts.
 # Runs every day, whenever index.html or the script changes, and on demand
 # (GitHub → Actions → "Build feed and previews" → Run workflow).
 name: Build feed and previews
@@ -32,13 +33,16 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Build feed.xml and preview pages
+      - name: Install Pillow (resizes gallery photos)
+        run: pip install pillow
+
+      - name: Build feed.xml, preview pages and gallery
         run: python3 scripts/build_static.py
 
       - name: Commit changes, if any
         id: commit
         run: |
-          git add -A feed.xml articles
+          git add -A feed.xml articles gallery.json assets/gallery
           if git diff --cached --quiet; then
             echo "No changes"
             echo "changed=false" >> "$GITHUB_OUTPUT"

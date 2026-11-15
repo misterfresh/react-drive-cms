@@ -1,4 +1,6 @@
 import { html } from '../../lib/htm-preact.js'
+import { BirdCall } from '../birdCall.js'
+import { getBird } from '../../data/birds.js'
 
 export const Sidebar = ({
     title,
@@ -7,6 +9,7 @@ export const Sidebar = ({
     sidebarImage,
     menuVisible,
     showLinks,
+    birdId,
 }) => {
     return html` <style>
             aside.sidebar {
@@ -93,6 +96,10 @@ export const Sidebar = ({
                 display: none;
             }
 
+            aside.sidebar .sidebar-call {
+                margin: 1.6rem 0 0.4rem;
+            }
+
             aside.sidebar .links {
                 display: none;
             }
@@ -141,6 +148,10 @@ export const Sidebar = ({
                     <h1>${title}</h1>
                     <p>${subtitle}</p>
                     <p>${description}</p>
+                    ${getBird(birdId)?.call &&
+                    html`<div class="sidebar-call">
+                        <${BirdCall} bird=${getBird(birdId)} variant="light" />
+                    </div>`}
                 </div>
                 <div class="links ${showLinks ? 'show-links' : ''}">
                     <a

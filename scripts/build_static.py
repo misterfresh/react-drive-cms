@@ -7,15 +7,23 @@ Reads the posts from the same Google Sheet the site uses, then writes:
                                      title, description and photo in the
                                      <meta> tags, so shared links show a
                                      proper preview card
+  - gallery.json + assets/gallery/   your own photos from the posts, resized,
+                                     for the Gallery page. A photo is left
+                                     out when the line after it starts with
+                                     "Photo source:" (someone else's photo).
 
 GitHub Pages serves /articles/<id>/<slug> from <slug>.html, so post URLs
 don't change. Runs daily from .github/workflows/build-static.yml, or by
 hand: python3 scripts/build_static.py
 """
+import base64
+import hashlib
 import html
 import json
 import re
 import shutil
+import subprocess
+import tempfile
 import urllib.request
 from datetime import datetime, timezone
 from email.utils import format_datetime
@@ -188,6 +196,148 @@ def write_feed(posts):
     (ROOT / 'feed.xml').write_text(feed, encoding='utf-8')
 
 
+# ---------------------------------------------------------------- gallery
+
+GALLERY_DIR = ROOT / 'assets' / 'gallery'
+FULL_SIZE = 1600   # longest edge of the full-screen photo
+THUMB_SIZE = 640   # longest edge of the grid thumbnail
+MIN_SIZE = 400     # skip small images (icons, emoji, stickers)
+SOURCE_LINE = re.compile(r'^\W*(photo|animation|image|picture|gif)?\s*(source|credit)', re.I)
+
+
+def fetch_doc_html(post_id):
+    url = (
+        'https://docs.google.com/feeds/download/documents/export/Export'
+        f'?id={post_id}&exportFormat=html'
+    )
+    with urllib.request.urlopen(url, timeout=60) as response:
+        return response.read().decode('utf-8', errors='replace')
+
+
+def doc_blocks(doc):
+    """Paragraph-level blocks of the doc body, in order: (image srcs, text)."""
+    body = doc.split('<body', 1)[-1]
+    blocks = []
+    for match in re.finditer(r'<(p|h[1-6]|li)\b[^>]*>(.*?)</\1>', body, re.S):
+        inner = match.group(2)
+        images = re.findall(r'<img\b[^>]*\bsrc="([^"]+)"', inner)
+        text = html.unescape(re.sub(r'<[^>]+>', ' ', inner))
+        text = re.sub(r'\s+', ' ', text).strip()
+        blocks.append((images, text))
+    return blocks
+
+
+def own_photos(doc):
+    """Images not credited to someone else, with the line after them as caption."""
+    blocks = doc_blocks(doc)
+    photos = []
+    for index, (images, _) in enumerate(blocks):
+        for position, src in enumerate(images):
+            following = next((text for _, text in blocks[index:] if text), '')
+            if SOURCE_LINE.match(following):
+                continue
+            # Only the photo right before a line of text gets it as caption
+            is_last_in_block = position == len(images) - 1
+            later = blocks[index + 1:]
+            direct = is_last_in_block and next(
+                (not imgs for imgs, text in later if imgs or text), True
+            )
+            caption = following if direct and len(following) <= 220 else ''
+            photos.append((src, caption))
+    return photos
+
+
+def image_bytes(src):
+    if src.startswith('data:'):
+        return base64.b64decode(src.split(',', 1)[1])
+    with urllib.request.urlopen(src, timeout=60) as response:
+        return response.read()
+
+
+def resize(data, size, target):
+    """Save as JPEG with the longest edge at most `size`. Returns (w, h)."""
+    try:
+        from PIL import Image, ImageOps
+    except ImportError:
+        Image = None
+    if Image:
+        import io
+        image = ImageOps.exif_transpose(Image.open(io.BytesIO(data))).convert('RGB')
+        image.thumbnail((size, size))
+        image.save(target, 'JPEG', quality=82, optimize=True, progressive=True)
+        return image.size
+    if shutil.which('sips'):  # macOS fallback, no install needed
+        with tempfile.NamedTemporaryFile(suffix='.img') as source:
+            source.write(data)
+            source.flush()
+            subprocess.run(
+                ['sips', '-Z', str(size), '-s', 'format', 'jpeg',
+                 '-s', 'formatOptions', '82', source.name, '--out', str(target)],
+                check=True, capture_output=True,
+            )
+        out = subprocess.run(
+            ['sips', '-g', 'pixelWidth', '-g', 'pixelHeight', str(target)],
+            check=True, capture_output=True, text=True,
+        ).stdout
+        width = int(re.search(r'pixelWidth: (\d+)', out).group(1))
+        height = int(re.search(r'pixelHeight: (\d+)', out).group(1))
+        return width, height
+    raise SystemExit('Install Pillow (pip install pillow) to build the gallery')
+
+
+def image_size(data):
+    """Rough size check without decoding: JPEG/PNG headers, else assume big."""
+    if data[:8] == b'\x89PNG\r\n\x1a\n':
+        return int.from_bytes(data[16:20], 'big'), int.from_bytes(data[20:24], 'big')
+    if data[:2] == b'\xff\xd8':
+        i = 2
+        while i < len(data) - 9:
+            if data[i] != 0xFF:
+                i += 1
+                continue
+            marker = data[i + 1]
+            if marker in (0xC0, 0xC1, 0xC2):
+                return int.from_bytes(data[i + 7:i + 9], 'big'), int.from_bytes(data[i + 5:i + 7], 'big')
+            i += 2 + int.from_bytes(data[i + 2:i + 4], 'big')
+    return (MIN_SIZE, MIN_SIZE)
+
+
+def write_gallery(posts):
+    shutil.rmtree(GALLERY_DIR, ignore_errors=True)
+    GALLERY_DIR.mkdir(parents=True)
+    items = []
+    for post in posts:
+        try:
+            photos = own_photos(fetch_doc_html(post['id']))
+        except Exception as error:  # one broken doc shouldn't stop the build
+            print(f'  skipped "{post["title"]}": {error}')
+            continue
+        for src, caption in photos:
+            data = image_bytes(src)
+            if data[:3] == b'GIF':
+                continue  # animations aren't photos
+            if max(image_size(data)) < MIN_SIZE:
+                continue
+            name = hashlib.sha1(data).hexdigest()[:12]
+            width, height = resize(data, FULL_SIZE, GALLERY_DIR / f'{name}.jpg')
+            resize(data, THUMB_SIZE, GALLERY_DIR / f'{name}-thumb.jpg')
+            items.append({
+                'src': f'/assets/gallery/{name}.jpg',
+                'thumb': f'/assets/gallery/{name}-thumb.jpg',
+                'width': width,
+                'height': height,
+                'caption': caption,
+                'postId': post['id'],
+                'postTitle': post['title'],
+                'postUri': '/' + post['path'],
+            })
+        print(f'  {post["title"]}: {sum(i["postId"] == post["id"] for i in items)} photos')
+    (ROOT / 'gallery.json').write_text(
+        json.dumps(items, ensure_ascii=False, indent=1) + '\n', encoding='utf-8'
+    )
+    return len(items)
+
+
 def main():
     posts = to_posts(fetch_rows(*read_conf()))
     if not posts:
@@ -195,6 +345,7 @@ def main():
     write_preview_pages(posts)
     write_feed(posts)
     print(f'Built feed.xml and {len(posts)} preview pages')
+    print(f'Built gallery.json with {write_gallery(posts)} photos')
 
 
 if __name__ == '__main__':

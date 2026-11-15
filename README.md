@@ -29,7 +29,11 @@ Live Demo: [https://thepurpleclub.github.io/home]
 
 4) Push these changes to your forked repository on GitHub, go to your repo's Settings tab to publish it.
 
-5) The GitHub Action in `.github/workflows/build-static.yml` runs `scripts/build_static.py` every day. It rebuilds `feed.xml` (the RSS feed) and a small page for each post under `articles/`, so links shared on social media show that post's title and photo. To update them right after publishing a post, open the Actions tab on GitHub, choose "Build feed and previews" and click "Run workflow".
+5) The GitHub Action in `.github/workflows/build-static.yml` runs `scripts/build_static.py` every day. It rebuilds `feed.xml` (the RSS feed) and a small page for each post under `articles/`, so links shared on social media show that post's title and photo. It also builds the Gallery page (`gallery.json` and `assets/gallery/`) from the photos in your posts. A photo is left out of the gallery when the line right after it starts with "Photo source:", so credit other people's photos that way. To update all of this right after publishing a post, open the Actions tab on GitHub, choose "Build feed and previews" and click "Run workflow".
+
+6) Birds: `app/data/birds.js` holds the "Bird of the month" list, the xeno-canto recordings behind the Listen buttons, and the pins on the Sightings map. Edit that file to add birds or sightings.
+
+7) Optional extras in ./conf.js: "cloudflareAnalyticsToken" turns on Cloudflare Web Analytics visitor stats, and "buttondownUsername" shows a newsletter sign-up box (Buttondown).
 
 That's it!
 

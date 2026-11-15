@@ -32,6 +32,7 @@ export const Memoriam = () => html`
         independence of this great bird aptly symbolizes the strength and freedom
         of America. -John F. Kennedy"
         sidebarImage=${prefixUriIfNeeded('/assets/bald_eagle.jpg')}
+        birdId="bald-eagle"
         showLinks=${true}
     >
         <div class="about-content">

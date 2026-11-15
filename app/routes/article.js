@@ -10,6 +10,9 @@ import { usePageMeta } from '../hooks/usePageMeta.js'
 import { useArticleText } from '../hooks/useArticleText.js'
 import { useMenuVisible } from '../hooks/useMenuVisible.js'
 import { Spinner } from '../styles/Spinner.js'
+import { BirdCall } from '../components/birdCall.js'
+import { Lightbox } from '../components/lightbox.js'
+import { getBirdForPost } from '../data/birds.js'
 import prefixUriIfNeeded from '../utils/prefixUriIfNeeded.js'
 import { avoidReload } from '../utils/avoidReload.js'
 
@@ -19,6 +22,7 @@ export const Article = ({ state, dispatch }) => {
     const activeArticle = articles?.[activeArticleId] ?? {}
     const activeText = useArticleText(activeArticleId)
     const category = categories?.[activeArticle?.categoryId]
+    const bird = getBirdForPost(activeArticleId)
 
     const title = activeArticle?.title
     const subtitle = activeArticle?.subtitle
@@ -28,25 +32,16 @@ export const Article = ({ state, dispatch }) => {
 
     const readingMinutes = useMemo(() => getReadingMinutes(activeText), [activeText])
 
-    // Tap a photo in the article to see it full-screen
-    const [lightboxSrc, setLightboxSrc] = useState(null)
+    // Tap a photo in the article to see it full-screen, then browse the others
+    const [lightbox, setLightbox] = useState(null)
     const openLightbox = (event) => {
-        if (event.target.tagName === 'IMG') {
-            setLightboxSrc(event.target.src)
-        }
+        if (event.target.tagName !== 'IMG') return
+        const images = [...event.currentTarget.querySelectorAll('img')]
+        setLightbox({
+            items: images.map((image) => ({ src: image.src })),
+            index: images.indexOf(event.target),
+        })
     }
-    useEffect(() => {
-        if (!lightboxSrc) return
-        const closeOnEscape = (event) => {
-            if (event.key === 'Escape') setLightboxSrc(null)
-        }
-        window.addEventListener('keydown', closeOnEscape)
-        document.body.style.overflow = 'hidden'
-        return () => {
-            window.removeEventListener('keydown', closeOnEscape)
-            document.body.style.overflow = ''
-        }
-    }, [lightboxSrc])
 
     return html` <style>
             ${blocksStyles} .page {
@@ -231,6 +226,9 @@ export const Article = ({ state, dispatch }) => {
                 font-size: 1.4rem;
                 letter-spacing: 0.02em;
             }
+            .hero .hero-call {
+                margin-top: 1.8rem;
+            }
             .hero .post-meta > * + *::before {
                 content: '·';
                 margin: 0 0.8rem;
@@ -239,42 +237,6 @@ export const Article = ({ state, dispatch }) => {
             .article-body .gdoc img {
                 cursor: zoom-in;
             }
-            .lightbox {
-                position: fixed;
-                inset: 0;
-                z-index: 50;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                padding: 2rem;
-                background: rgba(12, 6, 16, 0.92);
-                cursor: zoom-out;
-                animation: fadein 200ms var(--ease) both;
-            }
-            .lightbox img {
-                max-width: 100%;
-                max-height: 100%;
-                object-fit: contain;
-                border-radius: var(--radius-sm);
-                box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-            }
-            .lightbox .close {
-                position: absolute;
-                top: 1.6rem;
-                right: 1.6rem;
-                width: 4.4rem;
-                height: 4.4rem;
-                border: 1px solid rgba(255, 255, 255, 0.25);
-                border-radius: 50%;
-                background: rgba(255, 255, 255, 0.1);
-                color: #fff;
-                font-size: 1.8rem;
-                cursor: pointer;
-            }
-            .lightbox .close:hover {
-                background: rgba(255, 255, 255, 0.2);
-            }
-
             .loading {
                 display: flex;
                 justify-content: center;
@@ -345,6 +307,10 @@ export const Article = ({ state, dispatch }) => {
                             html`<span>${readingMinutes} min read</span>`}
                         </p>`
                             : null}
+                        ${bird?.call &&
+                        html`<div class="hero-call">
+                            <${BirdCall} bird=${bird} variant="light" />
+                        </div>`}
                     </div>
                 </header>
                 <section class="article-content">
@@ -372,18 +338,13 @@ export const Article = ({ state, dispatch }) => {
                     category=${category}
                 />
             </main>
-            ${lightboxSrc &&
-            html`<div
-                class="lightbox"
-                role="dialog"
-                aria-label="Photo"
-                onClick=${() => setLightboxSrc(null)}
-            >
-                <img src=${lightboxSrc} alt="" />
-                <button class="close" aria-label="Close photo">
-                    <i class="fa-solid fa-xmark" aria-hidden="true" />
-                </button>
-            </div>`}
+            ${lightbox &&
+            html`<${Lightbox}
+                items=${lightbox.items}
+                index=${lightbox.index}
+                onChange=${(index) => setLightbox({ ...lightbox, index })}
+                onClose=${() => setLightbox(null)}
+            />`}
         </div>`
 }
 

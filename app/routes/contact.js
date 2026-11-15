@@ -231,6 +231,7 @@ export const Contact = ({ state, dispatch }) => {
             subtitle=""
             description="This eagle has a pale coloration on his feathers, the cause of this is unknown. But the colors of his feet and eyes are normal, and his health status is normal. ~Photo: 2020 The Journal of the San Juan Islands"
             sidebarImage=${prefixUriIfNeeded('/assets/white_bald_eagle.jpg')}
+        birdId="bald-eagle"
         >
             <h1 class="contact-title">Get in touch</h1>
             <p class="contact-lead">Contact us for further inquiries.</p>
