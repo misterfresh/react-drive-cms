@@ -200,6 +200,12 @@ export const sightings = [
         note: 'Dabbling on the pond in the evening light.',
     },
     {
+        name: 'Muscovy duck',
+        ...HOUSTON,
+        photo: 'muscovy-duck-1',
+        note: 'A young Muscovy duck wandering in the shade, its dark feathers shining green. Three photos of it are in the Gallery.',
+    },
+    {
         name: 'Mallards and grackles',
         ...COLLEGE_STATION,
         photo: 'mallards-and-grackles',
