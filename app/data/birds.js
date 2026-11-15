@@ -143,6 +143,17 @@ export const getBirdOfTheMonth = (date = new Date()) =>
 
 // Pins on the sightings map. Coordinates: right-click a spot in Google Maps
 // and click the numbers at the top of the menu to copy them.
+// birdId: a bird from the list above (gives the Listen button and post link),
+//         or leave it out and set name for any other bird.
+// photo:  optional, a file name from app/data/myPhotos.js to show a thumbnail.
+// Sightings with the same lat/lng share one pin.
+const HOUSTON = { place: 'Houston, Texas', lat: 29.7604, lng: -95.3698 }
+const COLLEGE_STATION = {
+    place: 'College Station, Texas',
+    lat: 30.628,
+    lng: -96.3344,
+}
+
 export const sightings = [
     {
         birdId: 'eurasian-coot',
@@ -150,6 +161,7 @@ export const sightings = [
         lat: 51.5101,
         lng: -0.1749,
         date: 'May 2022',
+        zoom: 16,
         note: 'Coot chicks swimming in the pond, fed daily by visitors.',
     },
     {
@@ -158,6 +170,37 @@ export const sightings = [
         lat: 51.5109,
         lng: -0.1759,
         date: '',
+        zoom: 16,
         note: 'Very friendly geese, happy to pose for an iPhone photoshoot.',
+    },
+    {
+        name: 'Rooster',
+        ...HOUSTON,
+        photo: 'rooster',
+        note: 'A rooster exploring under the palm fronds.',
+    },
+    {
+        name: 'White duck',
+        ...HOUSTON,
+        photo: 'white-duck',
+        note: 'Posing for the camera, with Egyptian geese by the lake behind it.',
+    },
+    {
+        name: 'Domestic goose',
+        ...HOUSTON,
+        photo: 'domestic-goose',
+        note: 'A curious goose coming over to say hello.',
+    },
+    {
+        name: 'Ducks',
+        ...HOUSTON,
+        photo: 'ducks-on-the-pond',
+        note: 'Dabbling on the pond in the evening light.',
+    },
+    {
+        name: 'Mallards and grackles',
+        ...COLLEGE_STATION,
+        photo: 'mallards-and-grackles',
+        note: 'Mallards wading between the stepping stones, watched by grackles.',
     },
 ]

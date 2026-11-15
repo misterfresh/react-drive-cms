@@ -1,7 +1,7 @@
 import { html, useEffect, useRef, useState } from '../lib/htm-preact.js'
 import { Page } from '../components/layout/page.js'
 import { BirdCall } from '../components/birdCall.js'
-import { birds, sightings, getBird } from '../data/birds.js'
+import { sightings, getBird } from '../data/birds.js'
 import { useCategoriesAndArticles } from '../hooks/useCategoriesAndArticles.js'
 import prefixUriIfNeeded from '../utils/prefixUriIfNeeded.js'
 import { avoidReload } from '../utils/avoidReload.js'
@@ -33,6 +33,21 @@ const loadLeaflet = () => {
 
 const escapeHtml = (text = '') =>
     text.replace(/[&<>"']/g, (c) => `&#${c.charCodeAt(0)};`)
+
+const nameOf = (sighting) => getBird(sighting.birdId)?.name ?? sighting.name
+
+// One pin per place: sightings at the same coordinates share a marker.
+const places = []
+const placeOf = sightings.map((sighting) => {
+    const key = `${sighting.lat},${sighting.lng}`
+    let index = places.findIndex((place) => place.key === key)
+    if (index === -1) {
+        index = places.length
+        places.push({ key, lat: sighting.lat, lng: sighting.lng, items: [] })
+    }
+    places[index].items.push(sighting)
+    return index
+})
 
 export const Sightings = () => {
     const mapElement = useRef(null)
@@ -66,22 +81,28 @@ export const Sightings = () => {
                     iconAnchor: [17, 17],
                     popupAnchor: [0, -18],
                 })
-                markers.current = sightings.map((sighting, index) => {
-                    const bird = getBird(sighting.birdId)
-                    return L.marker([sighting.lat, sighting.lng], { icon })
+                markers.current = places.map((place, placeIndex) =>
+                    L.marker([place.lat, place.lng], { icon })
                         .addTo(map.current)
                         .bindPopup(
-                            `<strong>${escapeHtml(bird?.name)}</strong><br>` +
-                                `${escapeHtml(sighting.place)}` +
-                                (sighting.date
-                                    ? `<br><span class="pin-date">${escapeHtml(sighting.date)}</span>`
-                                    : '')
+                            place.items
+                                .map(
+                                    (sighting) =>
+                                        `<strong>${escapeHtml(nameOf(sighting))}</strong>` +
+                                        (sighting.date
+                                            ? ` <span class="pin-date">${escapeHtml(sighting.date)}</span>`
+                                            : '')
+                                )
+                                .join('<br>') +
+                                `<br>${escapeHtml(place.items[0].place)}`
                         )
-                        .on('click', () => setSelected(index))
-                })
-                if (sightings.length) {
+                        .on('click', () =>
+                            setSelected(placeOf.indexOf(placeIndex))
+                        )
+                )
+                if (places.length) {
                     map.current.fitBounds(
-                        sightings.map((s) => [s.lat, s.lng]),
+                        places.map((p) => [p.lat, p.lng]),
                         { padding: [60, 60], maxZoom: 15 }
                     )
                 } else {
@@ -99,8 +120,10 @@ export const Sightings = () => {
     const focus = (index) => {
         setSelected(index)
         const sighting = sightings[index]
-        map.current?.flyTo([sighting.lat, sighting.lng], 16, { duration: 0.8 })
-        markers.current[index]?.openPopup()
+        map.current?.flyTo([sighting.lat, sighting.lng], sighting.zoom ?? 11, {
+            duration: 0.8,
+        })
+        markers.current[placeOf[index]]?.openPopup()
         mapElement.current?.scrollIntoView({ behavior: 'smooth', block: 'center' })
     }
 
@@ -166,6 +189,19 @@ export const Sightings = () => {
                 border-color: var(--c-brand);
                 box-shadow: 0 0 0 3px var(--c-brand-soft);
             }
+            .sighting.has-photo {
+                display: grid;
+                grid-template-columns: 9.6rem 1fr;
+                gap: 1.6rem;
+                align-items: start;
+            }
+            .sighting .thumb {
+                width: 9.6rem;
+                height: 9.6rem;
+                border-radius: calc(var(--radius) / 2);
+                object-fit: cover;
+                background: var(--c-surface-2);
+            }
             .sighting h2 {
                 margin: 0 0 0.2rem;
                 font-size: 2rem;
@@ -219,13 +255,25 @@ export const Sightings = () => {
                   />`}
             <ul class="sightings-list">
                 ${sightings.map((sighting, index) => {
-                    const bird = getBird(sighting.birdId) ?? birds[0]
-                    const post = bird.postId ? articles?.[bird.postId] : null
+                    const bird = getBird(sighting.birdId)
+                    const post = bird?.postId ? articles?.[bird.postId] : null
                     return html`<li
                         key=${index}
-                        class="sighting ${selected === index ? 'selected' : ''}"
+                        class="sighting ${selected === index
+                            ? 'selected'
+                            : ''} ${sighting.photo ? 'has-photo' : ''}"
                     >
-                        <h2>${bird.name}</h2>
+                        ${sighting.photo &&
+                        html`<img
+                            class="thumb"
+                            src=${prefixUriIfNeeded(
+                                `/assets/my-photos/${sighting.photo}-thumb.jpg`
+                            )}
+                            alt=""
+                            loading="lazy"
+                        />`}
+                        <div>
+                        <h2>${nameOf(sighting)}</h2>
                         <p class="where">
                             <i
                                 class="fa-solid fa-location-dot"
@@ -251,6 +299,7 @@ export const Sightings = () => {
                                 >Read the post →</a
                             >`}
                             <${BirdCall} bird=${bird} />
+                        </div>
                         </div>
                     </li>`
                 })}
