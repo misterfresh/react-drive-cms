@@ -201,8 +201,8 @@ export const Sightings = () => {
         </style>
         <${Page}
             title="Sightings"
-            description="Where I've met the birds on this site."
-            sidebarImage=${prefixUriIfNeeded('/assets/bald_eagle.jpg')}
+            description="Where I've met the birds on this site. ~Photo: Grey heron by Andreas Trepte, CC BY-SA 2.5, Wikimedia Commons"
+            sidebarImage=${prefixUriIfNeeded('/assets/grey_heron.jpg')}
         >
             <h1 class="sightings-title">Sightings map</h1>
             <p class="sightings-intro">
