@@ -82,6 +82,7 @@ export const birds = [
         name: 'Bald Eagle',
         scientific: 'Haliaeetus leucocephalus',
         photo: '/assets/bald_eagle.jpg',
+        postId: '1Jk3ag2f0lW4Kxt5fjnpz9wHBIFL5jGOV',
         fact: 'Bald eagles build the biggest nests of any North American bird, adding to the same nest year after year until it can weigh as much as a small car.',
         call: {
             xc: 451490,
@@ -122,6 +123,7 @@ export const birds = [
         nameLang: 'ja',
         scientific: 'Ardea cinerea',
         photo: '/assets/grey_heron.jpg',
+        postId: '1khLOTBVODqhZUHWiFBykFPQ3r5n8FAeK',
         fact: 'A patient hunter that stands perfectly still at the water\'s edge before striking. In flight it folds its neck into an S-shape, unlike cranes and storks.',
         call: {
             xc: 895619,
