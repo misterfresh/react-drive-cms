@@ -3,6 +3,24 @@
 // (~640px) in assets/my-photos/, then add an entry here. Newest first.
 export const myPhotos = [
     {
+        file: 'muscovy-duck-1',
+        width: 1600,
+        height: 1200,
+        caption: 'A young Muscovy duck in the dappled shade, its dark feathers shining green.',
+    },
+    {
+        file: 'muscovy-duck-2',
+        width: 1600,
+        height: 1200,
+        caption: 'A Muscovy duck out for a walk among the pine needles.',
+    },
+    {
+        file: 'muscovy-duck-3',
+        width: 1600,
+        height: 1200,
+        caption: 'Looking up to see what I was doing.',
+    },
+    {
         file: 'rooster',
         width: 900,
         height: 1600,
