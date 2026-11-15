@@ -1,35 +1,39 @@
-# Rebuilds feed.xml, the per-post link-preview pages and the photo gallery
-# from the Google Sheet and the posts.
-# Runs every day, whenever index.html or the script changes, and on demand
-# (GitHub → Actions → "Build feed and previews" → Run workflow).
-name: Build feed and previews
+# Builds and publishes the site to GitHub Pages.
+#
+# Before publishing it runs scripts/build_static.py, which reads the Google
+# Sheet and the posts to generate feed.xml, the per-post link-preview pages
+# and the photo gallery. Those generated files are never committed; they
+# only exist in the published site.
+#
+# Runs on every push to master, once a day (to pick up new posts), and on
+# demand: GitHub → Actions → "Build and deploy site" → Run workflow.
+#
+# Requires Settings → Pages → Source: "GitHub Actions".
+name: Build and deploy site
 
 on:
+  push:
+    branches: [master]
   schedule:
     - cron: '0 6 * * *'
   workflow_dispatch:
-  push:
-    branches: [master]
-    paths:
-      - index.html
-      - conf.js
-      - scripts/build_static.py
 
 permissions:
-  contents: write
+  contents: read
   pages: write
+  id-token: write
 
 concurrency:
-  group: build-static
+  group: pages
   cancel-in-progress: false
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v6
         with:
           python-version: '3.12'
 
@@ -39,25 +43,27 @@ jobs:
       - name: Build feed.xml, preview pages and gallery
         run: python3 scripts/build_static.py
 
-      - name: Commit changes, if any
-        id: commit
+      - name: Collect the files to publish
         run: |
-          git add -A feed.xml articles gallery.json assets/gallery
-          if git diff --cached --quiet; then
-            echo "No changes"
-            echo "changed=false" >> "$GITHUB_OUTPUT"
-          else
-            git config user.name "github-actions[bot]"
-            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git commit -m "Update feed and link previews"
-            git push
-            echo "changed=true" >> "$GITHUB_OUTPUT"
-          fi
+          mkdir -p _site
+          rsync -a ./ _site/ \
+            --exclude '.git' --exclude '.github' --exclude '_site' \
+            --exclude 'scripts' --exclude 'node_modules' --exclude '.idea' \
+            --exclude 'package.json' --exclude 'package-lock.json'
+          touch _site/.nojekyll
 
-      # Pushes made by this workflow don't always trigger a Pages rebuild,
-      # so request one explicitly.
-      - name: Rebuild GitHub Pages
-        if: steps.commit.outputs.changed == 'true'
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: gh api -X POST "repos/${{ github.repository }}/pages/builds" || true
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v4
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

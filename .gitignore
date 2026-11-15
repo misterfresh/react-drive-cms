@@ -1,2 +1,9 @@
 .idea/
 node_modules/
+
+# Built by scripts/build_static.py during deploy (see .github/workflows/build-static.yml)
+/articles/
+/feed.xml
+/gallery.json
+/assets/gallery/
+/_site/
