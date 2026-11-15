@@ -24,6 +24,8 @@ import re
 import shutil
 import subprocess
 import tempfile
+import time
+import urllib.error
 import urllib.request
 from datetime import datetime, timezone
 from email.utils import format_datetime
@@ -37,6 +39,23 @@ SITE_DESCRIPTION = (
     'in English, 日本語 and 繁體中文.'
 )
 IMAGE_URL = 'https://lh3.googleusercontent.com/d/{}=w1200'
+
+
+def download(url, headers=None, timeout=60, attempts=4):
+    """GET a URL, retrying on network hiccups (timeouts, 429/5xx)."""
+    request = urllib.request.Request(url, headers=headers or {})
+    for attempt in range(1, attempts + 1):
+        try:
+            with urllib.request.urlopen(request, timeout=timeout) as response:
+                return response.read()
+        except (urllib.error.URLError, TimeoutError, ConnectionError) as error:
+            status = getattr(error, 'code', None)
+            retryable = status is None or status == 429 or status >= 500
+            if not retryable or attempt == attempts:
+                raise
+            wait = 5 * attempt
+            print(f'  {error} - retrying in {wait}s ({attempt}/{attempts - 1})')
+            time.sleep(wait)
 
 
 def read_conf():
@@ -58,9 +77,7 @@ def fetch_rows(sheet_id, api_key):
     )
     # Send the site as referrer so this keeps working if the key gets
     # restricted to thepurpleclub.github.io in Google Cloud Console.
-    request = urllib.request.Request(url, headers={'Referer': SITE_URL + '/'})
-    with urllib.request.urlopen(request, timeout=30) as response:
-        rows = json.load(response)['values']
+    rows = json.loads(download(url, headers={'Referer': SITE_URL + '/'}))['values']
     return rows[1:]  # skip header row
 
 
@@ -210,8 +227,7 @@ def fetch_doc_html(post_id):
         'https://docs.google.com/feeds/download/documents/export/Export'
         f'?id={post_id}&exportFormat=html'
     )
-    with urllib.request.urlopen(url, timeout=60) as response:
-        return response.read().decode('utf-8', errors='replace')
+    return download(url, timeout=90).decode('utf-8', errors='replace')
 
 
 def doc_blocks(doc):
@@ -250,8 +266,7 @@ def own_photos(doc):
 def image_bytes(src):
     if src.startswith('data:'):
         return base64.b64decode(src.split(',', 1)[1])
-    with urllib.request.urlopen(src, timeout=60) as response:
-        return response.read()
+    return download(src)
 
 
 def resize(data, size, target):
