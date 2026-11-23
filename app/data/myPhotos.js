@@ -3,6 +3,42 @@
 // (~640px) in assets/my-photos/, then add an entry here. Newest first.
 export const myPhotos = [
     {
+        file: 'chinese-goose',
+        width: 1200,
+        height: 1600,
+        caption: 'A Chinese goose on the lawn by the lake, with its friends behind.',
+    },
+    {
+        file: 'muscovy-ducks-and-grackle',
+        width: 1200,
+        height: 1600,
+        caption: 'Two Muscovy ducks walking right up to me, with a grackle tagging along.',
+    },
+    {
+        file: 'greylag-geese',
+        width: 1600,
+        height: 1200,
+        caption: 'Greylag geese posing at the Round Pond in Kensington Gardens, surrounded by pigeons.',
+    },
+    {
+        file: 'mute-swan',
+        width: 1600,
+        height: 1200,
+        caption: 'A mute swan wading at the edge of the Round Pond.',
+    },
+    {
+        file: 'canada-goose-grazing',
+        width: 1600,
+        height: 1200,
+        caption: 'A Canada goose grazing on the grass, with pigeons for company.',
+    },
+    {
+        file: 'canada-geese-pond',
+        width: 1600,
+        height: 900,
+        caption: 'Canada geese swimming on a pond beside a golf course.',
+    },
+    {
         file: 'muscovy-duck-1',
         width: 1600,
         height: 1200,

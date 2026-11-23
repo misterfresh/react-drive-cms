@@ -220,6 +220,11 @@ FULL_SIZE = 1600   # longest edge of the full-screen photo
 THUMB_SIZE = 640   # longest edge of the grid thumbnail
 MIN_SIZE = 400     # skip small images (icons, emoji, stickers)
 SOURCE_LINE = re.compile(r'^\W*(photo|animation|image|picture|gif)?\s*(source|credit)', re.I)
+# Posts whose photos are not mine, so they never appear in Gallery → My photos.
+# Add a post's "Post Id" from the Google Sheet here to leave it out.
+NOT_MY_PHOTOS = {
+    '1Jk3ag2f0lW4Kxt5fjnpz9wHBIFL5jGOV',  # Bald Eagle
+}
 
 
 def fetch_doc_html(post_id):
@@ -322,6 +327,9 @@ def write_gallery(posts):
     GALLERY_DIR.mkdir(parents=True)
     items = []
     for post in posts:
+        if post['id'] in NOT_MY_PHOTOS:
+            print(f'  {post["title"]}: left out (not my photos)')
+            continue
         try:
             photos = own_photos(fetch_doc_html(post['id']))
         except Exception as error:  # one broken doc shouldn't stop the build
