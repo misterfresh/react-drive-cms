@@ -22,6 +22,7 @@ import { Chinese } from './routes/chinese.js'
 import { Gallery } from './routes/gallery.js'
 import { Sightings } from './routes/sightings.js'
 import { Subscribe } from './routes/subscribe.js'
+import { Quiz } from './routes/quiz.js'
 import { loadAnalytics } from './utils/analytics.js'
 
 const App = () => {
@@ -52,6 +53,8 @@ const App = () => {
             Page = Sightings
         } else if (pageName === 'subscribe') {
             Page = Subscribe
+        } else if (pageName === 'quiz') {
+            Page = Quiz
         }
         return Page
     }, [pageName])

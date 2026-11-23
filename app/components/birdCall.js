@@ -19,7 +19,14 @@ const getPlayer = () => {
 const audioUrl = (call) => `https://xeno-canto.org/${call.xc}/download`
 
 // variant: 'light' for use on top of photos, 'default' on page background
-export const BirdCall = ({ bird, variant = 'default' }) => {
+// label: button text instead of "Listen to the …" (the quiz uses this so the
+//        name stays hidden); showCredit: false hides the recording credit.
+export const BirdCall = ({
+    bird,
+    variant = 'default',
+    label,
+    showCredit = true,
+}) => {
     const call = bird?.call
     const [, rerender] = useState(0)
 
@@ -162,7 +169,11 @@ export const BirdCall = ({ bird, variant = 'default' }) => {
             class="listen"
             onClick=${toggle}
             aria-pressed=${isPlaying}
-            aria-label=${isPlaying
+            aria-label=${label
+                ? isPlaying
+                    ? 'Pause the call'
+                    : label
+                : isPlaying
                 ? `Pause the ${bird.name}'s call`
                 : `Listen to the ${bird.name}'s call`}
         >
@@ -182,9 +193,10 @@ export const BirdCall = ({ bird, variant = 'default' }) => {
                       ><span class="bars" aria-hidden="true"
                           ><span /><span /><span
                       /></span>`
-                : `Listen to the ${bird.name}`}
+                : label ?? `Listen to the ${bird.name}`}
         </button>
-        <span class="credit">
+        ${showCredit &&
+        html`<span class="credit">
             Recording${' '}
             <a
                 href="https://xeno-canto.org/${call.xc}"
@@ -195,6 +207,6 @@ export const BirdCall = ({ bird, variant = 'default' }) => {
             <a href=${call.licenseUrl} target="_blank" rel="noopener"
                 >${call.license}</a
             >
-        </span>
+        </span>`}
     </div>`
 }
