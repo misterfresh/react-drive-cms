@@ -257,12 +257,11 @@ export const Menu = ({ categories, articles, menuVisible }) => {
             <hr class="separator" />
             <a
                 class="rss-link"
-                href="${prefixUriIfNeeded('/feed.xml')}"
-                target="_blank"
-                rel="noopener"
+                href="${prefixUriIfNeeded('/subscribe')}"
+                onClick=${avoidReload}
             >
                 <i class="fa-solid fa-rss" aria-hidden="true" />
-                Subscribe via RSS
+                Follow via RSS
             </a>
             <${ThemeToggle} />
         </nav>`

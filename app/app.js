@@ -21,6 +21,7 @@ import { Japanese } from './routes/japanese.js'
 import { Chinese } from './routes/chinese.js'
 import { Gallery } from './routes/gallery.js'
 import { Sightings } from './routes/sightings.js'
+import { Subscribe } from './routes/subscribe.js'
 import { loadAnalytics } from './utils/analytics.js'
 
 const App = () => {
@@ -49,6 +50,8 @@ const App = () => {
             Page = Gallery
         } else if (pageName === 'sightings') {
             Page = Sightings
+        } else if (pageName === 'subscribe') {
+            Page = Subscribe
         }
         return Page
     }, [pageName])
