@@ -219,6 +219,7 @@ GALLERY_DIR = ROOT / 'assets' / 'gallery'
 FULL_SIZE = 1600   # longest edge of the full-screen photo
 THUMB_SIZE = 640   # longest edge of the grid thumbnail
 MIN_SIZE = 400     # skip small images (icons, emoji, stickers)
+PREVIEW_SIZE = 24  # tiny blurred placeholder shown while a photo loads
 SOURCE_LINE = re.compile(r'^\W*(photo|animation|image|picture|gif)?\s*(source|credit)', re.I)
 # Posts whose photos are not mine, so they never appear in Gallery → My photos.
 # Add a post's "Post Id" from the Google Sheet here to leave it out.
@@ -274,7 +275,7 @@ def image_bytes(src):
     return download(src)
 
 
-def resize(data, size, target):
+def resize(data, size, target, quality=82):
     """Save as JPEG with the longest edge at most `size`. Returns (w, h)."""
     try:
         from PIL import Image, ImageOps
@@ -284,7 +285,7 @@ def resize(data, size, target):
         import io
         image = ImageOps.exif_transpose(Image.open(io.BytesIO(data))).convert('RGB')
         image.thumbnail((size, size))
-        image.save(target, 'JPEG', quality=82, optimize=True, progressive=True)
+        image.save(target, 'JPEG', quality=quality, optimize=True, progressive=True)
         return image.size
     if shutil.which('sips'):  # macOS fallback, no install needed
         with tempfile.NamedTemporaryFile(suffix='.img') as source:
@@ -292,7 +293,7 @@ def resize(data, size, target):
             source.flush()
             subprocess.run(
                 ['sips', '-Z', str(size), '-s', 'format', 'jpeg',
-                 '-s', 'formatOptions', '82', source.name, '--out', str(target)],
+                 '-s', 'formatOptions', str(quality), source.name, '--out', str(target)],
                 check=True, capture_output=True,
             )
         out = subprocess.run(
@@ -303,6 +304,30 @@ def resize(data, size, target):
         height = int(re.search(r'pixelHeight: (\d+)', out).group(1))
         return width, height
     raise SystemExit('Install Pillow (pip install pillow) to build the gallery')
+
+
+def strip_jpeg_metadata(data):
+    """Drop APP1-APP15 segments (EXIF, XMP...) and comments from a JPEG."""
+    out, i = bytearray(data[:2]), 2
+    while i + 4 <= len(data) and data[i] == 0xFF:
+        marker = data[i + 1]
+        if marker == 0xDA:  # start of image data: copy the rest
+            out += data[i:]
+            return bytes(out)
+        length = int.from_bytes(data[i + 2:i + 4], 'big')
+        if not (0xE1 <= marker <= 0xEF or marker == 0xFE):
+            out += data[i:i + 2 + length]
+        i += 2 + length
+    return data
+
+
+def preview_uri(data):
+    """A tiny JPEG as a data: URI, shown blurred until the real photo loads."""
+    with tempfile.TemporaryDirectory() as folder:
+        target = Path(folder) / 'preview.jpg'
+        resize(data, PREVIEW_SIZE, target, quality=50)
+        tiny = strip_jpeg_metadata(target.read_bytes())
+    return 'data:image/jpeg;base64,' + base64.b64encode(tiny).decode('ascii')
 
 
 def image_size(data):
@@ -343,12 +368,14 @@ def write_gallery(posts):
                 continue
             name = hashlib.sha1(data).hexdigest()[:12]
             width, height = resize(data, FULL_SIZE, GALLERY_DIR / f'{name}.jpg')
-            resize(data, THUMB_SIZE, GALLERY_DIR / f'{name}-thumb.jpg')
+            thumb = GALLERY_DIR / f'{name}-thumb.jpg'
+            resize(data, THUMB_SIZE, thumb)
             items.append({
                 'src': f'/assets/gallery/{name}.jpg',
                 'thumb': f'/assets/gallery/{name}-thumb.jpg',
                 'width': width,
                 'height': height,
+                'preview': preview_uri(thumb.read_bytes()),
                 'caption': caption,
                 'postId': post['id'],
                 'postTitle': post['title'],

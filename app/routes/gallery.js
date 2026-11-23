@@ -5,6 +5,8 @@ import { Spinner } from '../styles/Spinner.js'
 import prefixUriIfNeeded from '../utils/prefixUriIfNeeded.js'
 import { endangeredBirds, statusLabels } from '../data/endangered.js'
 import { myPhotos } from '../data/myPhotos.js'
+import { photoPreviews } from '../data/photoPreviews.js'
+import { BlurImage } from '../components/blurImage.js'
 
 // Photos from app/data/myPhotos.js, shown before the ones from posts
 const extraPhotos = myPhotos.map((photo) => ({
@@ -13,6 +15,7 @@ const extraPhotos = myPhotos.map((photo) => ({
     width: photo.width,
     height: photo.height,
     caption: photo.caption,
+    preview: photoPreviews[`/assets/my-photos/${photo.file}-thumb.jpg`],
 }))
 
 // Two sections:
@@ -206,7 +209,8 @@ export const Gallery = () => {
                 width: 100%;
                 height: 100%;
                 object-fit: cover;
-                transition: transform 600ms var(--ease);
+                transition: transform 600ms var(--ease),
+                    opacity 600ms var(--ease);
             }
             .species-card .photo:hover img {
                 transform: scale(1.05);
@@ -335,8 +339,9 @@ export const Gallery = () => {
                                                 : ''
                                         }`}
                                     >
-                                        <img
+                                        <${BlurImage}
                                             src=${photo.thumb}
+                                            preview=${photo.preview}
                                             width=${photo.width}
                                             height=${photo.height}
                                             alt=${photo.caption}
@@ -377,8 +382,10 @@ export const Gallery = () => {
                                                 open(endangeredItems, index)}
                                             aria-label=${`Open photo of the ${bird.name}`}
                                         >
-                                            <img
+                                            <${BlurImage}
                                                 src=${bird.thumb}
+                                                preview=${photoPreviews[bird.thumb]}
+                                                fill=${true}
                                                 alt=${bird.name}
                                                 loading="lazy"
                                                 referrerpolicy="no-referrer"

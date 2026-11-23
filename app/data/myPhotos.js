@@ -1,6 +1,7 @@
 // Extra photos for Gallery → "My photos" that aren't in a blog post.
 // Put a full-size image (longest side ~1600px) and a "-thumb" version
 // (~640px) in assets/my-photos/, then add an entry here. Newest first.
+// Then run `python3 scripts/make_previews.py` to make its blurred loading preview.
 export const myPhotos = [
     {
         file: 'chinese-goose',
