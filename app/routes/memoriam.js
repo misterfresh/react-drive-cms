@@ -7,12 +7,14 @@ import { infoPageStyles } from '../styles/infoPage.js'
 export const Memoriam = () => html`
     <style>
         ${infoPageStyles}
-        /* Photo and name share one box, so the name cannot sit beside the picture. */
+        /* Photo, then the name, then the memorial text. Nothing floats beside the picture. */
         .about-content .tribute {
-            float: left;
+            float: none;
+            display: block;
+            clear: both;
             width: 22rem;
             max-width: 100%;
-            margin: 0.6rem 3.2rem 2rem 0;
+            margin: 0 0 2rem;
             container-type: inline-size;
         }
         .about-content .tribute-link {
@@ -49,17 +51,10 @@ export const Memoriam = () => html`
             white-space: nowrap;
             color: var(--c-text);
         }
-        /* Keep the memorial text in the column beside the photo, instead of
-           letting a line slip underneath the caption. */
         .about-content .info {
-            display: flow-root;
-        }
-        @media (max-width: 560px) {
-            .about-content .tribute {
-                float: none;
-                display: block;
-                margin: 0 0 2rem;
-            }
+            display: block;
+            clear: both;
+            float: none;
         }
     </style>
     <${Page}
