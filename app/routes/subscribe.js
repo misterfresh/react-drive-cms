@@ -117,8 +117,9 @@ export const Subscribe = () => {
         <${Page}
             title="Follow along"
             description="Get new posts from The Purple Club in your favourite reader app."
-            sidebarImage=${prefixUriIfNeeded('/assets/canada_goose.jpg')}
-            birdId="canada-goose"
+            sidebarImage=${prefixUriIfNeeded(
+                '/assets/my-photos/muscovy-ducks-and-grackle.jpg'
+            )}
         >
             <div class="rss-page">
                 <h1>Follow along with RSS</h1>
