@@ -7,7 +7,7 @@ import { infoPageStyles } from '../styles/infoPage.js'
 export const Memoriam = () => html`
     <style>
         ${infoPageStyles}
-        /* Photo, then the name, then the memorial text. Nothing floats beside the picture. */
+        /* Photo, then the name (same size as other page headlines), then the text. */
         .about-content .tribute {
             float: none;
             display: block;
@@ -15,7 +15,6 @@ export const Memoriam = () => html`
             width: 22rem;
             max-width: 100%;
             margin: 0 0 2rem;
-            container-type: inline-size;
         }
         .about-content .tribute-link {
             display: block;
@@ -30,26 +29,8 @@ export const Memoriam = () => html`
             height: auto;
             margin: 0;
         }
-        .about-content .tribute figcaption {
-            display: block;
-            width: 100%;
-            margin: 0;
-            padding: 0;
-        }
         .about-content .tribute-name {
-            display: block;
-            width: 100%;
-            margin: 0.8rem 0 0;
-            padding: 0;
-            font-family: var(--font-serif);
-            font-size: 1.7rem;
-            font-size: min(1.7rem, 8.5cqi);
-            font-weight: 600;
-            line-height: 1.3;
-            letter-spacing: 0;
-            text-align: left;
-            white-space: nowrap;
-            color: var(--c-text);
+            margin: 0 0 1.6rem;
         }
         .about-content .info {
             display: block;
@@ -81,10 +62,8 @@ export const Memoriam = () => html`
                         alt="James Edward Parker"
                     />
                 </a>
-                <figcaption>
-                    <h1 class="tribute-name">James Edward Parker</h1>
-                </figcaption>
             </figure>
+            <h1 class="info-title tribute-name">James Edward Parker</h1>
             <div class="info">
                 <p>
                     This site is built in memory of my mentor and friend, James Edward Parker.
