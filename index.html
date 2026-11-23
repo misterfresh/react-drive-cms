@@ -25,6 +25,15 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600&family=Noto+Sans+JP:wght@400;500&family=Noto+Serif:ital,wght@0,400;0,600;0,700;1,400&family=Noto+Serif+JP:wght@400;600&family=Noto+Serif+TC:wght@400;600&display=swap">
     <link href="/home/assets/favicon.ico" rel="shortcut icon" type="image/x-icon"/>
     <script type="text/javascript">
+        // Apply the visitor's saved Light/Dark choice before the page paints.
+        try {
+            var savedTheme = localStorage.getItem('theme')
+            if (savedTheme === 'light' || savedTheme === 'dark') {
+                document.documentElement.setAttribute('data-theme', savedTheme)
+            }
+        } catch (e) {}
+    </script>
+    <script type="text/javascript">
         // Credits: Single Page Apps for GitHub Pages
         // https://github.com/rafrex/spa-github-pages
         // Copyright (c) 2016 Rafael Pedicini, licensed under the MIT License
@@ -80,8 +89,10 @@
             --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
             --dur: 200ms;
         }
+        /* Dark colours: used when the device is in dark mode (unless the
+           visitor picked Light), or when the visitor picked Dark. */
         @media (prefers-color-scheme: dark) {
-            :root {
+            :root:not([data-theme="light"]) {
                 --c-bg: #141016;
                 --c-surface: #1c1720;
                 --c-surface-2: #251e2a;
@@ -99,6 +110,28 @@
                 --shadow-md: 0 4px 14px rgba(0, 0, 0, 0.45);
                 --shadow-lg: 0 14px 36px rgba(0, 0, 0, 0.55);
             }
+        }
+        :root[data-theme="dark"] {
+            color-scheme: dark;
+            --c-bg: #141016;
+            --c-surface: #1c1720;
+            --c-surface-2: #251e2a;
+            --c-text: #ece6f0;
+            --c-text-muted: #a99fb2;
+            --c-border: #322a38;
+            --c-brand: #cf9be3;
+            --c-brand-strong: #e0b8ef;
+            --c-brand-soft: #2c2033;
+            --c-on-brand: #1a0f20;
+            --c-menu-bg: #1b0f21;
+            --c-success: #6fcf97;
+            --c-danger: #f28b82;
+            --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+            --shadow-md: 0 4px 14px rgba(0, 0, 0, 0.45);
+            --shadow-lg: 0 14px 36px rgba(0, 0, 0, 0.55);
+        }
+        :root[data-theme="light"] {
+            color-scheme: light;
         }
         :lang(zh-Hant) {
             --font-serif: 'Noto Serif', 'Noto Serif TC', Georgia, serif;

@@ -1,6 +1,7 @@
 import { html, useEffect, useState } from '../../lib/htm-preact.js'
 import { avoidReload } from '../../utils/avoidReload.js'
 import prefixUriIfNeeded from '../../utils/prefixUriIfNeeded.js'
+import { ThemeToggle } from '../themeToggle.js'
 
 const mainLinks = [
     { path: '/', title: 'Home', icon: 'fa-house' },
@@ -263,5 +264,6 @@ export const Menu = ({ categories, articles, menuVisible }) => {
                 <i class="fa-solid fa-rss" aria-hidden="true" />
                 Subscribe via RSS
             </a>
+            <${ThemeToggle} />
         </nav>`
 }
