@@ -1,4 +1,4 @@
-import { html, useState } from '../lib/htm-preact.js'
+import { html, useEffect, useState } from '../lib/htm-preact.js'
 import { Page } from '../components/layout/page.js'
 import { BirdCall } from '../components/birdCall.js'
 import { birds } from '../data/birds.js'
@@ -6,10 +6,42 @@ import { useCategoriesAndArticles } from '../hooks/useCategoriesAndArticles.js'
 import prefixUriIfNeeded from '../utils/prefixUriIfNeeded.js'
 import { avoidReload } from '../utils/avoidReload.js'
 
-// "Guess the bird call": every bird in app/data/birds.js that has a call
-// becomes one question, in random order, with 4 choices each.
-// Add a bird with a call to birds.js and it joins the quiz automatically.
+// Bird quiz with three modes, built from app/data/birds.js:
+//   calls  - play a call, guess the bird (birds with a call)
+//   photos - look at a photo, guess the bird (birds with a photo, or a post
+//            whose header photo can be used)
+//   mix    - each question is a call or a photo, at random
+// Every eligible bird becomes one question, in random order, with 4 choices.
+// Add a bird to birds.js and it joins the quiz automatically.
 const CHOICES = 4
+const BEST_KEY = 'quiz-best'
+
+const MODES = {
+    calls: {
+        label: 'Calls',
+        icon: 'fa-headphones',
+        heading: 'Guess the bird call',
+        intro: (total) =>
+            `Play each mystery call, then pick the bird you think is singing. There are ${total} birds from this blog to guess.`,
+        share: 'bird call quiz',
+    },
+    photos: {
+        label: 'Photos',
+        icon: 'fa-camera',
+        heading: 'Name that bird',
+        intro: (total) =>
+            `Look at each photo and pick the bird you think it is. There are ${total} birds from this blog to guess.`,
+        share: 'bird photo quiz',
+    },
+    mix: {
+        label: 'Mix',
+        icon: 'fa-shuffle',
+        heading: 'Calls and photos',
+        intro: (total) =>
+            `A bit of both: some questions are a call to listen to, others a photo to look at. There are ${total} birds from this blog to guess.`,
+        share: 'bird quiz',
+    },
+}
 
 const shuffle = (list) => {
     const copy = [...list]
@@ -20,10 +52,21 @@ const shuffle = (list) => {
     return copy
 }
 
-const makeRounds = () => {
-    const pool = birds.filter((bird) => bird.call)
+const pickOne = (list) => list[Math.floor(Math.random() * list.length)]
+
+// kinds: which question types this bird can be asked as, in this mode
+const kindsFor = (bird, mode, photoOf) => {
+    const kinds = []
+    if (mode !== 'photos' && bird.call) kinds.push('call')
+    if (mode !== 'calls' && photoOf(bird)) kinds.push('photo')
+    return kinds
+}
+
+const makeRounds = (mode, photoOf) => {
+    const pool = birds.filter((bird) => kindsFor(bird, mode, photoOf).length)
     return shuffle(pool).map((bird) => ({
         bird,
+        kind: pickOne(kindsFor(bird, mode, photoOf)),
         options: shuffle([
             bird,
             ...shuffle(pool.filter((other) => other.id !== bird.id)).slice(
@@ -34,26 +77,87 @@ const makeRounds = () => {
     }))
 }
 
-const verdict = (score, total) => {
-    const ratio = score / total
-    if (ratio === 1) return 'Perfect score! You have the ears of an owl.'
+const verdict = (score, total, mode) => {
+    const ratio = total ? score / total : 0
+    if (ratio === 1)
+        return mode === 'photos'
+            ? 'Perfect score! You have the eyes of a hawk.'
+            : 'Perfect score! You have the ears of an owl.'
     if (ratio >= 0.75) return 'Excellent! You really know your birds.'
     if (ratio >= 0.5) return 'Nicely done! A few more walks in the park and you’ll ace it.'
-    return 'Bird calls are tricky! Have another listen and try again.'
+    if (mode === 'calls')
+        return 'Bird calls are tricky! Have another listen and try again.'
+    return mode === 'photos'
+        ? 'Some birds look a lot alike! Have another look and try again.'
+        : 'Birds are tricky! Have another go and try again.'
+}
+
+// Best scores live in this browser only: { calls: { score, total }, ... }
+const readBest = () => {
+    try {
+        return JSON.parse(localStorage.getItem(BEST_KEY)) || {}
+    } catch (e) {
+        return {}
+    }
+}
+
+const saveBest = (best) => {
+    try {
+        localStorage.setItem(BEST_KEY, JSON.stringify(best))
+    } catch (e) {
+        // Storage blocked (e.g. private mode): best scores last for this visit.
+    }
 }
 
 export const Quiz = () => {
-    const [rounds, setRounds] = useState(makeRounds)
+    const { articles } = useCategoriesAndArticles()
+
+    const photoOf = (bird) => {
+        if (bird.photo) return prefixUriIfNeeded(bird.photo)
+        const post = bird.postId ? articles?.[bird.postId] : null
+        return post?.image ?? ''
+    }
+
+    const [mode, setMode] = useState('calls')
+    const [rounds, setRounds] = useState(() => makeRounds('calls', photoOf))
     const [index, setIndex] = useState(0)
     const [picked, setPicked] = useState(null)
     const [score, setScore] = useState(0)
     const [shareNote, setShareNote] = useState('')
-    const { articles } = useCategoriesAndArticles()
+    const [best, setBest] = useState(readBest)
+    const [newBest, setNewBest] = useState(false)
 
     const total = rounds.length
-    const done = index >= total
+    const done = total > 0 && index >= total
     const round = rounds[index]
     const answered = picked !== null
+    const modeInfo = MODES[mode]
+    const bestHere = best[mode]
+
+    // Post photos arrive with the articles. If they land before the first
+    // answer, rebuild the photo questions so those birds are included too.
+    useEffect(() => {
+        if (mode !== 'calls' && index === 0 && picked === null) {
+            setRounds(makeRounds(mode, photoOf))
+        }
+    }, [articles])
+
+    // Record a new best score when a round of the quiz is finished.
+    useEffect(() => {
+        if (!done) return
+        const previous = best[mode]
+        const beats =
+            !previous ||
+            score / total > previous.score / previous.total ||
+            (score / total === previous.score / previous.total &&
+                score > previous.score)
+        if (beats) {
+            const updated = { ...best, [mode]: { score, total } }
+            setBest(updated)
+            saveBest(updated)
+        }
+        setNewBest(beats && score > 0)
+    }, [done])
 
     const pick = (bird) => {
         if (answered) return
@@ -66,20 +170,24 @@ export const Quiz = () => {
         setIndex((value) => value + 1)
     }
 
-    const restart = () => {
-        setRounds(makeRounds())
+    const start = (nextMode) => {
+        setMode(nextMode)
+        setRounds(makeRounds(nextMode, photoOf))
         setIndex(0)
         setPicked(null)
         setScore(0)
         setShareNote('')
+        setNewBest(false)
     }
+
+    const restart = () => start(mode)
 
     const share = async () => {
         const url = prefixUriIfNeeded('/quiz')
-        const text = `I got ${score}/${total} on The Purple Club's bird call quiz. Can you beat me?`
+        const text = `I got ${score}/${total} on The Purple Club's ${modeInfo.share}. Can you beat me?`
         try {
             if (navigator.share) {
-                await navigator.share({ title: 'Bird call quiz', text, url })
+                await navigator.share({ title: 'Bird quiz', text, url })
                 return
             }
             await navigator.clipboard.writeText(`${text} ${url}`)
@@ -91,17 +199,13 @@ export const Quiz = () => {
         }
     }
 
-    const photoOf = (bird) => {
-        if (bird.photo) return prefixUriIfNeeded(bird.photo)
-        const post = bird.postId ? articles?.[bird.postId] : null
-        return post?.image ?? ''
-    }
-
     const reveal = () => {
         const bird = round.bird
         const correct = picked === bird.id
         const post = bird.postId ? articles?.[bird.postId] : null
-        const photo = photoOf(bird)
+        // A photo question already showed the photo, so don't repeat it.
+        const photo = round.kind === 'photo' ? '' : photoOf(bird)
+        const credit = bird.photo && bird.photoCredit
         return html`<div class="quiz-reveal" key=${bird.id}>
             <p
                 class="quiz-result ${correct ? 'is-right' : 'is-wrong'}"
@@ -116,6 +220,13 @@ export const Quiz = () => {
             <div class="quiz-bird">
                 ${photo &&
                 html`<img src=${photo} alt=${bird.name} class="quiz-photo" />`}
+                ${credit &&
+                html`<p class="quiz-credit">
+                    Photo:
+                    <a href=${credit.url} target="_blank" rel="noopener noreferrer"
+                        >${credit.text}</a
+                    >
+                </p>`}
                 <div class="quiz-bird-body">
                     <h2>
                         ${bird.name}
@@ -153,8 +264,70 @@ export const Quiz = () => {
                 font-weight: 600;
             }
             .quiz-intro {
-                margin: 0 0 2.4rem;
+                margin: 0 0 2rem;
                 color: var(--c-text-muted);
+            }
+            .quiz-modes {
+                display: inline-flex;
+                flex-wrap: wrap;
+                gap: 0.4rem;
+                margin: 0 0 2.4rem;
+                padding: 0.4rem;
+                border: 1px solid var(--c-border);
+                border-radius: 999px;
+                background: var(--c-surface);
+            }
+            .quiz-modes button {
+                display: inline-flex;
+                align-items: center;
+                gap: 0.6rem;
+                padding: 0.7rem 1.4rem;
+                border: 0;
+                border-radius: 999px;
+                background: none;
+                color: var(--c-text-muted);
+                font-family: var(--font-sans);
+                font-size: 1.4rem;
+                font-weight: 600;
+                cursor: pointer;
+                transition: background-color var(--dur) var(--ease),
+                    color var(--dur) var(--ease);
+            }
+            .quiz-modes button:hover {
+                color: var(--c-text);
+            }
+            .quiz-modes button[aria-pressed='true'] {
+                background: var(--c-brand-soft);
+                color: var(--c-brand);
+            }
+            .quiz-mystery {
+                display: block;
+                width: 100%;
+                aspect-ratio: 4 / 3;
+                margin: 0 0 2.4rem;
+                object-fit: cover;
+                border-radius: var(--radius-sm);
+                box-shadow: var(--shadow-md);
+                background: var(--c-surface-2);
+            }
+            .quiz-credit {
+                margin: -1rem 0 1.8rem;
+                font-family: var(--font-sans);
+                font-size: 1.2rem;
+                color: var(--c-text-muted);
+            }
+            .quiz-credit a {
+                color: inherit;
+            }
+            .quiz-end .best {
+                margin: -1.2rem 0 2.4rem;
+                font-family: var(--font-sans);
+                font-size: 1.4rem;
+                font-weight: 600;
+                color: var(--c-text-muted);
+            }
+            .quiz-end .best.is-new {
+                color: var(--c-success);
             }
             .quiz-progress {
                 display: flex;
@@ -357,16 +530,26 @@ export const Quiz = () => {
             }
         </style>
         <${Page}
-            title="Bird call quiz"
-            description="Listen to a call and guess which bird is singing."
+            title="Bird quiz"
+            description="Guess the bird from its call or its photo."
             sidebarImage=${prefixUriIfNeeded('/assets/my-photos/greylag-geese.jpg')}
         >
             <div class="quiz">
-                <h1>Guess the bird call</h1>
-                <p class="quiz-intro">
-                    Play each mystery call, then pick the bird you think is
-                    singing. There are ${total} birds from this blog to guess.
-                </p>
+                <h1>${modeInfo.heading}</h1>
+                <p class="quiz-intro">${modeInfo.intro(total)}</p>
+                <div class="quiz-modes" role="group" aria-label="Quiz type">
+                    ${Object.entries(MODES).map(
+                        ([value, info]) => html`<button
+                            key=${value}
+                            type="button"
+                            aria-pressed=${mode === value ? 'true' : 'false'}
+                            onClick=${() => start(value)}
+                        >
+                            <i class="fa-solid ${info.icon}" aria-hidden="true" />
+                            ${info.label}
+                        </button>`
+                    )}
+                </div>
 
                 ${done
                     ? html`<div class="quiz-card quiz-end" role="status">
@@ -374,7 +557,13 @@ export const Quiz = () => {
                               Your score
                           </p>
                           <p class="quiz-score">${score}/${total}</p>
-                          <p class="verdict">${verdict(score, total)}</p>
+                          <p class="verdict">${verdict(score, total, mode)}</p>
+                          ${bestHere &&
+                          html`<p class="best ${newBest ? 'is-new' : ''}">
+                              ${newBest
+                                  ? 'New best score!'
+                                  : `Your best: ${bestHere.score}/${bestHere.total}`}
+                          </p>`}
                           <div class="actions">
                               <button
                                   class="quiz-primary"
@@ -403,7 +592,11 @@ export const Quiz = () => {
                       </div>`
                     : html`<p class="quiz-progress">
                               <span>Bird ${index + 1} of ${total}</span>
-                              <span>Score: ${score}</span>
+                              <span
+                                  >Score: ${score}${bestHere
+                                      ? ` · Best: ${bestHere.score}/${bestHere.total}`
+                                      : ''}</span
+                              >
                           </p>
                           <div class="quiz-bar" aria-hidden="true">
                               <span
@@ -413,8 +606,20 @@ export const Quiz = () => {
                               />
                           </div>
                           <div class="quiz-card">
-                              <p class="quiz-question">Who's singing?</p>
-                              ${!answered &&
+                              <p class="quiz-question">
+                                  ${round.kind === 'photo'
+                                      ? 'Which bird is this?'
+                                      : 'Who’s singing?'}
+                              </p>
+                              ${round.kind === 'photo' &&
+                              html`<img
+                                  key=${round.bird.id}
+                                  src=${photoOf(round.bird)}
+                                  alt="Mystery bird"
+                                  class="quiz-mystery"
+                              />`}
+                              ${round.kind === 'call' &&
+                              !answered &&
                               html`<div class="quiz-play">
                                   <${BirdCall}
                                       key=${round.bird.id}

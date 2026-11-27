@@ -10,7 +10,7 @@ const mainLinks = [
     { path: '/chinese', title: '繁體中文', icon: 'fa-ship', lang: 'zh-Hant' },
     { path: '/gallery', title: 'Gallery', icon: 'fa-images' },
     { path: '/sightings', title: 'Sightings map', icon: 'fa-map-location-dot' },
-    { path: '/quiz', title: 'Bird call quiz', icon: 'fa-headphones' },
+    { path: '/quiz', title: 'Bird quiz', icon: 'fa-dove' },
     // { path: '/music', title: 'Inspiration', icon: 'fa-music' },
     { path: '/contact', title: 'Contact', icon: 'fa-feather-pointed' },
     { path: '/memoriam', title: 'In Memoriam', icon: 'fa-monument' },
