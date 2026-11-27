@@ -408,6 +408,21 @@ export const endangeredBirds = [
         "author": "Christian Mehlführer",
         "license": "CC BY 2.5",
         "licenseUrl": "https://creativecommons.org/licenses/by/2.5"
+    },
+    {
+        "name": "Secretary Bird",
+        "scientific": "Sagittarius serpentarius",
+        "status": "EN",
+        "region": "Sub-Saharan Africa",
+        "fact": "Moved up to Endangered in 2020 after steep declines, as its savanna home is lost to farming and overgrazing and birds collide with power lines and fences.",
+        "page": "https://commons.wikimedia.org/wiki/File:Secretario_(Sagittarius_serpentarius),_parque_nacional_de_Amboseli,_Kenia,_2024-05-23,_DD_14.jpg",
+        "thumb": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Secretario_%28Sagittarius_serpentarius%29%2C_parque_nacional_de_Amboseli%2C_Kenia%2C_2024-05-23%2C_DD_14.jpg/500px-Secretario_%28Sagittarius_serpentarius%29%2C_parque_nacional_de_Amboseli%2C_Kenia%2C_2024-05-23%2C_DD_14.jpg",
+        "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Secretario_%28Sagittarius_serpentarius%29%2C_parque_nacional_de_Amboseli%2C_Kenia%2C_2024-05-23%2C_DD_14.jpg/1280px-Secretario_%28Sagittarius_serpentarius%29%2C_parque_nacional_de_Amboseli%2C_Kenia%2C_2024-05-23%2C_DD_14.jpg",
+        "width": 1280,
+        "height": 853,
+        "author": "Diego Delso",
+        "license": "CC BY-SA 4.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0"
     }
 ]
 
