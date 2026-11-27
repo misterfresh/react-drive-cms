@@ -225,6 +225,7 @@ SOURCE_LINE = re.compile(r'^\W*(photo|animation|image|picture|gif)?\s*(source|cr
 # Add a post's "Post Id" from the Google Sheet here to leave it out.
 NOT_MY_PHOTOS = {
     '1Jk3ag2f0lW4Kxt5fjnpz9wHBIFL5jGOV',  # Bald Eagle
+    '1n6l4OfdYX6lRyheI4F-hpwnGGYxLQwbp6tDd633Yk24',  # The Secretary Bird
 }
 
 
