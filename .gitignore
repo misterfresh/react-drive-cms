@@ -10,3 +10,4 @@ node_modules/
 
 # Post drafts to upload to Google Drive (not part of the site)
 /drafts/
+.DS_Store

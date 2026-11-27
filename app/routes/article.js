@@ -247,6 +247,11 @@ export const Article = ({ state, dispatch }) => {
                 margin-top: 5rem;
                 padding-top: 3rem;
                 border-top: 1px solid var(--c-border);
+                /* Disqus's iframe is a light-scheme page. If its container
+                   is dark-scheme, the browser paints an opaque white backdrop
+                   behind it, and Disqus's light dark-mode text vanishes on it.
+                   Matching schemes keeps the iframe transparent. */
+                color-scheme: normal;
             }
 
             @media (min-width: 768px) {

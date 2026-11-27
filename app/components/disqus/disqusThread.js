@@ -50,5 +50,26 @@ export const DisqusThread = ({ articleId, articleTitle }) => {
         return removeDisqusThreadScript
     }, [articleId, articleTitle])
 
+    // Disqus picks its light/dark look from the page's colours only when it
+    // loads, so reload it when the visitor switches theme.
+    useEffect(() => {
+        const reload = () => {
+            if (typeof window.DISQUS !== 'undefined') {
+                window.DISQUS.reset({ reload: true })
+            }
+        }
+        const observer = new MutationObserver(reload)
+        observer.observe(document.documentElement, {
+            attributes: true,
+            attributeFilter: ['data-theme'],
+        })
+        const media = window.matchMedia('(prefers-color-scheme: dark)')
+        media.addEventListener('change', reload)
+        return () => {
+            observer.disconnect()
+            media.removeEventListener('change', reload)
+        }
+    }, [])
+
     return html`<div id="disqus_thread" />`
 }
