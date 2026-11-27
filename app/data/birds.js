@@ -132,6 +132,19 @@ export const birds = [
             licenseUrl: 'https://creativecommons.org/licenses/by-nc-sa/4.0/',
         },
     },
+    {
+        id: 'secretary-bird',
+        name: 'Secretary Bird',
+        scientific: 'Sagittarius serpentarius',
+        postId: '1n6l4OfdYX6lRyheI4F-hpwnGGYxLQwbp6tDd633Yk24',
+        fact: 'A long-legged eagle that hunts on foot, stamping on snakes with kicks about five times its own body weight, delivered in a blink.',
+        call: {
+            xc: 948459,
+            recordist: 'Peter Boesman',
+            license: 'CC BY-NC-ND 4.0',
+            licenseUrl: 'https://creativecommons.org/licenses/by-nc-nd/4.0/',
+        },
+    },
 ]
 
 export const getBird = (id) => birds.find((bird) => bird.id === id)
