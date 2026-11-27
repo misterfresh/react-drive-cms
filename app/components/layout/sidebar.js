@@ -9,7 +9,6 @@ export const Sidebar = ({
     sidebarImage,
     sidebarPosition = 'center',
     menuVisible,
-    showLinks,
     birdId,
 }) => {
     return html` <style>
@@ -100,45 +99,6 @@ export const Sidebar = ({
             aside.sidebar .sidebar-call {
                 margin: 1.6rem 0 0.4rem;
             }
-
-            aside.sidebar .links {
-                display: none;
-            }
-
-            aside.sidebar .links.show-links {
-                display: flex;
-                flex-wrap: wrap;
-                gap: 1rem;
-                margin-top: 1.6rem;
-                padding-top: 2rem;
-                border-top: 1px solid rgba(255, 255, 255, 0.2);
-            }
-
-            aside.sidebar .links a.button {
-                display: inline-flex;
-                align-items: center;
-                gap: 0.8rem;
-                padding: 0.8rem 1.6rem;
-                border: 1px solid rgba(255, 255, 255, 0.3);
-                border-radius: 999px;
-                background-color: rgba(255, 255, 255, 0.12);
-                -webkit-backdrop-filter: blur(8px);
-                backdrop-filter: blur(8px);
-                color: #fff;
-                font-family: var(--font-sans);
-                font-size: 1.35rem;
-                font-weight: 500;
-                white-space: nowrap;
-                transition: background-color var(--dur) var(--ease),
-                    border-color var(--dur) var(--ease);
-            }
-
-            aside.sidebar .links a.button:hover,
-            aside.sidebar .links a.button:focus-visible {
-                color: #fff;
-                background-color: rgba(255, 255, 255, 0.24);
-                border-color: rgba(255, 255, 255, 0.5);
-            }
         </style>
         <aside
             class="sidebar ${menuVisible ? 'sidebar-narrow' : ''}"
@@ -156,26 +116,6 @@ export const Sidebar = ({
                     html`<div class="sidebar-call">
                         <${BirdCall} bird=${getBird(birdId)} variant="light" />
                     </div>`}
-                </div>
-                <div class="links ${showLinks ? 'show-links' : ''}">
-                    <a
-                        class="button"
-                        href="https://drive.google.com/drive/folders/0B0A_zASTMp9WU0NMYW9wXzVQWjg?resourcekey=0-k6M28TIgKjp_9hvDeT623Q&usp=sharing"
-                        target="_blank"
-                        rel="noopener"
-                    >
-                        <i class="fa-brands fa-google-drive" aria-hidden="true" />
-                        Original posts on Drive
-                    </a>
-                    <a
-                        class="button"
-                        href="https://github.com/potinmak/birds"
-                        target="_blank"
-                        rel="noopener"
-                    >
-                        <i class="fa-brands fa-github" aria-hidden="true" />
-                        Source on GitHub
-                    </a>
                 </div>
             </div>
         </aside>`

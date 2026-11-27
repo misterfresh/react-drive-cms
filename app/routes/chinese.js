@@ -15,7 +15,6 @@ export const Chinese = () => html`
         因其扁平如湯匙狀的長嘴，與中國樂器中的琵琶極為相似，因而得名；亦因其姿態優雅，又有「黑面天使」和「黑面舞者」的雅稱。 ~維基百科"
         sidebarImage=${prefixUriIfNeeded('/assets/black_faced_spoonbill.jpg')}
         birdId="black-faced-spoonbill"
-        showLinks=${true}
         lang="zh-Hant"
     >
         <div class="about-content">

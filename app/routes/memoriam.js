@@ -46,7 +46,6 @@ export const Memoriam = () => html`
         of America. -John F. Kennedy"
         sidebarImage=${prefixUriIfNeeded('/assets/bald_eagle.jpg')}
         birdId="bald-eagle"
-        showLinks=${true}
     >
         <div class="about-content">
             <figure class="tribute">

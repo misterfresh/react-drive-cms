@@ -14,7 +14,6 @@ export const About = () => html`
         description="Gyrfalcon is a strong and festy predator in the High Arctic. They are also the world's fastest bird. They can fly with an average speed of 50-68 mph. ~Photo: 2023 Gilligallou Bird"
         sidebarImage=${prefixUriIfNeeded('/assets/default-about.jpg')}
         birdId="gyrfalcon"
-        showLinks=${true}
     >
         <div class="about-content">
             <div class="info">

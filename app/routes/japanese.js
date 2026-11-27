@@ -14,7 +14,6 @@ export const Japanese = () => html`
         description="奄美大島、加計呂麻島、請島、枝手久島の森林に周年生息する。独特のルリ色の羽色をしていることから、目視による識別は容易。鳴き声は、九州以北に生息するカケスに似ており、鳴き声での識別も容易。~BirdSearch JP"
         sidebarImage=${prefixUriIfNeeded('/assets/lidths_jay.jpg')}
         birdId="lidths-jay"
-        showLinks=${true}
         lang="ja"
     >
         <div class="about-content">

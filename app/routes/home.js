@@ -11,7 +11,6 @@ export const Home = ({ state, dispatch }) => html` <${Page}
     subtitle=""
     description="This is a harpy eagle. Harpy eagles are originally from South America. Looking at their eyes, isn't this one a baddie?"
     sidebarImage=${prefixUriIfNeeded('/assets/harpy_eagle_1.jpg')}
-    showLinks=${true}
     birdId="harpy-eagle"
 >
     <${BirdOfTheMonth} />

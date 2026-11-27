@@ -14,7 +14,6 @@ export const Page = ({
     description,
     sidebarImage,
     sidebarPosition,
-    showLinks,
     lang,
     birdId,
     children,
@@ -114,7 +113,6 @@ export const Page = ({
                     sidebarImage=${sidebarImage}
                     sidebarPosition=${sidebarPosition}
                     menuVisible=${menuVisible}
-                    showLinks=${showLinks}
                     birdId=${birdId}
                 />
                 <section
